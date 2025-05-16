@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import { ArrowRight, Command } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -81,11 +82,24 @@ const Index = () => {
           className="relative mx-auto max-w-5xl mt-20"
         >
           <div className="glass rounded-xl overflow-hidden">
-            <img
-              src="/lovable-uploads/c32c6788-5e4a-4fee-afee-604b03113c7f.png"
-              alt="CryptoTrade Dashboard"
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
               className="w-full h-auto"
-            />
+            >
+              <source 
+                src="/lovable-uploads/c32c6788-5e4a-4fee-afee-604b03113c7f.mp4" 
+                type="video/mp4" 
+              />
+              {/* Fallback to image in case video doesn't load */}
+              <img
+                src="/lovable-uploads/c32c6788-5e4a-4fee-afee-604b03113c7f.png"
+                alt="CryptoTrade Dashboard"
+                className="w-full h-auto"
+              />
+            </video>
           </div>
         </motion.div>
       </motion.section>
