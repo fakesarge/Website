@@ -8,7 +8,6 @@ import { PricingSection } from "@/components/pricing/PricingSection";
 import LogoCarousel from "@/components/LogoCarousel";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import Footer from "@/components/Footer";
-import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { useEffect, useRef, useState } from "react";
 
 const Index = () => {
@@ -36,31 +35,23 @@ const Index = () => {
     <div className="min-h-screen bg-black text-foreground">
       <Navigation />
       
-      {/* Full-screen Video Hero Section */}
+      {/* Full-screen YouTube Video Hero Section */}
       <div 
         ref={videoSectionRef}
         className="relative h-screen w-full overflow-hidden flex items-center justify-center"
       >
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source 
-            src="/lovable-uploads/c32c6788-5e4a-4fee-afee-604b03113c7f.mp4" 
-            type="video/mp4" 
-          />
-          {/* Fallback image */}
-          <img
-            src="/lovable-uploads/c32c6788-5e4a-4fee-afee-604b03113c7f.png"
-            alt="CryptoTrade Dashboard"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        </video>
+        <div className="absolute inset-0 w-full h-full">
+          <iframe
+            src="https://www.youtube.com/embed/HcgnQw_LBKA?autoplay=1&mute=1&loop=1&playlist=HcgnQw_LBKA&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1"
+            title="Cryptocurrency Trading Video"
+            className="w-full h-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            frameBorder="0"
+            allowFullScreen
+          ></iframe>
+        </div>
 
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
         
         <div className="relative z-10 text-center px-4">
           <motion.div
@@ -76,16 +67,6 @@ const Index = () => {
           </motion.div>
           
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-5xl md:text-7xl font-normal mb-4 tracking-tight">
-              <span className="text-gray-200">
-                <TextGenerateEffect words="Trade crypto with" />
-              </span>
-              <br />
-              <span className="text-white font-medium">
-                <TextGenerateEffect words="confidence & security" />
-              </span>
-            </h1>
-            
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
