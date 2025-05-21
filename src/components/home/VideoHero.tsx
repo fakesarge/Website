@@ -18,12 +18,27 @@ const VideoHero = ({ scrollToContent }: VideoHeroProps) => {
       <div className="absolute inset-0 w-full h-full">
         <iframe
           src="https://www.youtube.com/embed/sBm2Ip0WN1o?autoplay=1&mute=1&loop=1&playlist=sBm2Ip0WN1o&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&start=3&fs=0&vq=hd1080"
-          title="Cryptocurrency Trading Video"
+          title="VFX Studio Showreel"
           className="w-full h-full absolute inset-0 scale-[1.5]"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           frameBorder="0"
           allowFullScreen
         ></iframe>
+      </div>
+      
+      {/* Overlay with studio name */}
+      <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2 }}
+          className="text-center"
+        >
+          <h1 className="text-5xl md:text-7xl font-bold mb-4 text-gradient">NOVA VFX</h1>
+          <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto">
+            Premium Visual Effects & Design for FiveM Communities
+          </p>
+        </motion.div>
       </div>
       
       <motion.div 
