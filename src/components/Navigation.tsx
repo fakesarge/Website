@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from "react";
-import { Layers, Menu } from "lucide-react";
+import { Command, Menu } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 
@@ -41,9 +40,9 @@ const Navigation = () => {
   };
 
   const navItems = [
-    { name: "Services", href: "#features", onClick: () => scrollToSection('features') },
-    { name: "Packages", href: "#pricing", onClick: () => scrollToSection('pricing') },
-    { name: "Portfolio", href: "#testimonials", onClick: () => scrollToSection('testimonials') },
+    { name: "Features", href: "#features", onClick: () => scrollToSection('features') },
+    { name: "Prices", href: "#pricing", onClick: () => scrollToSection('pricing') },
+    { name: "Testimonials", href: "#testimonials", onClick: () => scrollToSection('testimonials') },
   ];
 
   return (
@@ -57,8 +56,8 @@ const Navigation = () => {
       <div className="mx-auto h-full px-6">
         <nav className="flex items-center justify-between h-full">
           <div className="flex items-center gap-2">
-            <Layers className="w-5 h-5 text-primary" />
-            <span className="font-bold text-base">NOVA VFX</span>
+            <Command className="w-5 h-5 text-primary" />
+            <span className="font-bold text-base">CryptoTrade</span>
           </div>
 
           {/* Desktop Navigation */}
@@ -83,7 +82,7 @@ const Navigation = () => {
               size="sm"
               className="button-gradient"
             >
-              Get a Quote
+              Start Trading
             </Button>
           </div>
 
@@ -120,7 +119,7 @@ const Navigation = () => {
                     }}
                     className="button-gradient mt-4"
                   >
-                    Get a Quote
+                    Start Trading
                   </Button>
                 </div>
               </SheetContent>

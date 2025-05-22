@@ -41,7 +41,7 @@ const ContentSection = ({ contentRef }: ContentSectionProps) => {
             transition={{ delay: 0.4 }}
             className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl text-left"
           >
-            We are a premium visual effects studio specializing in creating stunning Blender animations, loading screens, logos, and graphics for FiveM communities worldwide. Our team of expert designers delivers exceptional quality visuals that elevate your brand.
+            Our platform provides you with all the tools you need to trade cryptocurrencies efficiently and securely. From real-time market data to advanced trading features, we've got you covered.
           </motion.p>
           
           <motion.div
@@ -51,10 +51,10 @@ const ContentSection = ({ contentRef }: ContentSectionProps) => {
             className="flex flex-col sm:flex-row gap-4 items-start"
           >
             <Button size="lg" className="button-gradient">
-              View Our Portfolio
+              Start Trading Now
             </Button>
             <Button size="lg" variant="link" className="text-white">
-              Contact Us <ArrowRight className="ml-2 w-4 h-4" />
+              View Markets <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
           </motion.div>
         </div>
@@ -68,7 +68,7 @@ const ContentSection = ({ contentRef }: ContentSectionProps) => {
           <div className="glass rounded-xl overflow-hidden">
             <img
               src="/lovable-uploads/c32c6788-5e4a-4fee-afee-604b03113c7f.png"
-              alt="VFX Studio Dashboard"
+              alt="CryptoTrade Dashboard"
               className="w-full h-auto"
             />
           </div>
