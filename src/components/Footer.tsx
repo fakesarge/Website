@@ -1,3 +1,4 @@
+
 import { Github, Twitter } from "lucide-react";
 import { Button } from "./ui/button";
 
@@ -8,9 +9,9 @@ const Footer = () => {
         <div className="glass glass-hover rounded-xl p-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="space-y-4">
-              <h3 className="font-medium text-lg">CryptoTrade</h3>
+              <h3 className="font-medium text-lg">NOVA VFX</h3>
               <p className="text-sm text-muted-foreground">
-                Empowering traders with advanced crypto trading solutions.
+                Premium FiveM graphics studio creating stunning Blender animations and loading screens for gaming communities.
               </p>
               <div className="flex space-x-4">
                 <Button variant="ghost" size="icon">
@@ -23,16 +24,21 @@ const Footer = () => {
             </div>
 
             <div className="space-y-4">
-              <h4 className="font-medium">Trading</h4>
+              <h4 className="font-medium">Services</h4>
               <ul className="space-y-2">
                 <li>
                   <a href="#features" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                    Markets
+                    Loading Screens
                   </a>
                 </li>
                 <li>
                   <a href="#pricing" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                    Trading Fees
+                    Logo Design
+                  </a>
+                </li>
+                <li>
+                  <a href="#features" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    3D Animations
                   </a>
                 </li>
               </ul>
@@ -43,12 +49,17 @@ const Footer = () => {
               <ul className="space-y-2">
                 <li>
                   <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                    Trading Guide
+                    Portfolio
                   </a>
                 </li>
                 <li>
                   <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                    Market Analysis
+                    Installation Guide
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    Support
                   </a>
                 </li>
               </ul>
@@ -67,13 +78,18 @@ const Footer = () => {
                     Terms of Service
                   </a>
                 </li>
+                <li>
+                  <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    Refund Policy
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
 
           <div className="mt-8 pt-8 border-t border-white/10">
             <p className="text-sm text-muted-foreground text-center">
-              © {new Date().getFullYear()} Rezaul Arif. All rights reserved.
+              © {new Date().getFullYear()} NOVA VFX Studios. All rights reserved.
             </p>
           </div>
         </div>

@@ -41,7 +41,7 @@ const ContentSection = ({ contentRef }: ContentSectionProps) => {
             transition={{ delay: 0.4 }}
             className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl text-left"
           >
-            Our platform provides you with all the tools you need to trade cryptocurrencies efficiently and securely. From real-time market data to advanced trading features, we've got you covered.
+            Premium FiveM graphics studio specializing in custom Blender loading screens, professional logos, and stunning VFX animations. Transform your gaming community with our high-quality digital art and graphics packages.
           </motion.p>
           
           <motion.div
@@ -51,10 +51,10 @@ const ContentSection = ({ contentRef }: ContentSectionProps) => {
             className="flex flex-col sm:flex-row gap-4 items-start"
           >
             <Button size="lg" className="button-gradient">
-              Start Trading Now
+              Browse Graphics
             </Button>
             <Button size="lg" variant="link" className="text-white">
-              View Markets <ArrowRight className="ml-2 w-4 h-4" />
+              View Portfolio <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
           </motion.div>
         </div>
@@ -68,7 +68,7 @@ const ContentSection = ({ contentRef }: ContentSectionProps) => {
           <div className="glass rounded-xl overflow-hidden">
             <img
               src="/lovable-uploads/c32c6788-5e4a-4fee-afee-604b03113c7f.png"
-              alt="CryptoTrade Dashboard"
+              alt="NOVA VFX Portfolio Showcase"
               className="w-full h-auto"
             />
           </div>

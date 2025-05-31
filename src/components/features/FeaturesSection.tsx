@@ -1,3 +1,4 @@
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FeatureTab } from "./FeatureTab";
 import { FeatureContent } from "./FeatureContent";
@@ -9,12 +10,12 @@ export const FeaturesSection = () => {
       {/* Header Section */}
       <div className="max-w-2xl mb-20">
         <h2 className="text-5xl md:text-6xl font-normal mb-6 tracking-tight text-left">
-          Advanced Trading
+          Premium VFX
           <br />
-          <span className="text-gradient font-medium">Features & Tools</span>
+          <span className="text-gradient font-medium">Graphics & Services</span>
         </h2>
         <p className="text-lg md:text-xl text-gray-400 text-left">
-          Experience professional-grade trading tools and features designed for both novice and experienced crypto traders.
+          Professional-grade FiveM graphics, Blender animations, and custom loading screens designed to elevate your gaming community's visual experience.
         </p>
       </div>
 

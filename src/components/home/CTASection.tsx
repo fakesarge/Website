@@ -21,13 +21,13 @@ const CTASection = () => {
         className="bg-[#0A0A0A]/80 backdrop-blur-lg border border-white/10 rounded-2xl p-8 md:p-12 text-center relative z-10"
       >
         <h2 className="text-3xl md:text-4xl font-bold mb-4">
-          Ready to start trading?
+          Ready to elevate your FiveM server?
         </h2>
         <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-          Join thousands of traders who have already discovered the power of our platform.
+          Join thousands of server owners who have transformed their communities with our premium VFX graphics and Blender animations.
         </p>
         <Button size="lg" className="button-gradient">
-          Create Account
+          Shop Graphics Now
           <ArrowRight className="ml-2 w-4 h-4" />
         </Button>
       </motion.div>

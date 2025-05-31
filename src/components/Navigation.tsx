@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Command, Menu } from "lucide-react";
 import { Button } from "./ui/button";
@@ -40,9 +41,9 @@ const Navigation = () => {
   };
 
   const navItems = [
-    { name: "Features", href: "#features", onClick: () => scrollToSection('features') },
-    { name: "Prices", href: "#pricing", onClick: () => scrollToSection('pricing') },
-    { name: "Testimonials", href: "#testimonials", onClick: () => scrollToSection('testimonials') },
+    { name: "Services", href: "#features", onClick: () => scrollToSection('features') },
+    { name: "Packages", href: "#pricing", onClick: () => scrollToSection('pricing') },
+    { name: "Reviews", href: "#testimonials", onClick: () => scrollToSection('testimonials') },
   ];
 
   return (
@@ -57,7 +58,7 @@ const Navigation = () => {
         <nav className="flex items-center justify-between h-full">
           <div className="flex items-center gap-2">
             <Command className="w-5 h-5 text-primary" />
-            <span className="font-bold text-base">CryptoTrade</span>
+            <span className="font-bold text-base">NOVA VFX</span>
           </div>
 
           {/* Desktop Navigation */}
@@ -82,7 +83,7 @@ const Navigation = () => {
               size="sm"
               className="button-gradient"
             >
-              Start Trading
+              Shop Now
             </Button>
           </div>
 
@@ -119,7 +120,7 @@ const Navigation = () => {
                     }}
                     className="button-gradient mt-4"
                   >
-                    Start Trading
+                    Shop Now
                   </Button>
                 </div>
               </SheetContent>
