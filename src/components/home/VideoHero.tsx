@@ -16,14 +16,17 @@ const VideoHero = ({ scrollToContent }: VideoHeroProps) => {
       className="relative h-screen w-full overflow-hidden"
     >
       <div className="absolute inset-0 w-full h-full">
-        <iframe
-          src="https://www.youtube.com/embed/sBm2Ip0WN1o?autoplay=1&mute=1&loop=1&playlist=sBm2Ip0WN1o&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&start=3&fs=0&vq=hd1080"
-          title="Cryptocurrency Trading Video"
-          className="w-full h-full absolute inset-0 scale-[1.5]"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          frameBorder="0"
-          allowFullScreen
-        ></iframe>
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="w-full h-full object-cover"
+        >
+          <source src="/your-video.mp4" type="video/mp4" />
+          <source src="/your-video.webm" type="video/webm" />
+          Your browser does not support the video tag.
+        </video>
       </div>
       
       <motion.div 
