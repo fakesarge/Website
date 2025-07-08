@@ -3,9 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import Navigation from "@/components/Navigation";
 import VideoHero from "@/components/home/VideoHero";
 import ContentSection from "@/components/home/ContentSection";
+import LoadingScreen from "@/components/LoadingScreen";
 
 const Index = () => {
   const [hasScrolled, setHasScrolled] = useState(false);
+  const [showLoading, setShowLoading] = useState(true);
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -26,6 +28,8 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-black text-foreground">
+      {showLoading && <LoadingScreen onComplete={() => setShowLoading(false)} />}
+      
       <Navigation />
       
       {/* Full-screen YouTube Video Hero Section */}
