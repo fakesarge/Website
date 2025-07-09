@@ -8,7 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Command } from "lucide-react";
+import { Command, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -56,33 +57,55 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center p-4">
-      <Card className="w-full max-w-md glass border-silver/20">
-        <CardHeader className="text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center p-4 relative">
+      {/* Background pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(255,255,255,0.1)_0%,_transparent_50%)]" />
+      </div>
+
+      {/* Back to home button */}
+      <Link 
+        to="/" 
+        className="absolute top-6 left-6 flex items-center gap-2 text-muted-foreground hover:text-white transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        <span>Back to Home</span>
+      </Link>
+
+      <Card className="w-full max-w-md glass border-white/20 backdrop-blur-xl relative">
+        <CardHeader className="text-center space-y-4">
+          <div className="flex items-center justify-center gap-2">
             <Command className="w-8 h-8 text-primary" />
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-silver bg-clip-text text-transparent">
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-primary bg-clip-text text-transparent">
               74hrs
             </h1>
           </div>
-          <CardTitle className="text-xl text-white">Welcome</CardTitle>
-          <CardDescription className="text-gray-400">
-            Access your premium VFX studio account
-          </CardDescription>
+          <div>
+            <CardTitle className="text-xl text-white">Welcome Back</CardTitle>
+            <CardDescription className="text-muted-foreground">
+              Access your premium VFX studio account
+            </CardDescription>
+          </div>
         </CardHeader>
         
-        <CardContent>
+        <CardContent className="space-y-6">
           <Tabs defaultValue="signin" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 bg-black/40">
-              <TabsTrigger value="signin" className="text-white data-[state=active]:bg-primary">
+            <TabsList className="grid w-full grid-cols-2 glass">
+              <TabsTrigger 
+                value="signin" 
+                className="text-white data-[state=active]:bg-primary data-[state=active]:text-black"
+              >
                 Sign In
               </TabsTrigger>
-              <TabsTrigger value="signup" className="text-white data-[state=active]:bg-primary">
+              <TabsTrigger 
+                value="signup" 
+                className="text-white data-[state=active]:bg-primary data-[state=active]:text-black"
+              >
                 Sign Up
               </TabsTrigger>
             </TabsList>
             
-            <TabsContent value="signin">
+            <TabsContent value="signin" className="space-y-4 mt-6">
               <form onSubmit={handleSignIn} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-white">Email</Label>
@@ -92,7 +115,7 @@ const Auth = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="glass border-silver/20 text-white placeholder:text-gray-400"
+                    className="glass border-white/20 text-white placeholder:text-muted-foreground bg-white/5 focus:bg-white/10"
                     placeholder="Enter your email"
                   />
                 </div>
@@ -105,7 +128,7 @@ const Auth = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="glass border-silver/20 text-white placeholder:text-gray-400"
+                    className="glass border-white/20 text-white placeholder:text-muted-foreground bg-white/5 focus:bg-white/10"
                     placeholder="Enter your password"
                   />
                 </div>
@@ -113,14 +136,14 @@ const Auth = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full button-gradient"
+                  className="w-full button-gradient font-semibold"
                 >
                   {loading ? "Signing in..." : "Sign In"}
                 </Button>
               </form>
             </TabsContent>
             
-            <TabsContent value="signup">
+            <TabsContent value="signup" className="space-y-4 mt-6">
               <form onSubmit={handleSignUp} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="fullName" className="text-white">Full Name</Label>
@@ -130,7 +153,7 @@ const Auth = () => {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     required
-                    className="glass border-silver/20 text-white placeholder:text-gray-400"
+                    className="glass border-white/20 text-white placeholder:text-muted-foreground bg-white/5 focus:bg-white/10"
                     placeholder="Enter your full name"
                   />
                 </div>
@@ -143,7 +166,7 @@ const Auth = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="glass border-silver/20 text-white placeholder:text-gray-400"
+                    className="glass border-white/20 text-white placeholder:text-muted-foreground bg-white/5 focus:bg-white/10"
                     placeholder="Enter your email"
                   />
                 </div>
@@ -156,7 +179,7 @@ const Auth = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="glass border-silver/20 text-white placeholder:text-gray-400"
+                    className="glass border-white/20 text-white placeholder:text-muted-foreground bg-white/5 focus:bg-white/10"
                     placeholder="Create a password"
                   />
                 </div>
@@ -164,7 +187,7 @@ const Auth = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full button-gradient"
+                  className="w-full button-gradient font-semibold"
                 >
                   {loading ? "Creating account..." : "Sign Up"}
                 </Button>

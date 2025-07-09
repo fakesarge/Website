@@ -20,9 +20,9 @@ interface AdminOrder {
   queue_position: number | null;
   created_at: string;
   profiles: {
-    full_name: string;
-    email: string;
-  };
+    full_name: string | null;
+    email: string | null;
+  } | null;
 }
 
 interface AdminAffiliate {
@@ -32,9 +32,9 @@ interface AdminAffiliate {
   total_referrals: number;
   commission_rate: number;
   profiles: {
-    full_name: string;
-    email: string;
-  };
+    full_name: string | null;
+    email: string | null;
+  } | null;
 }
 
 const Admin = () => {
@@ -135,7 +135,7 @@ const Admin = () => {
 
   if (loading || adminLoading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
       </div>
     );
@@ -146,16 +146,16 @@ const Admin = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black">
       {/* Header */}
-      <header className="border-b border-silver/20 bg-black/40 backdrop-blur-xl">
+      <header className="border-b border-white/10 bg-black/40 backdrop-blur-xl">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Button onClick={() => navigate("/dashboard")} variant="outline" size="icon" className="glass border-silver/20">
+              <Button onClick={() => navigate("/dashboard")} variant="outline" size="icon" className="glass border-white/20 text-white hover:bg-white/10">
                 <ArrowLeft className="w-4 h-4" />
               </Button>
               <div className="flex items-center gap-2">
                 <Shield className="w-8 h-8 text-primary" />
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-silver bg-clip-text text-transparent">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-primary bg-clip-text text-transparent">
                   74hrs Admin Panel
                 </h1>
               </div>
@@ -167,53 +167,53 @@ const Admin = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-white mb-2">Admin Dashboard</h2>
-          <p className="text-gray-400">Manage orders, users, and affiliate program</p>
+          <p className="text-muted-foreground">Manage orders, users, and affiliate program</p>
         </div>
 
         <Tabs defaultValue="orders" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-black/40 mb-8">
-            <TabsTrigger value="orders" className="text-white data-[state=active]:bg-primary">
+          <TabsList className="grid w-full grid-cols-2 glass mb-8">
+            <TabsTrigger value="orders" className="text-white data-[state=active]:bg-primary data-[state=active]:text-black">
               <Package className="w-4 h-4 mr-2" />
               All Orders ({orders.length})
             </TabsTrigger>
-            <TabsTrigger value="affiliates" className="text-white data-[state=active]:bg-primary">
+            <TabsTrigger value="affiliates" className="text-white data-[state=active]:bg-primary data-[state=active]:text-black">
               <Users className="w-4 h-4 mr-2" />
               Affiliates ({affiliates.length})
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="orders">
-            <Card className="glass border-silver/20">
+            <Card className="glass border-white/20">
               <CardHeader>
                 <CardTitle className="text-white">Order Management</CardTitle>
-                <CardDescription className="text-gray-400">
+                <CardDescription className="text-muted-foreground">
                   View and manage all customer orders
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <Table>
                   <TableHeader>
-                    <TableRow className="border-silver/20">
-                      <TableHead className="text-gray-300">Customer</TableHead>
-                      <TableHead className="text-gray-300">Order</TableHead>
-                      <TableHead className="text-gray-300">Category</TableHead>
-                      <TableHead className="text-gray-300">Price</TableHead>
-                      <TableHead className="text-gray-300">Queue</TableHead>
-                      <TableHead className="text-gray-300">Status</TableHead>
-                      <TableHead className="text-gray-300">Actions</TableHead>
+                    <TableRow className="border-white/20">
+                      <TableHead className="text-muted-foreground">Customer</TableHead>
+                      <TableHead className="text-muted-foreground">Order</TableHead>
+                      <TableHead className="text-muted-foreground">Category</TableHead>
+                      <TableHead className="text-muted-foreground">Price</TableHead>
+                      <TableHead className="text-muted-foreground">Queue</TableHead>
+                      <TableHead className="text-muted-foreground">Status</TableHead>
+                      <TableHead className="text-muted-foreground">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {orders.map((order) => (
-                      <TableRow key={order.id} className="border-silver/20">
+                      <TableRow key={order.id} className="border-white/20">
                         <TableCell>
                           <div>
-                            <p className="text-white font-medium">{order.profiles?.full_name}</p>
-                            <p className="text-gray-400 text-sm">{order.profiles?.email}</p>
+                            <p className="text-white font-medium">{order.profiles?.full_name || 'N/A'}</p>
+                            <p className="text-muted-foreground text-sm">{order.profiles?.email || 'N/A'}</p>
                           </div>
                         </TableCell>
                         <TableCell className="text-white">{order.order_name}</TableCell>
-                        <TableCell className="text-gray-300 capitalize">{order.category}</TableCell>
+                        <TableCell className="text-muted-foreground capitalize">{order.category}</TableCell>
                         <TableCell className="text-white">${order.price}</TableCell>
                         <TableCell className="text-white">
                           {order.queue_position ? `#${order.queue_position}` : 'N/A'}
@@ -229,7 +229,7 @@ const Admin = () => {
                               <Button
                                 size="sm"
                                 onClick={() => updateOrderStatus(order.id, 'in_progress')}
-                                className="bg-blue-600 hover:bg-blue-700"
+                                className="bg-blue-600 hover:bg-blue-700 text-white"
                               >
                                 Start
                               </Button>
@@ -238,7 +238,7 @@ const Admin = () => {
                               <Button
                                 size="sm"
                                 onClick={() => updateOrderStatus(order.id, 'completed')}
-                                className="bg-green-600 hover:bg-green-700"
+                                className="bg-green-600 hover:bg-green-700 text-white"
                               >
                                 Complete
                               </Button>
@@ -254,31 +254,31 @@ const Admin = () => {
           </TabsContent>
 
           <TabsContent value="affiliates">
-            <Card className="glass border-silver/20">
+            <Card className="glass border-white/20">
               <CardHeader>
                 <CardTitle className="text-white">Affiliate Program</CardTitle>
-                <CardDescription className="text-gray-400">
+                <CardDescription className="text-muted-foreground">
                   View affiliate performance and manage commissions
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <Table>
                   <TableHeader>
-                    <TableRow className="border-silver/20">
-                      <TableHead className="text-gray-300">User</TableHead>
-                      <TableHead className="text-gray-300">Referral Code</TableHead>
-                      <TableHead className="text-gray-300">Total Referrals</TableHead>
-                      <TableHead className="text-gray-300">Total Earnings</TableHead>
-                      <TableHead className="text-gray-300">Commission Rate</TableHead>
+                    <TableRow className="border-white/20">
+                      <TableHead className="text-muted-foreground">User</TableHead>
+                      <TableHead className="text-muted-foreground">Referral Code</TableHead>
+                      <TableHead className="text-muted-foreground">Total Referrals</TableHead>
+                      <TableHead className="text-muted-foreground">Total Earnings</TableHead>
+                      <TableHead className="text-muted-foreground">Commission Rate</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {affiliates.map((affiliate) => (
-                      <TableRow key={affiliate.id} className="border-silver/20">
+                      <TableRow key={affiliate.id} className="border-white/20">
                         <TableCell>
                           <div>
-                            <p className="text-white font-medium">{affiliate.profiles?.full_name}</p>
-                            <p className="text-gray-400 text-sm">{affiliate.profiles?.email}</p>
+                            <p className="text-white font-medium">{affiliate.profiles?.full_name || 'N/A'}</p>
+                            <p className="text-muted-foreground text-sm">{affiliate.profiles?.email || 'N/A'}</p>
                           </div>
                         </TableCell>
                         <TableCell>
