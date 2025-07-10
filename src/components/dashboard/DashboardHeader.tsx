@@ -9,6 +9,20 @@ const DashboardHeader = () => {
   const { signOut } = useAuth();
   const { data: profile } = useProfile();
 
+  // Get display name with fallbacks
+  const getDisplayName = () => {
+    if (profile?.full_name) return profile.full_name;
+    if (profile?.email) return profile.email.split('@')[0];
+    return 'User';
+  };
+
+  // Get avatar fallback initial
+  const getAvatarFallback = () => {
+    if (profile?.full_name) return profile.full_name.charAt(0).toUpperCase();
+    if (profile?.email) return profile.email.charAt(0).toUpperCase();
+    return 'U';
+  };
+
   return (
     <header className="border-b border-white/10 bg-[#1B1B1B]/40 backdrop-blur-xl mt-20">
       <div className="container mx-auto px-6 py-4">
@@ -22,13 +36,11 @@ const DashboardHeader = () => {
               <Avatar className="h-8 w-8">
                 <AvatarImage src={profile?.avatar_url || undefined} />
                 <AvatarFallback className="bg-primary/20 text-primary">
-                  {profile?.username?.charAt(0)?.toUpperCase() || 
-                   profile?.discord_username?.charAt(0)?.toUpperCase() || 
-                   profile?.full_name?.charAt(0)?.toUpperCase() || 'U'}
+                  {getAvatarFallback()}
                 </AvatarFallback>
               </Avatar>
               <span className="text-sm text-muted-foreground">
-                {profile?.username || profile?.discord_username || profile?.full_name || 'User'}
+                {getDisplayName()}
               </span>
             </div>
             
