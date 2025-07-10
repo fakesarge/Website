@@ -32,11 +32,11 @@ const DashboardHeader = () => {
               <Avatar className="h-8 w-8">
                 <AvatarImage src={profile?.avatar_url} />
                 <AvatarFallback className="bg-primary/20 text-primary">
-                  {profile?.username?.charAt(0)?.toUpperCase() || 'U'}
+                  {profile?.full_name?.charAt(0)?.toUpperCase() || 'U'}
                 </AvatarFallback>
               </Avatar>
               <span className="text-sm text-muted-foreground">
-                {profile?.username || 'User'}
+                {profile?.full_name || 'User'}
               </span>
             </div>
             
