@@ -62,12 +62,21 @@ const MobileNavigation = ({
               )
             ))}
             
+            <Link 
+              to="/login" 
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <Button variant="outline" className="glass w-full mb-2">
+                Login
+              </Button>
+            </Link>
+            
             <Button 
               onClick={() => {
                 setIsMobileMenuOpen(false);
                 scrollToSection('cta');
               }}
-              className="button-gradient mt-4"
+              className="button-gradient"
             >
               Shop Now
             </Button>

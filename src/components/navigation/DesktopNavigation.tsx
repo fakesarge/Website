@@ -43,6 +43,12 @@ const DesktopNavigation = ({ navItems, scrollToSection }: DesktopNavigationProps
         )
       ))}
       
+      <Link to="/login">
+        <Button variant="outline" size="sm" className="glass mr-2">
+          Login
+        </Button>
+      </Link>
+      
       <Button 
         onClick={() => scrollToSection('cta')}
         size="sm"
