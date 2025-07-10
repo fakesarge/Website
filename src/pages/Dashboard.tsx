@@ -2,6 +2,8 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import StatsCards from '@/components/dashboard/StatsCards';
 import OrdersTable from '@/components/dashboard/OrdersTable';
@@ -31,6 +33,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-black text-foreground">
+      <Navigation />
       <DashboardHeader />
       
       <main className="container mx-auto px-6 py-8">
@@ -50,6 +53,8 @@ const Dashboard = () => {
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 };
