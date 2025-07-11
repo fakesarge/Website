@@ -24,6 +24,11 @@ const MobileNavigation = ({
   isMobileMenuOpen, 
   setIsMobileMenuOpen 
 }: MobileNavigationProps) => {
+  const handleShopNowClick = () => {
+    setIsMobileMenuOpen(false);
+    window.open('https://discord.gg/VFX', '_blank');
+  };
+
   return (
     <div className="md:hidden">
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
@@ -72,10 +77,7 @@ const MobileNavigation = ({
             </Link>
             
             <Button 
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                scrollToSection('cta');
-              }}
+              onClick={handleShopNowClick}
               className="button-gradient"
             >
               Shop Now

@@ -4,10 +4,12 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-signature-ed25519, x-signature-timestamp',
 }
 
 serve(async (req) => {
+  console.log('Discord bot request received:', req.method, req.url)
+  
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -19,9 +21,11 @@ serve(async (req) => {
     )
 
     const body = await req.json()
+    console.log('Request body:', JSON.stringify(body, null, 2))
     
-    // Verify Discord interaction
+    // Verify Discord interaction (ping)
     if (body.type === 1) {
+      console.log('Ping received, responding with pong')
       return new Response(JSON.stringify({ type: 1 }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
@@ -29,8 +33,9 @@ serve(async (req) => {
 
     // Handle slash commands
     if (body.type === 2) {
-      const { data: commandData } = body
-      const commandName = commandData.name
+      console.log('Slash command received')
+      const commandName = body.data.name
+      console.log('Command name:', commandName)
 
       switch (commandName) {
         case 'create-order':
@@ -46,6 +51,7 @@ serve(async (req) => {
         case 'list-invoices':
           return await handleListInvoices(supabase, body)
         default:
+          console.log('Unknown command:', commandName)
           return new Response(JSON.stringify({
             type: 4,
             data: { content: 'Unknown command!' }
@@ -55,10 +61,23 @@ serve(async (req) => {
       }
     }
 
-    return new Response('Invalid request', { status: 400, headers: corsHeaders })
+    console.log('Invalid request type:', body.type)
+    return new Response(JSON.stringify({
+      type: 4,
+      data: { content: 'Invalid request type' }
+    }), { 
+      status: 400, 
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    })
   } catch (error) {
     console.error('Error:', error)
-    return new Response('Internal server error', { status: 500, headers: corsHeaders })
+    return new Response(JSON.stringify({
+      type: 4,
+      data: { content: 'Internal server error' }
+    }), { 
+      status: 500, 
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    })
   }
 })
 

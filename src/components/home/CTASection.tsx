@@ -4,6 +4,10 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const CTASection = () => {
+  const handleShopNowClick = () => {
+    window.open('https://discord.gg/VFX', '_blank');
+  };
+
   return (
     <section className="container px-4 py-20 relative bg-black">
       <div 
@@ -26,7 +30,7 @@ const CTASection = () => {
         <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
           Join thousands of server owners who have transformed their communities with our premium VFX graphics and Blender animations.
         </p>
-        <Button size="lg" className="button-gradient">
+        <Button size="lg" className="button-gradient" onClick={handleShopNowClick}>
           Shop Graphics Now
           <ArrowRight className="ml-2 w-4 h-4" />
         </Button>

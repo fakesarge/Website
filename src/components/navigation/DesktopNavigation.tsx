@@ -15,6 +15,10 @@ interface DesktopNavigationProps {
 }
 
 const DesktopNavigation = ({ navItems, scrollToSection }: DesktopNavigationProps) => {
+  const handleShopNowClick = () => {
+    window.open('https://discord.gg/VFX', '_blank');
+  };
+
   return (
     <div className="hidden md:flex items-center gap-6">
       {navItems.map((item) => (
@@ -50,7 +54,7 @@ const DesktopNavigation = ({ navItems, scrollToSection }: DesktopNavigationProps
       </Link>
       
       <Button 
-        onClick={() => scrollToSection('cta')}
+        onClick={handleShopNowClick}
         size="sm"
         className="button-gradient"
       >

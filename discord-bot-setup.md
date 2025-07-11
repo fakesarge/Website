@@ -1,9 +1,9 @@
 
-# Discord Bot Setup Instructions
+# Discord Bot Setup Instructions for 74HRS
 
 ## 1. Create Discord Application
 1. Go to https://discord.com/developers/applications
-2. Click "New Application" and give it a name (e.g., "74hrs Management Bot")
+2. Click "New Application" and give it a name (e.g., "74HRS Management Bot")
 3. Go to the "Bot" section and click "Add Bot"
 4. Copy the Bot Token (you'll need this later)
 
@@ -184,7 +184,7 @@ Go to your Discord application settings and register these slash commands:
 3. Go to "OAuth2" → "URL Generator"
 4. Select scopes: `bot` and `applications.commands`
 5. Select bot permissions: `Send Messages`, `Use Slash Commands`
-6. Use the generated URL to invite the bot to your server
+6. Use the generated URL to invite the bot to your 74HRS Discord server
 
 ## 4. Usage Examples
 - `/create-order user:123456789 order_name:"Logo Design" price:99.99 description:"Custom logo design"`
@@ -195,6 +195,14 @@ Go to your Discord application settings and register these slash commands:
 - `/list-invoices user:123456789`
 
 ## Notes
-- Users must sign up on your website first before you can create orders/invoices for them
+- Users must sign up on your 74HRS website first before you can create orders/invoices for them
 - Use Discord User IDs (right-click user → Copy ID with Developer Mode enabled)
 - The bot uses the Supabase service role to bypass RLS policies
+- Make sure to test the endpoint verification in Discord Developer Portal
+
+## Troubleshooting
+If the "Interactions Endpoint URL" verification fails:
+1. Make sure the URL is exactly: `https://dzbpjvtrfnjzyzfhlmad.supabase.co/functions/v1/discord-bot`
+2. Ensure the Discord bot function is deployed and responding to ping (type 1) requests
+3. Check the Supabase Edge Function logs for any errors
+4. Verify CORS headers are properly set in the function

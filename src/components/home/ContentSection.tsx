@@ -14,6 +14,15 @@ interface ContentSectionProps {
 }
 
 const ContentSection = ({ contentRef }: ContentSectionProps) => {
+  const handleBrowseGraphicsClick = () => {
+    window.open('https://discord.gg/VFX', '_blank');
+  };
+
+  const handleViewPortfolioClick = () => {
+    // This will be handled by the router
+    window.location.href = '/portfolio';
+  };
+
   return (
     <motion.div 
       ref={contentRef}
@@ -50,10 +59,10 @@ const ContentSection = ({ contentRef }: ContentSectionProps) => {
             transition={{ delay: 0.5 }}
             className="flex flex-col sm:flex-row gap-4 items-start"
           >
-            <Button size="lg" className="button-gradient">
+            <Button size="lg" className="button-gradient" onClick={handleBrowseGraphicsClick}>
               Browse Graphics
             </Button>
-            <Button size="lg" variant="link" className="text-white">
+            <Button size="lg" variant="link" className="text-white" onClick={handleViewPortfolioClick}>
               View Portfolio <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
           </motion.div>
@@ -68,7 +77,7 @@ const ContentSection = ({ contentRef }: ContentSectionProps) => {
           <div className="glass rounded-xl overflow-hidden">
             <img
               src="/lovable-uploads/c32c6788-5e4a-4fee-afee-604b03113c7f.png"
-              alt="NOVA VFX Portfolio Showcase"
+              alt="74HRS Portfolio Showcase"
               className="w-full h-auto"
             />
           </div>
