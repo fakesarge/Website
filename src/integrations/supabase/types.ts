@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      affiliate_claims: {
+        Row: {
+          affiliate_id: string
+          claimed: boolean | null
+          commission_amount: number | null
+          created_at: string | null
+          id: string
+          order_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          affiliate_id: string
+          claimed?: boolean | null
+          commission_amount?: number | null
+          created_at?: string | null
+          id?: string
+          order_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          affiliate_id?: string
+          claimed?: boolean | null
+          commission_amount?: number | null
+          created_at?: string | null
+          id?: string
+          order_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_claims_affiliate_id_fkey"
+            columns: ["affiliate_id"]
+            isOneToOne: false
+            referencedRelation: "affiliates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "affiliate_claims_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       affiliates: {
         Row: {
           commission_rate: number | null
@@ -63,6 +108,7 @@ export type Database = {
           delivery_date: string | null
           description: string | null
           id: string
+          order_code: string | null
           order_name: string
           price: number
           queue_position: number | null
@@ -78,6 +124,7 @@ export type Database = {
           delivery_date?: string | null
           description?: string | null
           id?: string
+          order_code?: string | null
           order_name: string
           price: number
           queue_position?: number | null
@@ -93,6 +140,7 @@ export type Database = {
           delivery_date?: string | null
           description?: string | null
           id?: string
+          order_code?: string | null
           order_name?: string
           price?: number
           queue_position?: number | null
