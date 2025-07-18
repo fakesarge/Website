@@ -83,42 +83,24 @@ serve(async (req) => {
 
 async function handleCreateOrder(supabase: any, body: any) {
   const options = body.data.options || []
-  const discordUserId = options.find((opt: any) => opt.name === 'user')?.value
   const orderName = options.find((opt: any) => opt.name === 'order_name')?.value
   const description = options.find((opt: any) => opt.name === 'description')?.value || null
   const price = options.find((opt: any) => opt.name === 'price')?.value
   const category = options.find((opt: any) => opt.name === 'category')?.value || 'general'
 
-  if (!discordUserId || !orderName || !price) {
+  if (!orderName || !price) {
     return new Response(JSON.stringify({
       type: 4,
-      data: { content: 'Missing required parameters: user, order_name, and price are required!' }
+      data: { content: 'Missing required parameters: order_name and price are required!' }
     }), {
       headers: { 'Content-Type': 'application/json' }
     })
   }
 
-  // Find user by Discord ID
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('id')
-    .eq('discord_id', discordUserId)
-    .single()
-
-  if (!profile) {
-    return new Response(JSON.stringify({
-      type: 4,
-      data: { content: 'User not found! They need to sign up first at your website.' }
-    }), {
-      headers: { 'Content-Type': 'application/json' }
-    })
-  }
-
-  // Create order
+  // Create order without user dependency
   const { data: order, error } = await supabase
     .from('orders')
     .insert({
-      user_id: profile.id,
       order_name: orderName,
       description,
       price: parseFloat(price),
@@ -141,7 +123,7 @@ async function handleCreateOrder(supabase: any, body: any) {
   return new Response(JSON.stringify({
     type: 4,
     data: { 
-      content: `✅ Order created successfully!\n**Order:** ${orderName}\n**Price:** $${price}\n**Status:** Pending` 
+      content: `✅ Order created successfully!\n**Order:** ${orderName}\n**Order Code:** ${order.order_code}\n**Price:** $${price}\n**Status:** Pending\n\nCustomers can track this order using code: ${order.order_code}` 
     }
   }), {
     headers: { 'Content-Type': 'application/json' }
@@ -301,39 +283,20 @@ async function handleUpdateInvoice(supabase: any, body: any) {
 
 async function handleListOrders(supabase: any, body: any) {
   const options = body.data.options || []
-  const discordUserId = options.find((opt: any) => opt.name === 'user')?.value
+  const limit = options.find((opt: any) => opt.name === 'limit')?.value || 10
+  const status = options.find((opt: any) => opt.name === 'status')?.value
 
-  if (!discordUserId) {
-    return new Response(JSON.stringify({
-      type: 4,
-      data: { content: 'User Discord ID is required!' }
-    }), {
-      headers: { 'Content-Type': 'application/json' }
-    })
-  }
-
-  // Find user by Discord ID
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('id')
-    .eq('discord_id', discordUserId)
-    .single()
-
-  if (!profile) {
-    return new Response(JSON.stringify({
-      type: 4,
-      data: { content: 'User not found!' }
-    }), {
-      headers: { 'Content-Type': 'application/json' }
-    })
-  }
-
-  const { data: orders, error } = await supabase
+  let query = supabase
     .from('orders')
     .select('*')
-    .eq('user_id', profile.id)
     .order('created_at', { ascending: false })
-    .limit(5)
+    .limit(parseInt(limit))
+
+  if (status) {
+    query = query.eq('status', status)
+  }
+
+  const { data: orders, error } = await query
 
   if (error) {
     console.error('Error fetching orders:', error)
@@ -348,14 +311,14 @@ async function handleListOrders(supabase: any, body: any) {
   if (orders.length === 0) {
     return new Response(JSON.stringify({
       type: 4,
-      data: { content: 'No orders found for this user.' }
+      data: { content: 'No orders found.' }
     }), {
       headers: { 'Content-Type': 'application/json' }
     })
   }
 
   const ordersList = orders.map(order => 
-    `• **${order.order_name}** - $${order.price} - ${order.status} (ID: ${order.id})`
+    `• **${order.order_name}** - $${order.price} - ${order.status}\n  📋 Code: ${order.order_code || order.id}`
   ).join('\n')
 
   return new Response(JSON.stringify({

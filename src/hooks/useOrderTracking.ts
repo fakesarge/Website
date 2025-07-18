@@ -9,11 +9,11 @@ export const useOrderTracking = (orderCode: string) => {
       
       const { data, error } = await supabase
         .from('orders')
-        .select('*, profiles(full_name)')
-        .eq('order_code', orderCode)
-        .single();
+        .select('*')
+        .or(`order_code.eq.${orderCode},id.eq.${orderCode}`)
+        .maybeSingle();
       
-      if (error) {
+      if (error || !data) {
         console.error('Error fetching order:', error);
         return null;
       }
@@ -60,8 +60,8 @@ export const useClaimAffiliate = (orderCode: string, affiliateCode: string) => {
       const orderResponse = await supabase
         .from('orders')
         .select('id, price')
-        .eq('order_code', orderCode)
-        .single();
+        .or(`order_code.eq.${orderCode},id.eq.${orderCode}`)
+        .maybeSingle();
       
       if (orderResponse.error) {
         console.error('Error fetching order:', orderResponse.error);

@@ -115,7 +115,7 @@ export type Database = {
           requirements: string | null
           status: string
           updated_at: string | null
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           affiliate_referrer_id?: string | null
@@ -131,7 +131,7 @@ export type Database = {
           requirements?: string | null
           status?: string
           updated_at?: string | null
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           affiliate_referrer_id?: string | null
@@ -147,7 +147,7 @@ export type Database = {
           requirements?: string | null
           status?: string
           updated_at?: string | null
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: [
           {
