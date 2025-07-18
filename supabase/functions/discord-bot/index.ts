@@ -9,6 +9,7 @@ const corsHeaders = {
 
 serve(async (req) => {
   console.log('Discord bot request received:', req.method, req.url)
+  console.log('Headers:', Object.fromEntries(req.headers.entries()))
   
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
@@ -20,8 +21,14 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    const body = await req.json()
-    console.log('Request body:', JSON.stringify(body, null, 2))
+    let body;
+    try {
+      body = await req.json()
+      console.log('Request body:', JSON.stringify(body, null, 2))
+    } catch (e) {
+      console.error('Failed to parse JSON:', e)
+      return new Response('Invalid JSON', { status: 400, headers: corsHeaders })
+    }
     
     // Verify Discord interaction (ping)
     if (body.type === 1) {
