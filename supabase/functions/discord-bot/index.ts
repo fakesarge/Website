@@ -1,15 +1,13 @@
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-signature-ed25519, x-signature-timestamp',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
 serve(async (req) => {
-  console.log('Discord bot request received:', req.method, req.url)
-  console.log('Headers:', Object.fromEntries(req.headers.entries()))
+  console.log('Discord bot request received:', req.method)
   
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
@@ -21,16 +19,10 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    let body;
-    try {
-      body = await req.json()
-      console.log('Request body:', JSON.stringify(body, null, 2))
-    } catch (e) {
-      console.error('Failed to parse JSON:', e)
-      return new Response('Invalid JSON', { status: 400, headers: corsHeaders })
-    }
+    const body = await req.json()
+    console.log('Request body type:', body.type)
     
-    // Verify Discord interaction (ping)
+    // Handle Discord verification ping
     if (body.type === 1) {
       console.log('Ping received, responding with pong')
       return new Response(JSON.stringify({ type: 1 }), {
@@ -38,40 +30,31 @@ serve(async (req) => {
       })
     }
 
-    // Handle slash commands
+    // Handle application commands
     if (body.type === 2) {
-      console.log('Slash command received')
       const commandName = body.data.name
-      console.log('Command name:', commandName)
+      console.log('Command:', commandName)
 
       switch (commandName) {
         case 'create-order':
           return await handleCreateOrder(supabase, body)
-        case 'update-order':
-          return await handleUpdateOrder(supabase, body)
-        case 'create-invoice':
-          return await handleCreateInvoice(supabase, body)
-        case 'update-invoice':
-          return await handleUpdateInvoice(supabase, body)
         case 'list-orders':
           return await handleListOrders(supabase, body)
-        case 'list-invoices':
-          return await handleListInvoices(supabase, body)
+        case 'update-order':
+          return await handleUpdateOrder(supabase, body)
         default:
-          console.log('Unknown command:', commandName)
           return new Response(JSON.stringify({
             type: 4,
-            data: { content: 'Unknown command!' }
+            data: { content: `Unknown command: ${commandName}` }
           }), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' }
           })
       }
     }
 
-    console.log('Invalid request type:', body.type)
     return new Response(JSON.stringify({
       type: 4,
-      data: { content: 'Invalid request type' }
+      data: { content: 'Invalid interaction type' }
     }), { 
       status: 400, 
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -91,314 +74,165 @@ serve(async (req) => {
 async function handleCreateOrder(supabase: any, body: any) {
   const options = body.data.options || []
   const orderName = options.find((opt: any) => opt.name === 'order_name')?.value
-  const description = options.find((opt: any) => opt.name === 'description')?.value || null
+  const description = options.find((opt: any) => opt.name === 'description')?.value || ''
   const price = options.find((opt: any) => opt.name === 'price')?.value
-  const category = options.find((opt: any) => opt.name === 'category')?.value || 'general'
+  const category = options.find((opt: any) => opt.name === 'category')?.value || 'gfx'
 
   if (!orderName || !price) {
     return new Response(JSON.stringify({
       type: 4,
-      data: { content: 'Missing required parameters: order_name and price are required!' }
+      data: { content: '❌ Missing required fields: order_name and price' }
     }), {
-      headers: { 'Content-Type': 'application/json' }
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
   }
 
-  // Create order without user dependency
-  const { data: order, error } = await supabase
-    .from('orders')
-    .insert({
-      order_name: orderName,
-      description,
-      price: parseFloat(price),
-      category,
-      status: 'pending'
-    })
-    .select()
-    .single()
+  try {
+    const { data: order, error } = await supabase
+      .from('orders')
+      .insert({
+        order_name: orderName,
+        description,
+        price: parseFloat(price),
+        category,
+        status: 'pending'
+      })
+      .select()
+      .single()
 
-  if (error) {
-    console.error('Error creating order:', error)
+    if (error) {
+      console.error('Database error:', error)
+      return new Response(JSON.stringify({
+        type: 4,
+        data: { content: '❌ Failed to create order. Please try again.' }
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
     return new Response(JSON.stringify({
       type: 4,
-      data: { content: 'Failed to create order. Please try again.' }
+      data: { 
+        content: `✅ **Order Created Successfully!**\n\n**Name:** ${orderName}\n**Code:** ${order.order_code || order.id}\n**Price:** $${price}\n**Category:** ${category}\n**Status:** Pending` 
+      }
     }), {
-      headers: { 'Content-Type': 'application/json' }
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    })
+  } catch (err) {
+    console.error('Unexpected error:', err)
+    return new Response(JSON.stringify({
+      type: 4,
+      data: { content: '❌ An unexpected error occurred' }
+    }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
   }
+}
 
-  return new Response(JSON.stringify({
-    type: 4,
-    data: { 
-      content: `✅ Order created successfully!\n**Order:** ${orderName}\n**Order Code:** ${order.order_code}\n**Price:** $${price}\n**Status:** Pending\n\nCustomers can track this order using code: ${order.order_code}` 
+async function handleListOrders(supabase: any, body: any) {
+  const options = body.data.options || []
+  const limit = options.find((opt: any) => opt.name === 'limit')?.value || 5
+  const status = options.find((opt: any) => opt.name === 'status')?.value
+
+  try {
+    let query = supabase
+      .from('orders')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(parseInt(limit))
+
+    if (status) {
+      query = query.eq('status', status)
     }
-  }), {
-    headers: { 'Content-Type': 'application/json' }
-  })
+
+    const { data: orders, error } = await query
+
+    if (error) {
+      console.error('Database error:', error)
+      return new Response(JSON.stringify({
+        type: 4,
+        data: { content: '❌ Failed to fetch orders' }
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
+    if (orders.length === 0) {
+      return new Response(JSON.stringify({
+        type: 4,
+        data: { content: '📋 No orders found' }
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
+    const ordersList = orders.map(order => 
+      `• **${order.order_name}** - $${order.price} - ${order.status}\n  📋 ID: ${order.id.slice(0, 8)}...`
+    ).join('\n')
+
+    return new Response(JSON.stringify({
+      type: 4,
+      data: { content: `📋 **Recent Orders:**\n\n${ordersList}` }
+    }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    })
+  } catch (err) {
+    console.error('Unexpected error:', err)
+    return new Response(JSON.stringify({
+      type: 4,
+      data: { content: '❌ An unexpected error occurred' }
+    }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    })
+  }
 }
 
 async function handleUpdateOrder(supabase: any, body: any) {
   const options = body.data.options || []
   const orderId = options.find((opt: any) => opt.name === 'order_id')?.value
   const status = options.find((opt: any) => opt.name === 'status')?.value
-  const deliveryDate = options.find((opt: any) => opt.name === 'delivery_date')?.value
 
-  if (!orderId) {
+  if (!orderId || !status) {
     return new Response(JSON.stringify({
       type: 4,
-      data: { content: 'Order ID is required!' }
+      data: { content: '❌ Missing required fields: order_id and status' }
     }), {
-      headers: { 'Content-Type': 'application/json' }
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
   }
 
-  const updateData: any = { updated_at: new Date().toISOString() }
-  if (status) updateData.status = status
-  if (deliveryDate) updateData.delivery_date = deliveryDate
+  try {
+    const { error } = await supabase
+      .from('orders')
+      .update({ 
+        status,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', orderId)
 
-  const { error } = await supabase
-    .from('orders')
-    .update(updateData)
-    .eq('id', orderId)
-
-  if (error) {
-    console.error('Error updating order:', error)
-    return new Response(JSON.stringify({
-      type: 4,
-      data: { content: 'Failed to update order. Please check the order ID.' }
-    }), {
-      headers: { 'Content-Type': 'application/json' }
-    })
-  }
-
-  return new Response(JSON.stringify({
-    type: 4,
-    data: { content: `✅ Order updated successfully!` }
-  }), {
-    headers: { 'Content-Type': 'application/json' }
-  })
-}
-
-async function handleCreateInvoice(supabase: any, body: any) {
-  const options = body.data.options || []
-  const discordUserId = options.find((opt: any) => opt.name === 'user')?.value
-  const orderId = options.find((opt: any) => opt.name === 'order_id')?.value || null
-  const amount = options.find((opt: any) => opt.name === 'amount')?.value
-  const dueDate = options.find((opt: any) => opt.name === 'due_date')?.value || null
-
-  if (!discordUserId || !amount) {
-    return new Response(JSON.stringify({
-      type: 4,
-      data: { content: 'Missing required parameters: user and amount are required!' }
-    }), {
-      headers: { 'Content-Type': 'application/json' }
-    })
-  }
-
-  // Find user by Discord ID
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('id')
-    .eq('discord_id', discordUserId)
-    .single()
-
-  if (!profile) {
-    return new Response(JSON.stringify({
-      type: 4,
-      data: { content: 'User not found! They need to sign up first at your website.' }
-    }), {
-      headers: { 'Content-Type': 'application/json' }
-    })
-  }
-
-  // Generate invoice number
-  const invoiceNumber = `INV-${Date.now().toString().slice(-6)}`
-
-  // Create invoice
-  const { data: invoice, error } = await supabase
-    .from('invoices')
-    .insert({
-      user_id: profile.id,
-      order_id: orderId,
-      invoice_number: invoiceNumber,
-      amount: parseFloat(amount),
-      status: 'unpaid',
-      due_date: dueDate
-    })
-    .select()
-    .single()
-
-  if (error) {
-    console.error('Error creating invoice:', error)
-    return new Response(JSON.stringify({
-      type: 4,
-      data: { content: 'Failed to create invoice. Please try again.' }
-    }), {
-      headers: { 'Content-Type': 'application/json' }
-    })
-  }
-
-  return new Response(JSON.stringify({
-    type: 4,
-    data: { 
-      content: `✅ Invoice created successfully!\n**Invoice #:** ${invoiceNumber}\n**Amount:** $${amount}\n**Status:** Unpaid` 
+    if (error) {
+      console.error('Database error:', error)
+      return new Response(JSON.stringify({
+        type: 4,
+        data: { content: '❌ Failed to update order. Check the order ID.' }
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
     }
-  }), {
-    headers: { 'Content-Type': 'application/json' }
-  })
-}
 
-async function handleUpdateInvoice(supabase: any, body: any) {
-  const options = body.data.options || []
-  const invoiceId = options.find((opt: any) => opt.name === 'invoice_id')?.value
-  const status = options.find((opt: any) => opt.name === 'status')?.value
-
-  if (!invoiceId || !status) {
     return new Response(JSON.stringify({
       type: 4,
-      data: { content: 'Invoice ID and status are required!' }
+      data: { content: `✅ **Order Updated!**\n\nStatus changed to: **${status}**` }
     }), {
-      headers: { 'Content-Type': 'application/json' }
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
-  }
-
-  const { error } = await supabase
-    .from('invoices')
-    .update({ 
-      status,
-      updated_at: new Date().toISOString()
-    })
-    .eq('id', invoiceId)
-
-  if (error) {
-    console.error('Error updating invoice:', error)
+  } catch (err) {
+    console.error('Unexpected error:', err)
     return new Response(JSON.stringify({
       type: 4,
-      data: { content: 'Failed to update invoice. Please check the invoice ID.' }
+      data: { content: '❌ An unexpected error occurred' }
     }), {
-      headers: { 'Content-Type': 'application/json' }
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
   }
-
-  return new Response(JSON.stringify({
-    type: 4,
-    data: { content: `✅ Invoice updated successfully! Status: ${status}` }
-  }), {
-    headers: { 'Content-Type': 'application/json' }
-  })
-}
-
-async function handleListOrders(supabase: any, body: any) {
-  const options = body.data.options || []
-  const limit = options.find((opt: any) => opt.name === 'limit')?.value || 10
-  const status = options.find((opt: any) => opt.name === 'status')?.value
-
-  let query = supabase
-    .from('orders')
-    .select('*')
-    .order('created_at', { ascending: false })
-    .limit(parseInt(limit))
-
-  if (status) {
-    query = query.eq('status', status)
-  }
-
-  const { data: orders, error } = await query
-
-  if (error) {
-    console.error('Error fetching orders:', error)
-    return new Response(JSON.stringify({
-      type: 4,
-      data: { content: 'Failed to fetch orders.' }
-    }), {
-      headers: { 'Content-Type': 'application/json' }
-    })
-  }
-
-  if (orders.length === 0) {
-    return new Response(JSON.stringify({
-      type: 4,
-      data: { content: 'No orders found.' }
-    }), {
-      headers: { 'Content-Type': 'application/json' }
-    })
-  }
-
-  const ordersList = orders.map(order => 
-    `• **${order.order_name}** - $${order.price} - ${order.status}\n  📋 Code: ${order.order_code || order.id}`
-  ).join('\n')
-
-  return new Response(JSON.stringify({
-    type: 4,
-    data: { content: `📋 **Recent Orders:**\n${ordersList}` }
-  }), {
-    headers: { 'Content-Type': 'application/json' }
-  })
-}
-
-async function handleListInvoices(supabase: any, body: any) {
-  const options = body.data.options || []
-  const discordUserId = options.find((opt: any) => opt.name === 'user')?.value
-
-  if (!discordUserId) {
-    return new Response(JSON.stringify({
-      type: 4,
-      data: { content: 'User Discord ID is required!' }
-    }), {
-      headers: { 'Content-Type': 'application/json' }
-    })
-  }
-
-  // Find user by Discord ID
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('id')
-    .eq('discord_id', discordUserId)
-    .single()
-
-  if (!profile) {
-    return new Response(JSON.stringify({
-      type: 4,
-      data: { content: 'User not found!' }
-    }), {
-      headers: { 'Content-Type': 'application/json' }
-    })
-  }
-
-  const { data: invoices, error } = await supabase
-    .from('invoices')
-    .select('*')
-    .eq('user_id', profile.id)
-    .order('created_at', { ascending: false })
-    .limit(5)
-
-  if (error) {
-    console.error('Error fetching invoices:', error)
-    return new Response(JSON.stringify({
-      type: 4,
-      data: { content: 'Failed to fetch invoices.' }
-    }), {
-      headers: { 'Content-Type': 'application/json' }
-    })
-  }
-
-  if (invoices.length === 0) {
-    return new Response(JSON.stringify({
-      type: 4,
-      data: { content: 'No invoices found for this user.' }
-    }), {
-      headers: { 'Content-Type': 'application/json' }
-    })
-  }
-
-  const invoicesList = invoices.map(invoice => 
-    `• **${invoice.invoice_number}** - $${invoice.amount} - ${invoice.status} (ID: ${invoice.id})`
-  ).join('\n')
-
-  return new Response(JSON.stringify({
-    type: 4,
-    data: { content: `🧾 **Recent Invoices:**\n${invoicesList}` }
-  }), {
-    headers: { 'Content-Type': 'application/json' }
-  })
 }

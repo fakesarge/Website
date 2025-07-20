@@ -100,6 +100,50 @@ export type Database = {
           },
         ]
       }
+      invoices: {
+        Row: {
+          amount: number
+          created_at: string
+          due_date: string | null
+          id: string
+          invoice_number: string
+          order_id: string | null
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          invoice_number: string
+          order_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          invoice_number?: string
+          order_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
           affiliate_referrer_id: string | null
@@ -170,6 +214,7 @@ export type Database = {
         Row: {
           avatar_url: string | null
           created_at: string | null
+          discord_id: string | null
           email: string | null
           full_name: string | null
           id: string
@@ -178,6 +223,7 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           created_at?: string | null
+          discord_id?: string | null
           email?: string | null
           full_name?: string | null
           id: string
@@ -186,6 +232,7 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           created_at?: string | null
+          discord_id?: string | null
           email?: string | null
           full_name?: string | null
           id?: string
