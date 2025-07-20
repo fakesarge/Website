@@ -59,6 +59,41 @@ export type Database = {
           },
         ]
       }
+      affiliate_clicks: {
+        Row: {
+          affiliate_id: string | null
+          clicked_at: string
+          id: string
+          ip_address: string | null
+          referrer: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          affiliate_id?: string | null
+          clicked_at?: string
+          id?: string
+          ip_address?: string | null
+          referrer?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          affiliate_id?: string | null
+          clicked_at?: string
+          id?: string
+          ip_address?: string | null
+          referrer?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_clicks_affiliate_id_fkey"
+            columns: ["affiliate_id"]
+            isOneToOne: false
+            referencedRelation: "affiliates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       affiliates: {
         Row: {
           commission_rate: number | null
@@ -269,14 +304,52 @@ export type Database = {
           },
         ]
       }
+      webhook_notifications: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          webhook_type: string
+          webhook_url: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          webhook_type?: string
+          webhook_url: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          webhook_type?: string
+          webhook_url?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      generate_affiliate_link: {
+        Args: { affiliate_code: string; base_url?: string }
+        Returns: string
+      }
       is_admin: {
         Args: { user_id: string }
         Returns: boolean
+      }
+      send_discord_webhook: {
+        Args: {
+          webhook_url: string
+          message_content: string
+          embed_title?: string
+          embed_description?: string
+          embed_color?: number
+        }
+        Returns: undefined
       }
     }
     Enums: {

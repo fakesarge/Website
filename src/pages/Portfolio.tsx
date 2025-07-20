@@ -89,7 +89,7 @@ const PortfolioItem = ({ item, onView, onPurchase }: any) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
-    className="bg-[#1B1B1B] rounded-lg overflow-hidden border border-white/10 group hover:border-primary/50 transition-all duration-300"
+    className="glass rounded-lg overflow-hidden border border-white/10 group hover:border-primary/50 transition-all duration-300 hover-scale"
   >
     <div className="relative aspect-video">
       <img
@@ -143,30 +143,31 @@ const Portfolio = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-background text-foreground">
       <Navigation />
       
       <main className="pt-20">
         <section className="container px-4 py-20">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-12"
-          >
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              Our <span className="text-gradient">Portfolio</span>
-            </h1>
-            <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-              Explore our collection of premium FiveM graphics, VFX animations, and customizable templates
-            </p>
-          </motion.div>
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center mb-12"
+            >
+              <h1 className="text-5xl md:text-6xl font-bold mb-6 animate-fade-in">
+                Our <span className="text-gradient">Portfolio</span>
+              </h1>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Explore our collection of premium FiveM graphics, VFX animations, and customizable templates
+              </p>
+            </motion.div>
 
-          <Tabs defaultValue="gfx" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 bg-[#1B1B1B] mb-8">
-              <TabsTrigger value="gfx">GFX Graphics</TabsTrigger>
-              <TabsTrigger value="vfx">VFX Animations</TabsTrigger>
-              <TabsTrigger value="templates">Templates</TabsTrigger>
-            </TabsList>
+            <Tabs defaultValue="gfx" className="w-full">
+              <TabsList className="grid w-full grid-cols-3 glass max-w-md mx-auto mb-8">
+                <TabsTrigger value="gfx">GFX Graphics</TabsTrigger>
+                <TabsTrigger value="vfx">VFX Animations</TabsTrigger>
+                <TabsTrigger value="templates">Templates</TabsTrigger>
+              </TabsList>
 
             <TabsContent value="gfx">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -206,7 +207,8 @@ const Portfolio = () => {
                 ))}
               </div>
             </TabsContent>
-          </Tabs>
+            </Tabs>
+          </div>
         </section>
       </main>
 
@@ -214,8 +216,8 @@ const Portfolio = () => {
 
       {/* Modal for viewing items */}
       {selectedItem && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onClick={closeModal}>
-          <div className="bg-[#1B1B1B] rounded-lg max-w-4xl w-full max-h-[80vh] overflow-auto" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 animate-fade-in" onClick={closeModal}>
+          <div className="glass rounded-lg max-w-4xl w-full max-h-[80vh] overflow-auto animate-scale-in" onClick={(e) => e.stopPropagation()}>
             <div className="p-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold">{selectedItem.title}</h2>

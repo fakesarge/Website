@@ -1,128 +1,99 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
-export const useOrderTracking = (orderCode: string) => {
+export const useOrders = () => {
   return useQuery({
-    queryKey: ['order', orderCode],
+    queryKey: ['orders'],
     queryFn: async () => {
-      if (!orderCode) return null;
-      
       const { data, error } = await supabase
         .from('orders')
         .select('*')
-        .or(`order_code.eq.${orderCode},id.eq.${orderCode}`)
-        .maybeSingle();
-      
-      if (error || !data) {
-        console.error('Error fetching order:', error);
-        return null;
-      }
-      
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
       return data;
     },
-    enabled: !!orderCode,
   });
 };
 
-export const useAffiliateLink = (affiliateCode: string) => {
+export const useRealtimeOrders = () => {
+  const queryClient = useQueryClient();
+
+  const subscription = supabase
+    .channel('orders_changes')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'orders'
+      },
+      () => {
+        // Refetch orders when any change occurs
+        queryClient.invalidateQueries({ queryKey: ['orders'] });
+      }
+    )
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(subscription);
+  };
+};
+
+export const useAffiliateLink = (code: string) => {
   return useQuery({
-    queryKey: ['affiliate', affiliateCode],
+    queryKey: ['affiliate-link', code],
     queryFn: async () => {
-      if (!affiliateCode) return null;
+      if (!code) return null;
       
       const { data, error } = await supabase
         .from('affiliates')
-        .select('*')
-        .eq('referral_code', affiliateCode)
+        .select('referral_code')
+        .eq('referral_code', code)
         .single();
-      
-      if (error) {
-        console.error('Error fetching affiliate:', error);
-        return null;
-      }
+
+      if (error) throw error;
       
       return {
-        ...data,
-        link: `https://74hrs.com/orders?ref=${affiliateCode}`
+        link: `${window.location.origin}?ref=${code}`,
+        code: data.referral_code
       };
     },
-    enabled: !!affiliateCode,
+    enabled: !!code,
   });
 };
 
-export const useClaimAffiliate = (orderCode: string, affiliateCode: string) => {
-  return useQuery({
-    queryKey: ['claim', orderCode, affiliateCode],
-    queryFn: async () => {
-      if (!orderCode || !affiliateCode) return null;
-      
-      // First get the order and affiliate IDs
-      const orderResponse = await supabase
-        .from('orders')
-        .select('id, price')
-        .or(`order_code.eq.${orderCode},id.eq.${orderCode}`)
-        .maybeSingle();
-      
-      if (orderResponse.error) {
-        console.error('Error fetching order:', orderResponse.error);
-        return { success: false, message: 'Order not found' };
-      }
-      
-      const affiliateResponse = await supabase
-        .from('affiliates')
-        .select('id, commission_rate')
-        .eq('referral_code', affiliateCode)
+export const useWebhookManagement = () => {
+  const queryClient = useQueryClient();
+
+  const addWebhook = useMutation({
+    mutationFn: async (webhookUrl: string) => {
+      const { data, error } = await supabase
+        .from('webhook_notifications')
+        .insert({ webhook_url: webhookUrl })
+        .select()
         .single();
-        
-      if (affiliateResponse.error) {
-        console.error('Error fetching affiliate:', affiliateResponse.error);
-        return { success: false, message: 'Affiliate not found' };
-      }
-      
-      const orderId = orderResponse.data.id;
-      const affiliateId = affiliateResponse.data.id;
-      const price = orderResponse.data.price;
-      const commissionRate = affiliateResponse.data.commission_rate || 10;
-      const commissionAmount = (price * commissionRate) / 100;
-      
-      // Check if claim already exists
-      const existingClaimResponse = await supabase
-        .from('affiliate_claims')
-        .select('*')
-        .eq('order_id', orderId)
-        .eq('affiliate_id', affiliateId);
-      
-      if (existingClaimResponse.data && existingClaimResponse.data.length > 0) {
-        return { 
-          success: true, 
-          message: 'This order has already been claimed',
-          existing: true,
-          claim: existingClaimResponse.data[0]
-        };
-      }
-      
-      // Create new claim
-      const claimResponse = await supabase
-        .from('affiliate_claims')
-        .insert([
-          { 
-            order_id: orderId, 
-            affiliate_id: affiliateId,
-            commission_amount: commissionAmount
-          }
-        ]);
-      
-      if (claimResponse.error) {
-        console.error('Error creating claim:', claimResponse.error);
-        return { success: false, message: 'Failed to create claim' };
-      }
-      
-      return { 
-        success: true, 
-        message: 'Claim created successfully',
-        amount: commissionAmount 
-      };
+
+      if (error) throw error;
+      return data;
     },
-    enabled: false, // This will be triggered manually
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['webhooks'] });
+    },
   });
+
+  const getWebhooks = useQuery({
+    queryKey: ['webhooks'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('webhook_notifications')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  return { addWebhook, getWebhooks };
 };
