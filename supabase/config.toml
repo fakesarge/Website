@@ -1,7 +1,1 @@
-project_id = "dzbpjvtrfnjzyzfhlmad"
-
-[functions.discord-bot]
-verify_jwt = false
-
-[functions.discord-webhook]
-verify_jwt = false
+project_id = "aqpjgfvsxxlwgcapxres"
