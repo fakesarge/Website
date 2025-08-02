@@ -23,10 +23,7 @@ const OrdersPage = () => {
   const { addWebhook, getWebhooks } = useWebhookManagement();
   
   // Set up real-time subscription
-  useEffect(() => {
-    const cleanup = useRealtimeOrders();
-    return cleanup;
-  }, []);
+  useRealtimeOrders();
 
   // Filter orders based on search
   const filteredOrders = orders?.filter(order => 

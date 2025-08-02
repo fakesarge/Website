@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 export const useOrders = () => {
@@ -19,39 +20,41 @@ export const useOrders = () => {
 export const useRealtimeOrders = () => {
   const queryClient = useQueryClient();
 
-  const subscription = supabase
-    .channel('orders_changes')
-    .on(
-      'postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'orders'
-      },
-      (payload) => {
-        console.log('Real-time order change:', payload);
-        
-        // Trigger webhook notification
-        if (payload.eventType !== 'UPDATE' || 
-            (payload.old && payload.new && payload.old.status !== payload.new.status)) {
-          supabase.functions.invoke('order-webhook-notifier', {
-            body: {
-              type: payload.eventType,
-              record: payload.new,
-              old_record: payload.old
-            }
-          }).catch(console.error);
+  useEffect(() => {
+    const subscription = supabase
+      .channel('orders_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'orders'
+        },
+        (payload) => {
+          console.log('Real-time order change:', payload);
+          
+          // Trigger webhook notification
+          if (payload.eventType !== 'UPDATE' || 
+              (payload.old && payload.new && payload.old.status !== payload.new.status)) {
+            supabase.functions.invoke('order-webhook-notifier', {
+              body: {
+                type: payload.eventType,
+                record: payload.new,
+                old_record: payload.old
+              }
+            }).catch(console.error);
+          }
+          
+          // Refetch orders when any change occurs
+          queryClient.invalidateQueries({ queryKey: ['orders'] });
         }
-        
-        // Refetch orders when any change occurs
-        queryClient.invalidateQueries({ queryKey: ['orders'] });
-      }
-    )
-    .subscribe();
+      )
+      .subscribe();
 
-  return () => {
-    supabase.removeChannel(subscription);
-  };
+    return () => {
+      supabase.removeChannel(subscription);
+    };
+  }, [queryClient]);
 };
 
 export const useCreateOrder = () => {
