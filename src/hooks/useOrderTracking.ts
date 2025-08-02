@@ -28,7 +28,21 @@ export const useRealtimeOrders = () => {
         schema: 'public',
         table: 'orders'
       },
-      () => {
+      (payload) => {
+        console.log('Real-time order change:', payload);
+        
+        // Trigger webhook notification
+        if (payload.eventType !== 'UPDATE' || 
+            (payload.old && payload.new && payload.old.status !== payload.new.status)) {
+          supabase.functions.invoke('order-webhook-notifier', {
+            body: {
+              type: payload.eventType,
+              record: payload.new,
+              old_record: payload.old
+            }
+          }).catch(console.error);
+        }
+        
         // Refetch orders when any change occurs
         queryClient.invalidateQueries({ queryKey: ['orders'] });
       }
@@ -38,6 +52,34 @@ export const useRealtimeOrders = () => {
   return () => {
     supabase.removeChannel(subscription);
   };
+};
+
+export const useCreateOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (orderData: {
+      order_name: string;
+      customer_email: string;
+      customer_name: string;
+      service: string;
+      category: string;
+      price: number;
+      description?: string;
+    }) => {
+      const { data, error } = await supabase
+        .from('orders')
+        .insert(orderData)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['orders'] });
+    },
+  });
 };
 
 export const useAffiliateLink = (code: string) => {
@@ -60,6 +102,29 @@ export const useAffiliateLink = (code: string) => {
       };
     },
     enabled: !!code,
+  });
+};
+
+export const useCreateAffiliate = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (affiliateData: {
+      referral_code: string;
+      affiliate_name: string;
+    }) => {
+      const { data, error } = await supabase
+        .from('affiliates')
+        .insert(affiliateData)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['affiliates'] });
+    },
   });
 };
 

@@ -14,7 +14,93 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      affiliates: {
+        Row: {
+          affiliate_name: string
+          created_at: string
+          id: string
+          referral_code: string
+        }
+        Insert: {
+          affiliate_name: string
+          created_at?: string
+          id?: string
+          referral_code: string
+        }
+        Update: {
+          affiliate_name?: string
+          created_at?: string
+          id?: string
+          referral_code?: string
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          category: string
+          created_at: string
+          customer_email: string
+          customer_name: string
+          description: string | null
+          id: string
+          order_code: string
+          order_name: string
+          price: number
+          service: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          customer_email: string
+          customer_name: string
+          description?: string | null
+          id?: string
+          order_code?: string
+          order_name: string
+          price: number
+          service: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          customer_email?: string
+          customer_name?: string
+          description?: string | null
+          id?: string
+          order_code?: string
+          order_name?: string
+          price?: number
+          service?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      webhook_notifications: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          webhook_url: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          webhook_url: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          webhook_url?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

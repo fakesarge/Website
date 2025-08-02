@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import { useOrders, useRealtimeOrders, useAffiliateLink, useWebhookManagement } from "@/hooks/useOrderTracking";
+import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
@@ -50,7 +51,7 @@ const OrdersPage = () => {
   };
 
   // Function to generate an affiliate link
-  const handleGenerateAffiliateLink = () => {
+  const handleGenerateAffiliateLink = async () => {
     if (!affiliateCode.trim()) {
       toast({
         title: "Affiliate code required",
@@ -58,6 +59,32 @@ const OrdersPage = () => {
         variant: "destructive"
       });
       return;
+    }
+
+    try {
+      // First try to create the affiliate if it doesn't exist
+      const { data: existing } = await supabase
+        .from('affiliates')
+        .select('referral_code')
+        .eq('referral_code', affiliateCode)
+        .single();
+
+      if (!existing) {
+        // Create new affiliate
+        await supabase
+          .from('affiliates')
+          .insert({
+            referral_code: affiliateCode,
+            affiliate_name: affiliateCode
+          });
+      }
+
+      toast({
+        title: "Affiliate link generated!",
+        description: "Your custom affiliate link is ready to use.",
+      });
+    } catch (error) {
+      console.error('Error creating affiliate:', error);
     }
   };
 
@@ -113,15 +140,26 @@ const OrdersPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground overflow-hidden">
       <Navigation />
+      
+      {/* Animated background */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-primary/5" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-secondary/10 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-accent/5 rounded-full blur-2xl animate-pulse delay-500" />
+      </div>
       
       <main className="pt-20 pb-20">
         <section className="container px-4 py-12">
           <div className="max-w-6xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 animate-fade-in">
-              <span className="text-gradient">74HRS</span> Orders
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 animate-fade-in text-center">
+              <span className="text-gradient">74HRS</span> Order Management
             </h1>
+            <p className="text-xl text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
+              Track orders, generate affiliate links, and manage Discord notifications in real-time.
+            </p>
             
             <Tabs defaultValue="track" className="w-full">
               <TabsList className="grid w-full max-w-lg grid-cols-3 mb-8 glass">
@@ -188,9 +226,7 @@ const OrdersPage = () => {
                         </div>
                         <div className="space-y-2">
                           <h4 className="text-sm font-medium text-muted-foreground">Delivery</h4>
-                          <p className="text-sm font-medium">
-                            {foundOrder.delivery_date ? new Date(foundOrder.delivery_date).toLocaleDateString() : 'TBD'}
-                          </p>
+                          <p className="text-sm font-medium">TBD</p>
                         </div>
                       </div>
                       
@@ -212,7 +248,7 @@ const OrdersPage = () => {
                           {foundOrder.status === "completed" && (
                             <div className="flex items-center gap-3">
                               <div className="h-3 w-3 rounded-full bg-primary"></div>
-                              <span className="text-sm">Completed - {foundOrder.delivery_date ? new Date(foundOrder.delivery_date).toLocaleDateString() : 'N/A'}</span>
+                              <span className="text-sm">Completed - {new Date(foundOrder.updated_at).toLocaleDateString()}</span>
                             </div>
                           )}
                         </div>
