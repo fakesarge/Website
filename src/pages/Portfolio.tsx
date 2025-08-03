@@ -1,9 +1,8 @@
-
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { Play, ShoppingCart, Eye } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
+import { Play, ShoppingCart, Eye, X } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "sonner";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
@@ -63,7 +62,7 @@ const portfolioItems = {
       title: "Premium Loading Screen Template",
       type: "template",
       thumbnail: "/lovable-uploads/86329743-ee49-4f2e-96f7-50508436273d.png",
-      price: "$15",
+      price: 15,
       description: "Customizable Blender template for loading screens"
     },
     {
@@ -71,7 +70,7 @@ const portfolioItems = {
       title: "Logo Animation Template",
       type: "template",
       thumbnail: "/lovable-uploads/7335619d-58a9-41ad-a233-f7826f56f3e9.png", 
-      price: "$25",
+      price: 25,
       description: "Animated logo template with multiple variations"
     },
     {
@@ -79,50 +78,128 @@ const portfolioItems = {
       title: "Complete Branding Kit",
       type: "template",
       thumbnail: "/lovable-uploads/79f2b901-8a4e-42a5-939f-fae0828e0aef.png",
-      price: "$45", 
+      price: 45, 
       description: "Full branding template package for servers"
     }
   ]
 };
 
-const PortfolioItem = ({ item, onView, onPurchase }: any) => (
+const PortfolioItem = ({ item, onView, onPurchase }: {
+  item: any;
+  onView: (item: any) => void;
+  onPurchase: (item: any) => void;
+}) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    className="glass rounded-lg overflow-hidden border border-white/10 group hover:border-primary/50 transition-all duration-300 hover-scale"
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    whileHover={{ 
+      y: -8,
+      scale: 1.02,
+      transition: { duration: 0.3, ease: "easeOut" }
+    }}
+    className="glass rounded-xl overflow-hidden group cursor-pointer relative"
   >
-    <div className="relative aspect-video">
-      <img
+    {/* Hover Glow Effect */}
+    <motion.div
+      className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+      initial={false}
+    />
+    
+    {/* Floating Particles on Hover */}
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {[...Array(4)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-1 h-1 bg-primary/40 rounded-full opacity-0 group-hover:opacity-100"
+          style={{
+            left: `${20 + i * 20}%`,
+            top: `${20 + i * 15}%`,
+          }}
+          animate={{
+            y: [0, -20, 0],
+            scale: [1, 1.5, 1],
+            opacity: [0, 1, 0],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            delay: i * 0.3,
+          }}
+        />
+      ))}
+    </div>
+
+    <div className="aspect-video relative overflow-hidden">
+      <motion.img
         src={item.thumbnail}
         alt={item.title}
-        className="w-full h-full object-cover"
+        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+        whileHover={{ filter: "brightness(1.1)" }}
       />
-      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
-        <Button
-          size="sm"
-          variant="outline"
+      
+      {/* Overlay gradient */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+    </div>
+    
+    <div className="p-6 relative z-10">
+      <motion.h3 
+        className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors duration-300"
+        whileHover={{ x: 5 }}
+      >
+        {item.title}
+      </motion.h3>
+      <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
+        {item.description}
+      </p>
+      
+      <div className="flex gap-3">
+        <motion.button
           onClick={() => onView(item)}
-          className="glass"
+          whileHover={{ scale: 1.05, x: 2 }}
+          whileTap={{ scale: 0.95 }}
+          className="flex-1 glass hover:glass-hover px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer"
         >
-          {item.type === "video" ? <Play className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
-          View
-        </Button>
-        {item.type === "template" && (
-          <Button
-            size="sm"
+          {item.type === 'video' ? (
+            <Play className="w-4 h-4" />
+          ) : (
+            <Eye className="w-4 h-4" />
+          )}
+          <span className="text-sm font-medium">View</span>
+        </motion.button>
+        
+        {item.price && (
+          <motion.button
             onClick={() => onPurchase(item)}
-            className="button-gradient"
+            whileHover={{ 
+              scale: 1.05,
+              backgroundColor: "hsl(var(--primary))",
+              color: "hsl(var(--primary-foreground))",
+              transition: { duration: 0.2 }
+            }}
+            whileTap={{ scale: 0.95 }}
+            className="flex-1 button-gradient px-4 py-2 rounded-lg flex items-center justify-center gap-2 cursor-pointer"
           >
-            <ShoppingCart className="w-4 h-4 mr-2" />
-            {item.price}
-          </Button>
+            <ShoppingCart className="w-4 h-4" />
+            <span className="text-sm font-medium">${item.price}</span>
+          </motion.button>
         )}
       </div>
     </div>
-    <div className="p-4">
-      <h3 className="font-semibold mb-2">{item.title}</h3>
-      <p className="text-sm text-gray-400">{item.description}</p>
-    </div>
+
+    {/* Corner decoration */}
+    <motion.div
+      className="absolute top-2 right-2 w-2 h-2 bg-primary/60 rounded-full opacity-0 group-hover:opacity-100"
+      animate={{
+        scale: [1, 1.5, 1],
+        opacity: [0.6, 1, 0.6],
+      }}
+      transition={{
+        duration: 2,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    />
   </motion.div>
 );
 
@@ -134,134 +211,277 @@ const Portfolio = () => {
   };
 
   const handlePurchase = (item: any) => {
-    console.log("Purchase:", item.title);
-    // TODO: Integrate with payment system
-  };
-
-  const closeModal = () => {
-    setSelectedItem(null);
+    toast.success(`Added ${item.title} to cart!`);
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background cursor-none">
       <Navigation />
       
+      {/* Animated Background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-primary/5" />
+        {[...Array(12)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-primary/20 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -100, 0],
+              opacity: [0, 0.8, 0],
+              scale: [1, 1.5, 1],
+            }}
+            transition={{
+              duration: 4 + Math.random() * 3,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+      </div>
+
       <main className="pt-20">
+        {/* Hero Section */}
         <section className="container px-4 py-20">
-          <div className="max-w-7xl mx-auto">
-            <motion.div
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="max-w-4xl mx-auto text-center"
+          >
+            <motion.h1 
+              className="text-5xl md:text-7xl font-bold mb-6"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              Creative <span className="text-gradient">Portfolio</span>
+            </motion.h1>
+            <motion.p 
+              className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-center mb-12"
+              transition={{ duration: 0.6, delay: 0.4 }}
             >
-              <h1 className="text-5xl md:text-6xl font-bold mb-6 animate-fade-in">
-                Our <span className="text-gradient">Portfolio</span>
-              </h1>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Explore our collection of premium FiveM graphics, VFX animations, and customizable templates
-              </p>
-            </motion.div>
+              Explore our collection of premium VFX graphics, cinematic animations, and custom templates designed for gaming communities.
+            </motion.p>
+            
+            {/* Decorative elements */}
+            <div className="relative mt-8">
+              {[...Array(3)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute w-2 h-2 bg-primary/40 rounded-full"
+                  style={{
+                    left: `${40 + i * 10}%`,
+                    top: `${20 + i * 5}px`,
+                  }}
+                  animate={{
+                    scale: [1, 1.5, 1],
+                    opacity: [0.4, 1, 0.4],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    delay: i * 0.5,
+                    ease: "easeInOut",
+                  }}
+                />
+              ))}
+            </div>
+          </motion.div>
+        </section>
 
+        {/* Portfolio Content */}
+        <section className="container px-4 pb-20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
             <Tabs defaultValue="gfx" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 glass max-w-md mx-auto mb-8">
-                <TabsTrigger value="gfx">GFX Graphics</TabsTrigger>
-                <TabsTrigger value="vfx">VFX Animations</TabsTrigger>
-                <TabsTrigger value="templates">Templates</TabsTrigger>
-              </TabsList>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.7 }}
+                className="flex justify-center mb-12"
+              >
+                <TabsList className="glass p-2 backdrop-blur-xl border border-white/10">
+                  {[
+                    { value: "gfx", label: "GFX Graphics" },
+                    { value: "vfx", label: "VFX Animations" },
+                    { value: "templates", label: "Templates" }
+                  ].map((tab, index) => (
+                    <motion.div key={tab.value} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                      <TabsTrigger 
+                        value={tab.value}
+                        className="px-6 py-3 cursor-pointer data-[state=active]:glass data-[state=active]:text-primary data-[state=active]:shadow-lg transition-all duration-300"
+                      >
+                        <motion.span
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.8 + index * 0.1 }}
+                        >
+                          {tab.label}
+                        </motion.span>
+                      </TabsTrigger>
+                    </motion.div>
+                  ))}
+                </TabsList>
+              </motion.div>
 
-            <TabsContent value="gfx">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {portfolioItems.gfx.map((item) => (
-                  <PortfolioItem
-                    key={item.id}
-                    item={item}
-                    onView={handleView}
-                    onPurchase={handlePurchase}
-                  />
-                ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="vfx">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {portfolioItems.vfx.map((item) => (
-                  <PortfolioItem
-                    key={item.id}
-                    item={item}
-                    onView={handleView}
-                    onPurchase={handlePurchase}
-                  />
-                ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="templates">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {portfolioItems.templates.map((item) => (
-                  <PortfolioItem
-                    key={item.id}
-                    item={item}
-                    onView={handleView}
-                    onPurchase={handlePurchase}
-                  />
-                ))}
-              </div>
-            </TabsContent>
+              {/* Tab Contents */}
+              {[
+                { value: "gfx", items: portfolioItems.gfx },
+                { value: "vfx", items: portfolioItems.vfx },
+                { value: "templates", items: portfolioItems.templates }
+              ].map((tab, tabIndex) => (
+                <TabsContent key={tab.value} value={tab.value} className="mt-0">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                  >
+                    {tab.items.map((item, index) => (
+                      <motion.div
+                        key={item.id}
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ 
+                          duration: 0.5, 
+                          delay: 0.1 * index,
+                          ease: "easeOut"
+                        }}
+                      >
+                        <PortfolioItem
+                          item={item}
+                          onView={handleView}
+                          onPurchase={handlePurchase}
+                        />
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                </TabsContent>
+              ))}
             </Tabs>
-          </div>
+          </motion.div>
         </section>
       </main>
 
       <Footer />
 
-      {/* Modal for viewing items */}
-      {selectedItem && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 animate-fade-in" onClick={closeModal}>
-          <div className="glass rounded-lg max-w-4xl w-full max-h-[80vh] overflow-auto animate-scale-in" onClick={(e) => e.stopPropagation()}>
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold">{selectedItem.title}</h2>
-                <Button variant="outline" onClick={closeModal}>
-                  ×
-                </Button>
-              </div>
-              
-              {selectedItem.type === "video" ? (
-                <div className="aspect-video mb-4">
-                  <video
-                    controls
-                    className="w-full h-full rounded-lg"
-                    poster={selectedItem.thumbnail}
-                  >
-                    <source src={selectedItem.videoUrl} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-              ) : (
-                <div className="aspect-video mb-4">
-                  <img
-                    src={selectedItem.thumbnail}
-                    alt={selectedItem.title}
-                    className="w-full h-full object-cover rounded-lg"
-                  />
-                </div>
-              )}
-              
-              <p className="text-gray-400 mb-4">{selectedItem.description}</p>
-              
-              {selectedItem.type === "template" && (
-                <Button
-                  onClick={() => handlePurchase(selectedItem)}
-                  className="button-gradient"
+      {/* Enhanced Modal */}
+      <AnimatePresence>
+        {selectedItem && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-lg flex items-center justify-center p-4 cursor-auto"
+            onClick={() => setSelectedItem(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 50 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="glass rounded-2xl p-8 max-w-4xl w-full max-h-[90vh] overflow-auto relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close button */}
+              <motion.button
+                whileHover={{ scale: 1.1, rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setSelectedItem(null)}
+                className="absolute top-4 right-4 w-8 h-8 glass hover:glass-hover rounded-full flex items-center justify-center cursor-pointer z-10"
+              >
+                <X className="w-4 h-4" />
+              </motion.button>
+
+              {/* Content */}
+              <div className="space-y-6">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
                 >
-                  <ShoppingCart className="w-4 h-4 mr-2" />
-                  Purchase for {selectedItem.price}
-                </Button>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+                  <h2 className="text-2xl font-bold text-gradient mb-2">{selectedItem.title}</h2>
+                  <p className="text-muted-foreground">{selectedItem.description}</p>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="aspect-video rounded-xl overflow-hidden glass"
+                >
+                  {selectedItem.videoUrl ? (
+                    <video
+                      src={selectedItem.videoUrl}
+                      controls
+                      autoPlay
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <img
+                      src={selectedItem.thumbnail}
+                      alt={selectedItem.title}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
+                </motion.div>
+
+                {selectedItem.price && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="flex justify-center"
+                  >
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handlePurchase(selectedItem)}
+                      className="button-gradient px-8 py-3 rounded-xl flex items-center gap-3 cursor-pointer"
+                    >
+                      <ShoppingCart className="w-5 h-5" />
+                      <span className="font-medium">Purchase for ${selectedItem.price}</span>
+                    </motion.button>
+                  </motion.div>
+                )}
+              </div>
+
+              {/* Background decoration */}
+              <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl">
+                {[...Array(6)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute w-1 h-1 bg-primary/30 rounded-full"
+                    style={{
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
+                    }}
+                    animate={{
+                      scale: [0, 1.5, 0],
+                      opacity: [0, 1, 0],
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      delay: Math.random() * 2,
+                    }}
+                  />
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
