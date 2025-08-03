@@ -3,6 +3,7 @@ import { ExternalLink, Users, Award, Star, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { AffiliateCreator } from "@/components/AffiliateCreator";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
@@ -214,9 +215,58 @@ const PartnersPage = () => {
           </div>
         </section>
 
-        {/* Call to Action */}
+        {/* Affiliate Section */}
         <section className="container px-4 py-20">
           <div className="max-w-4xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                Affiliate <span className="text-gradient">Program</span>
+              </h2>
+              <p className="text-xl text-muted-foreground">
+                Earn commissions by promoting our premium VFX content
+              </p>
+            </motion.div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+              {[
+                {
+                  icon: <TrendingUp className="w-8 h-8" />,
+                  title: "30% Commission",
+                  description: "Earn up to 30% on every sale you refer"
+                },
+                {
+                  icon: <Users className="w-8 h-8" />,
+                  title: "Growing Network",
+                  description: "Join thousands of creators already earning"
+                },
+                {
+                  icon: <Star className="w-8 h-8" />,
+                  title: "Real-time Tracking",
+                  description: "Monitor your referrals instantly"
+                }
+              ].map((benefit, index) => (
+                <motion.div
+                  key={benefit.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="glass p-6 rounded-xl text-center space-y-4 cursor-pointer hover:glass-hover"
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <div className="text-primary flex justify-center">
+                    {benefit.icon}
+                  </div>
+                  <h3 className="font-semibold text-lg">{benefit.title}</h3>
+                  <p className="text-muted-foreground text-sm">{benefit.description}</p>
+                </motion.div>
+              ))}
+            </div>
+
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -224,23 +274,40 @@ const PartnersPage = () => {
             >
               <Card className="glass border-primary/20 text-center">
                 <CardContent className="pt-8 pb-8">
-                  <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                    Ready to Create <span className="text-gradient">Magic</span> Together?
-                  </h2>
-                  <p className="text-xl text-muted-foreground mb-8">
-                    Join our exclusive network of industry partners and bring your vision to life.
+                  <h3 className="text-2xl md:text-3xl font-bold mb-4">
+                    Create Your Affiliate Link
+                  </h3>
+                  <p className="text-lg text-muted-foreground mb-8">
+                    Generate your custom referral link in seconds and start earning today
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Button className="button-gradient text-lg px-8 py-3">
-                      Start Partnership
-                      <ExternalLink className="ml-2 h-5 w-5" />
-                    </Button>
-                    <Button variant="outline" className="text-lg px-8 py-3">
-                      View Our Work
-                    </Button>
-                  </div>
+                  <Button 
+                    className="button-gradient text-lg px-8 py-3 cursor-pointer"
+                    onClick={() => {
+                      const affiliateSection = document.querySelector('#affiliate-creator');
+                      if (affiliateSection) {
+                        affiliateSection.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                  >
+                    Create Affiliate Link
+                    <ExternalLink className="ml-2 h-5 w-5" />
+                  </Button>
                 </CardContent>
               </Card>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Affiliate Creator */}
+        <section id="affiliate-creator" className="container px-4 py-20">
+          <div className="max-w-4xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <AffiliateCreator />
             </motion.div>
           </div>
         </section>
