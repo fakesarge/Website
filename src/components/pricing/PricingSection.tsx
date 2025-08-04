@@ -38,7 +38,10 @@ const PricingTier = ({
           </li>
         ))}
       </ul>
-      <Button className="button-gradient w-full">
+      <Button className="button-gradient w-full interactive-element" onClick={() => {
+        const event = new CustomEvent('openPriceEstimator');
+        window.dispatchEvent(event);
+      }}>
         Order Package
       </Button>
     </div>

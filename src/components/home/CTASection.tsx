@@ -30,8 +30,11 @@ const CTASection = () => {
         <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
           Join thousands of server owners who have transformed their communities with our premium VFX graphics and Blender animations.
         </p>
-        <Button size="lg" className="button-gradient" onClick={handleShopNowClick}>
-          Shop Graphics Now
+        <Button size="lg" className="button-gradient interactive-element" onClick={() => {
+          const event = new CustomEvent('openPriceEstimator');
+          window.dispatchEvent(event);
+        }}>
+          Order Now
           <ArrowRight className="ml-2 w-4 h-4" />
         </Button>
       </motion.div>

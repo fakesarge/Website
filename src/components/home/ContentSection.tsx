@@ -1,27 +1,29 @@
 
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 import { FeaturesSection } from "@/components/features/FeaturesSection";
 import { PricingSection } from "@/components/pricing/PricingSection";
 import LogoCarousel from "@/components/LogoCarousel";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import CTASection from "./CTASection";
 import Footer from "@/components/Footer";
+import PriceEstimator from "@/components/PriceEstimator";
 
 interface ContentSectionProps {
   contentRef: React.RefObject<HTMLDivElement>;
 }
 
 const ContentSection = ({ contentRef }: ContentSectionProps) => {
-  const handleBrowseGraphicsClick = () => {
-    window.open('https://discord.gg/VFX', '_blank');
-  };
+  const [showPriceEstimator, setShowPriceEstimator] = useState(false);
 
-  const handleViewPortfolioClick = () => {
-    // This will be handled by the router
-    window.location.href = '/portfolio';
-  };
+  useEffect(() => {
+    const handleOpenEstimator = () => {
+      setShowPriceEstimator(true);
+    };
+
+    window.addEventListener('openPriceEstimator', handleOpenEstimator);
+    return () => window.removeEventListener('openPriceEstimator', handleOpenEstimator);
+  }, []);
 
   return (
     <motion.div 
@@ -59,6 +61,12 @@ const ContentSection = ({ contentRef }: ContentSectionProps) => {
       <div className="bg-black">
         <Footer />
       </div>
+      
+      {/* Price Estimator Modal */}
+      <PriceEstimator 
+        isOpen={showPriceEstimator} 
+        onClose={() => setShowPriceEstimator(false)} 
+      />
     </motion.div>
   );
 };

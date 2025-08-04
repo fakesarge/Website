@@ -7,9 +7,9 @@ const Footer = () => {
   };
 
   return (
-    <footer className="w-full py-12 mt-20">
+    <footer className="w-full py-12 mt-20 relative">
       <div className="container px-4">
-        <div className="glass glass-hover rounded-xl p-8">
+        <div className="glass glass-hover rounded-xl p-8 interactive-element">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="space-y-4">
               <h3 className="font-medium text-lg">74HRS</h3>
