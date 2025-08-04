@@ -1,5 +1,4 @@
-
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { useRef } from "react";
 
@@ -10,9 +9,14 @@ interface VideoHeroProps {
 const VideoHero = ({ scrollToContent }: VideoHeroProps) => {
   const videoSectionRef = useRef<HTMLDivElement>(null);
 
+  // Hooks for scroll progress and opacity transformation
+  const { scrollY } = useScroll();
+  const opacity = useTransform(scrollY, [0, 200], [1, 0]); // Adjust 300 as needed
+
   return (
-    <div 
+    <motion.div
       ref={videoSectionRef}
+      style={{ opacity }} // fade out on scroll
       className="relative h-screen w-full overflow-hidden"
     >
       <div className="absolute inset-0 w-full h-full">
@@ -28,17 +32,22 @@ const VideoHero = ({ scrollToContent }: VideoHeroProps) => {
           Your browser does not support the video tag.
         </video>
       </div>
-      
-      <motion.div 
+
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.5, duration: 1.5, repeat: Infinity, repeatType: "reverse" }}
+        transition={{
+          delay: .5,
+          duration: 2,
+          repeat: Infinity,
+          repeatType: "reverse",
+        }}
         className="absolute bottom-8 left-1/2 transform -translate-x-1/2 cursor-pointer z-10"
         onClick={scrollToContent}
       >
         <ChevronDown className="w-10 h-10 text-white/80" />
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 

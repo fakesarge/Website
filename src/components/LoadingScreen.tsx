@@ -19,17 +19,11 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
 
   return (
     <div className={`loading-overlay ${!isVisible ? 'fade-out' : ''}`}>
-      <div className="loading-logo opium-glow">
+      <div className="loading-logo ">
         <img
           src="/logo.png"
           alt="74hrs Logo"
           className="h-24 w-auto"
-          onError={(e) => {
-            // Fallback if logo.png doesn't exist
-            const target = e.target as HTMLImageElement;
-            target.style.display = 'none';
-            target.parentElement!.innerHTML = '<div class="text-4xl font-bold text-primary">74hrs</div>';
-          }}
         />
       </div>
     </div>

@@ -72,7 +72,7 @@ const NotFoundPage = () => {
                   transition={{ delay: 0.5, duration: 1 }}
                 >
                   <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                    <TextGenerateEffect words="REALITY.EXE NOT FOUND" className="text-gradient" />
+                    <TextGenerateEffect words="PAGE NOT FOUND" className="text-gradient" />
                   </h2>
                   <p className="text-xl text-muted-foreground mb-6">
                     The page you're looking for has been lost in the digital void. 
@@ -105,7 +105,7 @@ const NotFoundPage = () => {
               transition={{ delay: 1, duration: 0.8 }}
               className="text-sm text-muted-foreground"
             >
-              <p>Lost in cyberspace? Try these coordinates:</p>
+              <p>Lost in space? Try these coordinates:</p>
               <div className="flex flex-wrap justify-center gap-2 mt-2">
                 <Button 
                   variant="link" 
