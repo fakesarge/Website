@@ -345,7 +345,7 @@ const Portfolio = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
                   >
                     {tab.items.map((item, index) => (
                       <motion.div
@@ -357,12 +357,40 @@ const Portfolio = () => {
                           delay: 0.1 * index,
                           ease: "easeOut"
                         }}
+                        className="group"
                       >
-                        <PortfolioItem
-                          item={item}
-                          onView={handleView}
-                          onPurchase={handlePurchase}
-                        />
+                        <div className="glass border border-white/10 rounded-xl overflow-hidden hover:border-primary/30 transition-all duration-300 hover:scale-[1.02]">
+                          <div className="aspect-video relative overflow-hidden">
+                            <img 
+                              src={item.thumbnail} 
+                              alt={item.title}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                            <div className="absolute bottom-0 left-0 right-0 p-3">
+                              <h3 className="text-white font-semibold text-sm mb-1">{item.title}</h3>
+                              <p className="text-white/80 text-xs">{item.description}</p>
+                            </div>
+                          </div>
+                          <div className="p-3 space-y-2">
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleView(item)}
+                                className="flex-1 px-3 py-2 bg-primary/10 border border-primary/30 text-primary rounded-lg hover:bg-primary/20 transition-colors text-xs font-medium"
+                              >
+                                View
+                              </button>
+                              {(item as any).price && (
+                                <button
+                                  onClick={() => handlePurchase(item)}
+                                  className="flex-1 px-3 py-2 button-gradient text-white rounded-lg hover:scale-105 transition-transform text-xs font-medium"
+                                >
+                                  ${(item as any).price}
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
                       </motion.div>
                     ))}
                   </motion.div>

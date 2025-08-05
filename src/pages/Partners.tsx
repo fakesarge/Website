@@ -131,7 +131,7 @@ const PartnersPage = () => {
               </p>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {partners.map((partner, index) => (
                 <motion.div
                   key={partner.name}
@@ -139,35 +139,51 @@ const PartnersPage = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.1 * index }}
                 >
-                  <Card className="glass border-white/10 hover:border-primary/30 transition-all duration-300 group">
-                    <CardHeader className="text-center">
-                      <div className="mx-auto mb-4 w-24 h-24 rounded-full bg-background/80 flex items-center justify-center border border-white/20">
-                        <img 
-                          src={partner.logo} 
-                          alt={partner.name}
-                          className="w-16 h-16 object-contain"
-                        />
-                      </div>
-                      <CardTitle className="text-xl group-hover:text-primary transition-colors">
-                        {partner.name}
-                      </CardTitle>
-                      <CardDescription>{partner.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="flex justify-center">
+                  <Card className="glass border-white/10 hover:border-primary/30 transition-all duration-300 group overflow-hidden">
+                    {/* Visual Banner */}
+                    <div className="aspect-video relative overflow-hidden bg-gradient-to-br from-primary/20 to-secondary/20">
+                      <img 
+                        src={partner.logo} 
+                        alt={partner.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                      <div className="absolute bottom-4 left-4">
                         <Badge className={`${getTierColor(partner.tier)} text-white px-3 py-1`}>
                           {partner.tier} Partner
                         </Badge>
                       </div>
-                      <div className="grid grid-cols-2 gap-4 text-center">
+                    </div>
+                    
+                    {/* Label Section */}
+                    <CardContent className="p-6">
+                      <div className="space-y-4">
                         <div>
-                          <p className="text-2xl font-bold text-primary">{partner.projects}</p>
-                          <p className="text-sm text-muted-foreground">Projects</p>
+                          <h3 className="text-xl font-bold group-hover:text-primary transition-colors">
+                            {partner.name}
+                          </h3>
+                          <p className="text-muted-foreground text-sm">{partner.description}</p>
                         </div>
-                        <div>
-                          <p className="text-sm font-medium">{partner.specialty}</p>
-                          <p className="text-xs text-muted-foreground">Specialty</p>
+                        
+                        <div className="grid grid-cols-2 gap-4 text-center">
+                          <div>
+                            <p className="text-2xl font-bold text-primary">{partner.projects}</p>
+                            <p className="text-xs text-muted-foreground">Projects</p>
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium">{partner.specialty}</p>
+                            <p className="text-xs text-muted-foreground">Specialty</p>
+                          </div>
                         </div>
+                        
+                        {/* Action Button */}
+                        <Button 
+                          className="w-full button-gradient hover:scale-105 transition-transform"
+                          onClick={() => window.open('#', '_blank')}
+                        >
+                          Visit Website
+                          <ExternalLink className="ml-2 h-4 w-4" />
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
