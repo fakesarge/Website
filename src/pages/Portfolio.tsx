@@ -215,7 +215,7 @@ const Portfolio = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background cursor-none">
+    <div className="min-h-screen bg-background">
       <Navigation />
       
       {/* Animated Background */}

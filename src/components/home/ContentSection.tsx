@@ -2,12 +2,12 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { FeaturesSection } from "@/components/features/FeaturesSection";
-import { PricingSection } from "@/components/pricing/PricingSection";
 import LogoCarousel from "@/components/LogoCarousel";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import CTASection from "./CTASection";
 import Footer from "@/components/Footer";
 import PriceEstimator from "@/components/PriceEstimator";
+import StatsCounter from "@/components/StatsCounter";
 
 interface ContentSectionProps {
   contentRef: React.RefObject<HTMLDivElement>;
@@ -42,11 +42,33 @@ const ContentSection = ({ contentRef }: ContentSectionProps) => {
       {/* Logo Carousel */}
       <LogoCarousel />
 
+      {/* Stats Counter */}
+      <div className="bg-black">
+        <StatsCounter />
+      </div>
 
-
-      {/* Pricing Section */}
+      {/* Price Calculator Section */}
       <div id="pricing" className="bg-black">
-        <PricingSection />
+        <section className="container px-4 py-24">
+          <div className="max-w-4xl mx-auto text-center mb-12">
+            <h2 className="text-5xl md:text-6xl font-normal mb-6">
+              Get Your{" "}
+              <span className="text-gradient font-medium">Custom Quote</span>
+            </h2>
+            <p className="text-lg text-gray-400 mb-8">
+              Use our price calculator to get an instant quote for your project
+            </p>
+            <button 
+              onClick={() => {
+                const event = new CustomEvent('openPriceEstimator');
+                window.dispatchEvent(event);
+              }}
+              className="button-gradient text-lg px-8 py-3 rounded-lg hover:scale-105 transition-transform duration-200"
+            >
+              Calculate Price
+            </button>
+          </div>
+        </section>
       </div>
 
       {/* Testimonials Section */}

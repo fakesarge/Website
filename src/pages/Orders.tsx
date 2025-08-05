@@ -1,123 +1,38 @@
-import { useState, useEffect } from "react";
-import { Search, ExternalLink, Copy, Loader2, Webhook, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import { toast } from "@/hooks/use-toast";
-import { useOrders, useRealtimeOrders, useAffiliateLink, useWebhookManagement } from "@/hooks/useOrderTracking";
-import { supabase } from "@/integrations/supabase/client";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Search, Package } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { useOrders, useRealtimeOrders } from '@/hooks/useOrderTracking';
+import { useToast } from '@/hooks/use-toast';
+import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
+import AffiliateBalance from '@/components/AffiliateBalance';
 
 const OrdersPage = () => {
-  const [orderSearchQuery, setOrderSearchQuery] = useState("");
-  const [affiliateCode, setAffiliateCode] = useState("");
-  const [webhookUrl, setWebhookUrl] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showAffiliateBalance, setShowAffiliateBalance] = useState(false);
   
-  // Real-time orders
-  const { data: orders, isLoading: isOrdersLoading } = useOrders();
-  const { data: affiliateData, isLoading: isAffiliateLoading } = useAffiliateLink(affiliateCode);
-  const { addWebhook, getWebhooks } = useWebhookManagement();
-  
+  const { data: orders, isLoading } = useOrders();
+  const { toast } = useToast();
+
   // Set up real-time subscription
   useRealtimeOrders();
 
-  // Filter orders based on search
   const filteredOrders = orders?.filter(order => 
-    order.order_code?.toLowerCase().includes(orderSearchQuery.toLowerCase()) ||
-    order.order_name?.toLowerCase().includes(orderSearchQuery.toLowerCase()) ||
-    order.id?.toLowerCase().includes(orderSearchQuery.toLowerCase())
+    order.order_code?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    order.order_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    order.customer_email?.toLowerCase().includes(searchTerm.toLowerCase())
   ) || [];
 
-  const foundOrder = orderSearchQuery ? filteredOrders[0] : null;
-
-  // Function to handle order tracking search
-  const handleOrderSearch = (e: React.FormEvent) => {
+  const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!orderSearchQuery.trim()) {
+    if (!searchTerm.trim()) {
       toast({
-        title: "Order ID required",
-        description: "Please enter an order ID to track.",
-        variant: "destructive"
-      });
-      return;
-    }
-  };
-
-  // Function to generate an affiliate link
-  const handleGenerateAffiliateLink = async () => {
-    if (!affiliateCode.trim()) {
-      toast({
-        title: "Affiliate code required",
-        description: "Please enter an affiliate code to generate a link.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    try {
-      // First try to create the affiliate if it doesn't exist
-      const { data: existing } = await supabase
-        .from('affiliates')
-        .select('referral_code')
-        .eq('referral_code', affiliateCode)
-        .single();
-
-      if (!existing) {
-        // Create new affiliate
-        await supabase
-          .from('affiliates')
-          .insert({
-            referral_code: affiliateCode,
-            affiliate_name: affiliateCode
-          });
-      }
-
-      toast({
-        title: "Affiliate link generated!",
-        description: "Your custom affiliate link is ready to use.",
-      });
-    } catch (error) {
-      console.error('Error creating affiliate:', error);
-    }
-  };
-
-  // Function to copy the affiliate link to clipboard
-  const copyToClipboard = () => {
-    if (affiliateData?.link) {
-      navigator.clipboard.writeText(affiliateData.link);
-      toast({
-        title: "Copied to clipboard",
-        description: "Your affiliate link has been copied to your clipboard.",
-      });
-    }
-  };
-
-  // Function to add webhook
-  const handleAddWebhook = async () => {
-    if (!webhookUrl.trim()) {
-      toast({
-        title: "Webhook URL required",
-        description: "Please enter a Discord webhook URL.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    try {
-      await addWebhook.mutateAsync(webhookUrl);
-      setWebhookUrl("");
-      toast({
-        title: "Webhook added",
-        description: "Discord webhook has been added successfully.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to add webhook.",
+        title: "Search term required",
+        description: "Please enter an order code, name, or email to search.",
         variant: "destructive"
       });
     }
@@ -137,7 +52,7 @@ const OrdersPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-hidden">
+    <div className="min-h-screen bg-background text-foreground">
       <Navigation />
       
       {/* Animated background */}
@@ -145,352 +60,176 @@ const OrdersPage = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-primary/5" />
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-secondary/10 rounded-full blur-3xl animate-pulse delay-1000" />
-        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-accent/5 rounded-full blur-2xl animate-pulse delay-500" />
       </div>
-      
+
       <main className="pt-20 pb-20">
+        {/* Hero Section */}
+        <section className="container px-4 py-20">
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <h1 className="text-5xl md:text-7xl font-bold mb-6">
+                Order <span className="text-gradient">Tracking</span>
+              </h1>
+              <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+                Track your orders in real-time and manage your account.
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Search Section */}
+        <section className="container px-4 py-12">
+          <div className="max-w-2xl mx-auto">
+            <Card className="glass border-white/10">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Search className="h-5 w-5" />
+                  Search Orders
+                </CardTitle>
+                <CardDescription>Enter order code, name, or email to find your order</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSearch} className="flex gap-3">
+                  <Input
+                    type="text"
+                    placeholder="Search by order code, name, or email..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="flex-1"
+                  />
+                  <Button type="submit" disabled={isLoading}>
+                    <Search className="w-4 h-4 mr-2" />
+                    Search
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* Results Section */}
         <section className="container px-4 py-12">
           <div className="max-w-6xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 animate-fade-in text-center">
-              <span className="text-gradient">74HRS</span> Order Management
-            </h1>
-            <p className="text-xl text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
-              Track orders, generate affiliate links, and manage Discord notifications in real-time.
-            </p>
-            
-            <Tabs defaultValue="track" className="w-full">
-              <TabsList className="grid w-full max-w-lg grid-cols-3 mb-8 glass">
-                <TabsTrigger value="track">Track Order</TabsTrigger>
-                <TabsTrigger value="affiliate">Affiliate</TabsTrigger>
-                <TabsTrigger value="webhook">Webhooks</TabsTrigger>
-              </TabsList>
-            
-            <TabsContent value="track">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <Card className="glass border-white/10 lg:col-span-1">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Search className="h-5 w-5" />
-                      Track Your Order
-                    </CardTitle>
-                    <CardDescription>Enter your order ID to check its status</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <form onSubmit={handleOrderSearch} className="space-y-4">
-                      <div className="space-y-2">
-                        <Input
-                          type="text"
-                          placeholder="Order ID or Order Code"
-                          value={orderSearchQuery}
-                          onChange={(e) => setOrderSearchQuery(e.target.value)}
-                          className="bg-black/40 border-white/20"
-                        />
-                        <Button type="submit" className="w-full button-gradient" disabled={isOrdersLoading}>
-                          {isOrdersLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Search className="h-4 w-4 mr-2" />}
-                          Track Order
-                        </Button>
-                      </div>
-                    </form>
-                  </CardContent>
-                </Card>
-                
-                {foundOrder && (
-                  <Card className="glass border-primary/20 lg:col-span-2 animate-scale-in">
-                    <CardHeader>
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <CardTitle className="text-xl">{foundOrder.order_name}</CardTitle>
-                          <CardDescription>Order: {foundOrder.order_code || foundOrder.id}</CardDescription>
+            {searchTerm && filteredOrders.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="space-y-6"
+              >
+                <h2 className="text-2xl font-bold mb-6">Search Results</h2>
+                <div className="grid gap-6">
+                  {filteredOrders.map((order) => (
+                    <Card key={order.id} className="glass border-white/10 hover:border-primary/30 transition-all duration-300">
+                      <CardContent className="p-6">
+                        <div className="flex justify-between items-start mb-4">
+                          <div>
+                            <h3 className="text-xl font-semibold mb-1">{order.order_name}</h3>
+                            <p className="text-muted-foreground">{order.order_code}</p>
+                          </div>
+                          <Badge variant={getStatusBadgeVariant(order.status)}>
+                            {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                          </Badge>
                         </div>
-                        <Badge variant={getStatusBadgeVariant(foundOrder.status)} className="text-sm">
-                          {foundOrder.status.charAt(0).toUpperCase() + foundOrder.status.slice(1)}
+                        
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                          <div>
+                            <p className="text-muted-foreground">Customer</p>
+                            <p className="font-medium">{order.customer_name}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground">Service</p>
+                            <p className="font-medium">{order.service}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground">Price</p>
+                            <p className="font-medium">${order.price}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground">Date</p>
+                            <p className="font-medium">{new Date(order.created_at).toLocaleDateString()}</p>
+                          </div>
+                        </div>
+
+                        {order.description && (
+                          <div className="mt-4 pt-4 border-t border-white/10">
+                            <p className="text-muted-foreground text-sm">{order.description}</p>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {searchTerm && filteredOrders.length === 0 && !isLoading && (
+              <Card className="glass border-white/10 text-center">
+                <CardContent className="py-12">
+                  <Package className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                  <h3 className="text-xl font-semibold mb-2">No Orders Found</h3>
+                  <p className="text-muted-foreground">
+                    No orders match your search criteria: "{searchTerm}"
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </section>
+
+        {/* Affiliate Balance Section */}
+        <section className="container px-4 py-12">
+          <div className="max-w-4xl mx-auto">
+            <Card className="glass border-primary/20">
+              <CardHeader>
+                <CardTitle>Affiliate Program</CardTitle>
+                <CardDescription>Check if you're eligible for our affiliate program</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <AffiliateBalance />
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* Recent Orders */}
+        <section className="container px-4 py-12">
+          <div className="max-w-6xl mx-auto">
+            <Card className="glass border-white/10">
+              <CardHeader>
+                <CardTitle>Recent Orders</CardTitle>
+                <CardDescription>Latest orders in the system</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {orders?.slice(0, 10).map((order) => (
+                    <div key={order.id} className="flex items-center justify-between p-4 rounded-lg bg-background/50 border border-white/10">
+                      <div>
+                        <p className="font-medium">{order.order_name}</p>
+                        <p className="text-sm text-muted-foreground">{order.order_code}</p>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <div className="text-right">
+                          <p className="font-medium">${order.price}</p>
+                          <p className="text-sm text-muted-foreground">{order.category}</p>
+                        </div>
+                        <Badge variant={getStatusBadgeVariant(order.status)}>
+                          {order.status}
                         </Badge>
                       </div>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <h4 className="text-sm font-medium text-muted-foreground">Category</h4>
-                          <p className="text-sm font-medium">{foundOrder.category}</p>
-                        </div>
-                        <div className="space-y-2">
-                          <h4 className="text-sm font-medium text-muted-foreground">Price</h4>
-                          <p className="text-sm font-medium">${foundOrder.price}</p>
-                        </div>
-                        <div className="space-y-2">
-                          <h4 className="text-sm font-medium text-muted-foreground">Order Date</h4>
-                          <p className="text-sm font-medium">{new Date(foundOrder.created_at).toLocaleDateString()}</p>
-                        </div>
-                        <div className="space-y-2">
-                          <h4 className="text-sm font-medium text-muted-foreground">Delivery</h4>
-                          <p className="text-sm font-medium">TBD</p>
-                        </div>
-                      </div>
-                      
-                      <Separator />
-                      
-                      <div className="space-y-3">
-                        <h4 className="text-sm font-medium text-muted-foreground">Status Timeline</h4>
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-3">
-                            <div className="h-3 w-3 rounded-full bg-primary"></div>
-                            <span className="text-sm">Order received - {new Date(foundOrder.created_at).toLocaleDateString()}</span>
-                          </div>
-                          {(foundOrder.status === "in-progress" || foundOrder.status === "completed") && (
-                            <div className="flex items-center gap-3">
-                              <div className="h-3 w-3 rounded-full bg-primary"></div>
-                              <span className="text-sm">Work in progress</span>
-                            </div>
-                          )}
-                          {foundOrder.status === "completed" && (
-                            <div className="flex items-center gap-3">
-                              <div className="h-3 w-3 rounded-full bg-primary"></div>
-                              <span className="text-sm">Completed - {new Date(foundOrder.updated_at).toLocaleDateString()}</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </CardContent>
-                    <CardFooter>
-                      <p className="text-sm text-muted-foreground">
-                        Questions? Join our <a href="https://discord.gg/VFX" target="_blank" rel="noreferrer" className="text-primary hover:underline inline-flex items-center">Discord <ExternalLink className="ml-1 h-3 w-3" /></a>
-                      </p>
-                    </CardFooter>
-                  </Card>
-                )}
-                
-                {!foundOrder && orderSearchQuery && !isOrdersLoading && (
-                  <Card className="glass border-red-500/20 lg:col-span-2">
-                    <CardContent className="pt-6">
-                      <div className="text-center py-8">
-                        <h3 className="text-lg font-medium mb-2">Order Not Found</h3>
-                        <p className="text-muted-foreground">
-                          We couldn't find an order with ID: {orderSearchQuery}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
-              
-              {/* All Orders Table */}
-              <div className="mt-12">
-                <Card className="glass border-white/10">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Search className="h-5 w-5" />
-                      All Recent Orders
-                    </CardTitle>
-                    <CardDescription>Real-time order updates</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid gap-4">
-                      {orders?.slice(0, 10).map((order) => (
-                        <div key={order.id} className="flex items-center justify-between p-4 rounded-lg bg-background/50 border border-white/10 hover:border-primary/30 transition-colors">
-                          <div className="space-y-1">
-                            <p className="font-medium">{order.order_name}</p>
-                            <p className="text-sm text-muted-foreground">{order.order_code || order.id}</p>
-                          </div>
-                          <div className="flex items-center gap-4">
-                            <div className="text-right">
-                              <p className="font-medium">${order.price}</p>
-                              <p className="text-sm text-muted-foreground">{order.category}</p>
-                            </div>
-                            <Badge variant={getStatusBadgeVariant(order.status)}>
-                              {order.status}
-                            </Badge>
-                          </div>
-                        </div>
-                      ))}
                     </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="affiliate">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <Card className="glass border-white/10">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Copy className="h-5 w-5" />
-                      Generate Affiliate Link
-                    </CardTitle>
-                    <CardDescription>Create your custom affiliate link to earn commissions</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">Your Affiliate Code:</label>
-                        <Input
-                          type="text"
-                          placeholder="Enter your affiliate code"
-                          value={affiliateCode}
-                          onChange={(e) => setAffiliateCode(e.target.value)}
-                          className="bg-black/40 border-white/20"
-                        />
-                      </div>
-                      
-                      <Button 
-                        onClick={handleGenerateAffiliateLink} 
-                        className="w-full button-gradient" 
-                        disabled={isAffiliateLoading || !affiliateCode.trim()}
-                      >
-                        {isAffiliateLoading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Copy className="h-4 w-4 mr-2" />}
-                        {isAffiliateLoading ? "Generating..." : "Generate Affiliate Link"}
-                      </Button>
-                      
-                      {affiliateData?.link && (
-                        <div className="mt-4 space-y-2 animate-fade-in">
-                          <label className="text-sm font-medium">Your Affiliate Link:</label>
-                          <div className="flex items-center space-x-2">
-                            <Input
-                              type="text"
-                              value={affiliateData.link}
-                              readOnly
-                              className="bg-black/40 border-white/20"
-                            />
-                            <Button onClick={copyToClipboard} size="icon" className="button-gradient">
-                              <Copy className="h-4 w-4" />
-                            </Button>
-                          </div>
-                          <p className="text-xs text-muted-foreground mt-2">
-                            Share this link with your audience. You'll earn a commission for each order placed through it.
-                          </p>
-                        </div>
-                      )}
-                      
-                      {!affiliateData && affiliateCode && !isAffiliateLoading && (
-                        <div className="mt-4 p-4 bg-red-950/20 rounded-lg border border-red-500/30">
-                          <p className="text-sm text-red-400">
-                            Affiliate code not found. Please check the code and try again.
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card className="glass border-white/10">
-                  <CardHeader>
-                    <CardTitle>Affiliate Program Info</CardTitle>
-                    <CardDescription>How our affiliate program works</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-3">
-                      <div className="p-3 rounded-lg bg-primary/10 border border-primary/20">
-                        <h4 className="font-medium text-primary">💰 10% Commission</h4>
-                        <p className="text-sm text-muted-foreground">Earn 10% on every order placed through your link</p>
-                      </div>
-                      <div className="p-3 rounded-lg bg-secondary/10 border border-secondary/20">
-                        <h4 className="font-medium">📊 Real-time Tracking</h4>
-                        <p className="text-sm text-muted-foreground">Track your referrals and earnings in real-time</p>
-                      </div>
-                      <div className="p-3 rounded-lg bg-accent/10 border border-accent/20">
-                        <h4 className="font-medium">💳 Monthly Payouts</h4>
-                        <p className="text-sm text-muted-foreground">Minimum payout: $50</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="webhook">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <Card className="glass border-white/10">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Webhook className="h-5 w-5" />
-                      Discord Webhook Setup
-                    </CardTitle>
-                    <CardDescription>Get real-time order notifications in Discord</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">Discord Webhook URL:</label>
-                        <Input
-                          type="text"
-                          placeholder="https://discord.com/api/webhooks/..."
-                          value={webhookUrl}
-                          onChange={(e) => setWebhookUrl(e.target.value)}
-                          className="bg-black/40 border-white/20"
-                        />
-                      </div>
-                      
-                      <Button 
-                        onClick={handleAddWebhook} 
-                        className="w-full button-gradient" 
-                        disabled={addWebhook.isPending || !webhookUrl.trim()}
-                      >
-                        {addWebhook.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Plus className="h-4 w-4 mr-2" />}
-                        {addWebhook.isPending ? "Adding..." : "Add Webhook"}
-                      </Button>
-                      
-                      <div className="text-xs text-muted-foreground space-y-1">
-                        <p>📋 How to get a Discord webhook URL:</p>
-                        <ol className="list-decimal list-inside space-y-1">
-                          <li>Go to your Discord server settings</li>
-                          <li>Navigate to Integrations → Webhooks</li>
-                          <li>Create a new webhook</li>
-                          <li>Copy the webhook URL</li>
-                        </ol>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card className="glass border-white/10">
-                  <CardHeader>
-                    <CardTitle>Active Webhooks</CardTitle>
-                    <CardDescription>Manage your Discord webhooks</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      {getWebhooks.data?.map((webhook) => (
-                        <div key={webhook.id} className="p-3 rounded-lg bg-background/50 border border-white/10">
-                          <p className="text-sm font-mono">{webhook.webhook_url.slice(0, 50)}...</p>
-                          <p className="text-xs text-muted-foreground">Added {new Date(webhook.created_at).toLocaleDateString()}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-              
-              <div className="mt-8">
-                <Card className="glass border-white/10">
-                  <CardHeader>
-                    <CardTitle>Webhook Information</CardTitle>
-                    <CardDescription>Real-time Discord notifications for all order events</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="p-4 rounded-lg bg-green-950/20 border border-green-500/30">
-                          <h4 className="font-medium text-green-400">🆕 New Orders</h4>
-                          <p className="text-sm text-muted-foreground">Get notified when new orders are created</p>
-                        </div>
-                        <div className="p-4 rounded-lg bg-blue-950/20 border border-blue-500/30">
-                          <h4 className="font-medium text-blue-400">📝 Order Updates</h4>
-                          <p className="text-sm text-muted-foreground">Status changes and progress updates</p>
-                        </div>
-                        <div className="p-4 rounded-lg bg-red-950/20 border border-red-500/30">
-                          <h4 className="font-medium text-red-400">🗑️ Order Deletions</h4>
-                          <p className="text-sm text-muted-foreground">When orders are removed</p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-            </Tabs>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </section>
       </main>
-      
+
       <Footer />
     </div>
   );

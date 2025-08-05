@@ -13,10 +13,11 @@ const Navigation = () => {
 
   const navItems = [
     { name: "Services", href: "#features", onClick: () => scrollToSection('features') },
-    // { name: "Portfolio", href: "/portfolio", isLink: true },
+    { name: "Portfolio", href: "/portfolio", isLink: true },
+    { name: "Pricing", href: "#pricing", onClick: () => scrollToSection('pricing') },
+    { name: "Partners", href: "/partners", isLink: true },
+    { name: "Affiliates", href: "/affiliates", isLink: true },
     { name: "Orders", href: "/orders", isLink: true },
-    // { name: "Packages", href: "#pricing", onClick: () => scrollToSection('pricing') },
-    { name: "Reviews", href: "#testimonials", onClick: () => scrollToSection('testimonials') },
   ];
 
   return (
