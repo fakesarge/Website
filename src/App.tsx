@@ -9,6 +9,8 @@ import Portfolio from "./pages/Portfolio";
 import Orders from "./pages/Orders";
 import Partners from "./pages/Partners";
 import Affiliates from "./pages/Affiliates";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 import NotFound from "./pages/NotFound";
 import ServerError from "./pages/ServerError";
 
@@ -27,6 +29,8 @@ const App = () => (
             <Route path="/orders" element={<Orders />} />
             <Route path="/partners" element={<Partners />} />
             <Route path="/affiliates" element={<Affiliates />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
             <Route path="/error" element={<ServerError />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

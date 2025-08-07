@@ -9,7 +9,7 @@ import { useOrders, useRealtimeOrders } from '@/hooks/useOrderTracking';
 import { useToast } from '@/hooks/use-toast';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
-import AffiliateBalance from '@/components/AffiliateBalance';
+
 
 const OrdersPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -181,16 +181,23 @@ const OrdersPage = () => {
           </div>
         </section>
 
-        {/* Affiliate Balance Section */}
+        {/* Affiliate Program Link */}
         <section className="container px-4 py-12">
           <div className="max-w-4xl mx-auto">
             <Card className="glass border-primary/20">
               <CardHeader>
                 <CardTitle>Affiliate Program</CardTitle>
-                <CardDescription>Check if you're eligible for our affiliate program</CardDescription>
+                <CardDescription>Join our affiliate program and earn commission on referrals</CardDescription>
               </CardHeader>
               <CardContent>
-                <AffiliateBalance />
+                <div className="text-center">
+                  <p className="text-muted-foreground mb-4">
+                    Check your affiliate status and manage your referrals
+                  </p>
+                  <Button asChild>
+                    <a href="/affiliates">Go to Affiliate Dashboard</a>
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>

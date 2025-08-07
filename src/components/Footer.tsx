@@ -47,7 +47,7 @@ const Footer = () => {
             </div>
 
             <div className="space-y-4">
-              <h4 className="font-medium">Resources</h4>
+              <h4 className="font-medium">Company</h4>
               <ul className="space-y-2">
                 <li>
                   <a href="/portfolio" className="text-sm text-muted-foreground hover:text-primary transition-colors">
@@ -55,9 +55,19 @@ const Footer = () => {
                   </a>
                 </li>
                 <li>
-                  <button onClick={handleDiscordClick} className="text-sm text-muted-foreground hover:text-primary transition-colors text-left">
-                    Support
-                  </button>
+                  <a href="/partners" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    Partners
+                  </a>
+                </li>
+                <li>
+                  <a href="/orders" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    Orders
+                  </a>
+                </li>
+                <li>
+                  <a href="/affiliates" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    Affiliates
+                  </a>
                 </li>
               </ul>
             </div>
@@ -66,19 +76,19 @@ const Footer = () => {
               <h4 className="font-medium">Legal</h4>
               <ul className="space-y-2">
                 <li>
-                  <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  <a href="/privacy" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                     Privacy Policy
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  <a href="/terms" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                     Terms of Service
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                    Refund Policy
-                  </a>
+                  <button onClick={handleDiscordClick} className="text-sm text-muted-foreground hover:text-primary transition-colors text-left">
+                    Support
+                  </button>
                 </li>
               </ul>
             </div>

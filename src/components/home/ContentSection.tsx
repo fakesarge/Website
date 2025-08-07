@@ -35,7 +35,7 @@ const ContentSection = ({ contentRef }: ContentSectionProps) => {
     >
 
       {/* Features Section */}
-      <div id="features" className="bg-black">
+      <div id="features" className="bg-black" data-animate>
         <FeaturesSection />
       </div>
 
@@ -43,12 +43,12 @@ const ContentSection = ({ contentRef }: ContentSectionProps) => {
       <LogoCarousel />
 
       {/* Stats Counter */}
-      <div className="bg-black">
+      <div className="bg-black" data-animate>
         <StatsCounter />
       </div>
 
       {/* Price Calculator Section */}
-      <div id="pricing" className="bg-black">
+      <div id="pricing" className="bg-black" data-animate>
         <section className="container px-4 py-24">
           <div className="max-w-4xl mx-auto text-center mb-12">
             <h2 className="text-5xl md:text-6xl font-normal mb-6">

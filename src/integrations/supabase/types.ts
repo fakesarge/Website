@@ -18,20 +18,32 @@ export type Database = {
         Row: {
           affiliate_name: string
           created_at: string
+          email: string | null
           id: string
+          is_active: boolean | null
           referral_code: string
+          total_commission: number | null
+          total_referrals: number | null
         }
         Insert: {
           affiliate_name: string
           created_at?: string
+          email?: string | null
           id?: string
+          is_active?: boolean | null
           referral_code: string
+          total_commission?: number | null
+          total_referrals?: number | null
         }
         Update: {
           affiliate_name?: string
           created_at?: string
+          email?: string | null
           id?: string
+          is_active?: boolean | null
           referral_code?: string
+          total_commission?: number | null
+          total_referrals?: number | null
         }
         Relationships: []
       }
