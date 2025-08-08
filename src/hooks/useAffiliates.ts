@@ -21,8 +21,11 @@ export const useCreateAffiliate = () => {
       if (error) throw error;
       return affiliate;
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
+      // Invalidate both the affiliates list and the specific affiliate query
       queryClient.invalidateQueries({ queryKey: ['affiliates'] });
+      queryClient.invalidateQueries({ queryKey: ['affiliate', variables.email] });
+      queryClient.setQueryData(['affiliate', variables.email], data);
       toast({
         title: "Success",
         description: "Affiliate account created successfully!",
@@ -48,12 +51,14 @@ export const useAffiliateByEmail = (email: string) => {
         .from('affiliates')
         .select('*')
         .eq('email', email)
-        .single();
+        .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') throw error;
+      if (error) throw error;
       return data;
     },
     enabled: !!email,
+    staleTime: 0, // Always refetch to ensure fresh data
+    gcTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
 };
 

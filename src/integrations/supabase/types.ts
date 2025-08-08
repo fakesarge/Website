@@ -24,6 +24,7 @@ export type Database = {
           referral_code: string
           total_commission: number | null
           total_referrals: number | null
+          updated_at: string | null
         }
         Insert: {
           affiliate_name: string
@@ -34,6 +35,7 @@ export type Database = {
           referral_code: string
           total_commission?: number | null
           total_referrals?: number | null
+          updated_at?: string | null
         }
         Update: {
           affiliate_name?: string
@@ -44,6 +46,7 @@ export type Database = {
           referral_code?: string
           total_commission?: number | null
           total_referrals?: number | null
+          updated_at?: string | null
         }
         Relationships: []
       }
