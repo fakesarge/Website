@@ -68,10 +68,19 @@ export const useAffiliateOrders = (email: string) => {
     queryFn: async () => {
       if (!email) return [];
       
+      // Get affiliate first to get referral code
+      const { data: affiliate } = await supabase
+        .from('affiliates')
+        .select('referral_code')
+        .eq('email', email)
+        .maybeSingle();
+      
+      if (!affiliate?.referral_code) return [];
+      
       const { data, error } = await supabase
         .from('orders')
         .select('*')
-        .eq('customer_email', email)
+        .eq('referral_code', affiliate.referral_code)
         .order('created_at', { ascending: false });
 
       if (error) throw error;

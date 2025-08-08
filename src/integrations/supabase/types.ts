@@ -121,18 +121,7 @@ export type Database = {
       }
     }
     Views: {
-      affiliate_order_stats: {
-        Row: {
-          affiliate_id: string | null
-          affiliate_name: string | null
-          email: string | null
-          referral_code: string | null
-          total_commission: number | null
-          total_orders: number | null
-          total_sales: number | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       [_ in never]: never

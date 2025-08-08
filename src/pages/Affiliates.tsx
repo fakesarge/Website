@@ -73,8 +73,9 @@ const AffiliatesPage = () => {
     setShowCreateForm(false);
   };
 
-  const totalCommission = orders?.reduce((total, order) => total + (order.price * 0.1), 0) || 0;
-  const isEligible = (orders?.length || 0) >= 1 && totalCommission >= 50;
+  const totalCommission = affiliate?.total_commission || 0;
+  const totalOrders = affiliate?.total_referrals || 0;
+  const isEligible = totalOrders >= 1 && totalCommission >= 50;
 
   return (
     <div className="min-h-screen bg-background">
@@ -278,7 +279,7 @@ const AffiliatesPage = () => {
                         <Card className="bg-gradient-to-br from-blue-900/20 to-blue-800/20 border-blue-700">
                           <CardContent className="p-4 text-center">
                             <div className="text-2xl font-bold text-blue-400">
-                              {orders?.length || 0}
+                              {totalOrders}
                             </div>
                             <div className="text-sm text-gray-400">Total Orders</div>
                           </CardContent>
