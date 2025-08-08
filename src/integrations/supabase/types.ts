@@ -61,6 +61,7 @@ export type Database = {
           order_code: string
           order_name: string
           price: number
+          referral_code: string | null
           service: string
           status: string
           updated_at: string
@@ -75,6 +76,7 @@ export type Database = {
           order_code?: string
           order_name: string
           price: number
+          referral_code?: string | null
           service: string
           status?: string
           updated_at?: string
@@ -89,6 +91,7 @@ export type Database = {
           order_code?: string
           order_name?: string
           price?: number
+          referral_code?: string | null
           service?: string
           status?: string
           updated_at?: string
@@ -118,7 +121,18 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      affiliate_order_stats: {
+        Row: {
+          affiliate_id: string | null
+          affiliate_name: string | null
+          email: string | null
+          referral_code: string | null
+          total_commission: number | null
+          total_orders: number | null
+          total_sales: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
