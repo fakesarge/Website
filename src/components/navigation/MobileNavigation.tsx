@@ -24,10 +24,6 @@ const MobileNavigation = ({
   isMobileMenuOpen, 
   setIsMobileMenuOpen 
 }: MobileNavigationProps) => {
-  const handleShopNowClick = () => {
-    setIsMobileMenuOpen(false);
-    window.open('https://discord.gg/VFX', '_blank');
-  };
 
   return (
     <div className="md:hidden">
@@ -76,12 +72,16 @@ const MobileNavigation = ({
               </Button>
             </Link>
             
-            <Button 
-              onClick={handleShopNowClick}
-              className="button-gradient"
+            <Link 
+              to="/shop" 
+              onClick={() => setIsMobileMenuOpen(false)}
             >
-              Shop Now
-            </Button>
+              <Button 
+                className="button-gradient w-full"
+              >
+                Shop Now
+              </Button>
+            </Link>
           </div>
         </SheetContent>
       </Sheet>
