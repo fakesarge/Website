@@ -14,7 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      orders: {
+        Row: {
+          category: string
+          created_at: string
+          customer_email: string
+          customer_name: string
+          description: string | null
+          id: string
+          order_code: string
+          order_name: string
+          price: number
+          referral_code: string | null
+          service: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          customer_email: string
+          customer_name: string
+          description?: string | null
+          id?: string
+          order_code?: string
+          order_name: string
+          price: number
+          referral_code?: string | null
+          service: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          customer_email?: string
+          customer_name?: string
+          description?: string | null
+          id?: string
+          order_code?: string
+          order_name?: string
+          price?: number
+          referral_code?: string | null
+          service?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
