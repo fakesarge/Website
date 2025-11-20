@@ -8,7 +8,7 @@ import Index from "./pages/Index";
 import Portfolio from "./pages/Portfolio";
 import Orders from "./pages/Orders";
 import Partners from "./pages/Partners";
-import Affiliates from "./pages/Affiliates";
+import Shop from "./pages/Shop";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import NotFound from "./pages/NotFound";
@@ -28,7 +28,7 @@ const App = () => (
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/partners" element={<Partners />} />
-            <Route path="/affiliates" element={<Affiliates />} />
+            <Route path="/shop" element={<Shop />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/error" element={<ServerError />} />

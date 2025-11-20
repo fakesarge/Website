@@ -16,7 +16,6 @@ const Navigation = () => {
     { name: "Portfolio", href: "/portfolio", isLink: true },
     { name: "Pricing", href: "#pricing", onClick: () => scrollToSection('pricing') },
     { name: "Partners", href: "/partners", isLink: true },
-    { name: "Affiliates", href: "/affiliates", isLink: true },
     { name: "Orders", href: "/orders", isLink: true },
   ];
 
