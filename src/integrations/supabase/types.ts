@@ -7,118 +7,14 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.12 (cd3cf9e)"
+    PostgrestVersion: "13.0.5"
   }
   public: {
     Tables: {
-      affiliates: {
-        Row: {
-          affiliate_name: string
-          created_at: string
-          email: string | null
-          id: string
-          is_active: boolean | null
-          referral_code: string
-          total_commission: number | null
-          total_referrals: number | null
-          updated_at: string | null
-        }
-        Insert: {
-          affiliate_name: string
-          created_at?: string
-          email?: string | null
-          id?: string
-          is_active?: boolean | null
-          referral_code: string
-          total_commission?: number | null
-          total_referrals?: number | null
-          updated_at?: string | null
-        }
-        Update: {
-          affiliate_name?: string
-          created_at?: string
-          email?: string | null
-          id?: string
-          is_active?: boolean | null
-          referral_code?: string
-          total_commission?: number | null
-          total_referrals?: number | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-      orders: {
-        Row: {
-          category: string
-          created_at: string
-          customer_email: string
-          customer_name: string
-          description: string | null
-          id: string
-          order_code: string
-          order_name: string
-          price: number
-          referral_code: string | null
-          service: string
-          status: string
-          updated_at: string
-        }
-        Insert: {
-          category: string
-          created_at?: string
-          customer_email: string
-          customer_name: string
-          description?: string | null
-          id?: string
-          order_code?: string
-          order_name: string
-          price: number
-          referral_code?: string | null
-          service: string
-          status?: string
-          updated_at?: string
-        }
-        Update: {
-          category?: string
-          created_at?: string
-          customer_email?: string
-          customer_name?: string
-          description?: string | null
-          id?: string
-          order_code?: string
-          order_name?: string
-          price?: number
-          referral_code?: string | null
-          service?: string
-          status?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      webhook_notifications: {
-        Row: {
-          created_at: string
-          id: string
-          is_active: boolean
-          webhook_url: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          is_active?: boolean
-          webhook_url: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          is_active?: boolean
-          webhook_url?: string
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
