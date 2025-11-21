@@ -10,6 +10,7 @@ import Orders from "./pages/Orders";
 import OrderQueue from "./pages/OrderQueue";
 import Partners from "./pages/Partners";
 import Shop from "./pages/Shop";
+import Casino from "./pages/Casino";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import NotFound from "./pages/NotFound";
@@ -31,6 +32,7 @@ const App = () => (
             <Route path="/order-queue" element={<OrderQueue />} />
             <Route path="/partners" element={<Partners />} />
             <Route path="/shop" element={<Shop />} />
+            <Route path="/casino" element={<Casino />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/error" element={<ServerError />} />

@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      casino_plays: {
+        Row: {
+          created_at: string
+          id: string
+          played_at: string
+          player_identifier: string
+          voucher_code: string | null
+          won: boolean
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          played_at?: string
+          player_identifier: string
+          voucher_code?: string | null
+          won?: boolean
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          played_at?: string
+          player_identifier?: string
+          voucher_code?: string | null
+          won?: boolean
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           category: string
@@ -59,6 +86,36 @@ export type Database = {
           service?: string
           status?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      voucher_codes: {
+        Row: {
+          code: string
+          created_at: string
+          discount_amount: number
+          id: string
+          is_used: boolean
+          used_at: string | null
+          used_by: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          discount_amount: number
+          id?: string
+          is_used?: boolean
+          used_at?: string | null
+          used_by?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          discount_amount?: number
+          id?: string
+          is_used?: boolean
+          used_at?: string | null
+          used_by?: string | null
         }
         Relationships: []
       }
