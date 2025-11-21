@@ -181,27 +181,6 @@ const OrdersPage = () => {
           </div>
         </section>
 
-        {/* Affiliate Program Link */}
-        <section className="container px-4 py-12">
-          <div className="max-w-4xl mx-auto">
-            <Card className="glass border-primary/20">
-              <CardHeader>
-                <CardTitle>Affiliate Program</CardTitle>
-                <CardDescription>Join our affiliate program and earn commission on referrals</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center">
-                  <p className="text-muted-foreground mb-4">
-                    Check your affiliate status and manage your referrals
-                  </p>
-                  <Button asChild>
-                    <a href="/affiliates">Go to Affiliate Dashboard</a>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
 
         {/* Recent Orders */}
         <section className="container px-4 py-12">
