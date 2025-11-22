@@ -1,18 +1,20 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Trophy, Lock, Unlock } from "lucide-react";
+import { Sparkles, Trophy, Lock, Unlock, Coins, Target, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { GameCard } from "@/components/casino/GameCard";
+import { SlotMachine } from "@/components/casino/SlotMachine";
+import { Roulette } from "@/components/casino/Roulette";
+import { CoinFlip } from "@/components/casino/CoinFlip";
 
-const SYMBOLS = ["💎", "🎰", "🍀", "⭐", "🎲"];
-const WIN_CHANCE = 0.25; // 25% base win rate (rigged lower)
+type GameType = "menu" | "slots" | "roulette" | "coinflip";
 
 const Casino = () => {
-  const [slots, setSlots] = useState([0, 0, 0]);
+  const [currentGame, setCurrentGame] = useState<GameType>("menu");
   const [spinning, setSpinning] = useState(false);
   const [canPlay, setCanPlay] = useState(true);
   const [hasVoucher, setHasVoucher] = useState(false);
@@ -66,55 +68,18 @@ const Casino = () => {
     return `LUCKY${Math.random().toString(36).substr(2, 8).toUpperCase()}`;
   };
 
-  const spin = async () => {
-    if (!canPlay || spinning) return;
-
+  const handleGamePlay = async (wins: boolean) => {
     setSpinning(true);
     setWonVoucher(null);
 
-    // Animate slots spinning
-    const spinInterval = setInterval(() => {
-      setSlots([
-        Math.floor(Math.random() * SYMBOLS.length),
-        Math.floor(Math.random() * SYMBOLS.length),
-        Math.floor(Math.random() * SYMBOLS.length),
-      ]);
-    }, 100);
-
-    // Determine if player wins (rigged)
-    const wins = Math.random() < WIN_CHANCE;
-    
     setTimeout(async () => {
-      clearInterval(spinInterval);
-      
-      let finalSlots;
-      if (wins) {
-        // All same symbol = WIN
-        const winningSymbol = Math.floor(Math.random() * SYMBOLS.length);
-        finalSlots = [winningSymbol, winningSymbol, winningSymbol];
-      } else {
-        // Random non-matching symbols = LOSE
-        finalSlots = [
-          Math.floor(Math.random() * SYMBOLS.length),
-          Math.floor(Math.random() * SYMBOLS.length),
-          Math.floor(Math.random() * SYMBOLS.length),
-        ];
-        // Make sure they don't accidentally match
-        if (finalSlots[0] === finalSlots[1] && finalSlots[1] === finalSlots[2]) {
-          finalSlots[2] = (finalSlots[2] + 1) % SYMBOLS.length;
-        }
-      }
-
-      setSlots(finalSlots);
       setSpinning(false);
 
-      // Record play
       const identifier = getPlayerIdentifier();
       let voucherCode = null;
 
       if (wins) {
         voucherCode = generateVoucherCode();
-        // Save voucher to database
         await supabase.from("voucher_codes").insert({
           code: voucherCode,
           discount_amount: 10,
@@ -132,126 +97,208 @@ const Casino = () => {
         });
       }
 
-      // Record the play
       await supabase.from("casino_plays").insert({
         player_identifier: identifier,
         won: wins,
         voucher_code: voucherCode,
       });
 
-      // Update can play status
       if (!hasVoucher) {
         setCanPlay(false);
       }
-    }, 2000);
+    }, 100);
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Animated background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-purple-500/5 to-pink-500/5" />
+      <motion.div
+        animate={{
+          backgroundPosition: ["0% 0%", "100% 100%"],
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          repeatType: "reverse",
+        }}
+        className="absolute inset-0 opacity-30"
+        style={{
+          backgroundImage: "radial-gradient(circle at 50% 50%, hsl(var(--primary) / 0.1) 0%, transparent 50%)",
+          backgroundSize: "100% 100%",
+        }}
+      />
+
       <Navigation />
       
-      <div className="container mx-auto px-4 py-24">
+      <div className="container mx-auto px-4 py-24 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent">
-            Lucky Casino
-          </h1>
+          <motion.h1 
+            className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent"
+            animate={{
+              backgroundPosition: ["0%", "100%"],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              repeatType: "reverse",
+            }}
+            style={{
+              backgroundSize: "200% auto",
+            }}
+          >
+            🎰 Lucky Casino 🎰
+          </motion.h1>
           <p className="text-xl text-muted-foreground">
-            Spin to win exclusive vouchers!
+            Choose your game and win exclusive vouchers!
           </p>
         </motion.div>
 
-        <div className="max-w-2xl mx-auto">
-          <Card className="p-8 bg-card/50 backdrop-blur-sm border-2">
-            <div className="mb-8">
-              <div className="flex justify-center gap-4 mb-8">
-                {slots.map((slot, index) => (
-                  <motion.div
-                    key={index}
-                    animate={spinning ? { y: [0, -10, 0] } : {}}
-                    transition={{ duration: 0.2, repeat: spinning ? Infinity : 0 }}
-                    className="w-24 h-24 bg-background rounded-lg flex items-center justify-center text-5xl border-2 border-primary"
-                  >
-                    {SYMBOLS[slot]}
-                  </motion.div>
-                ))}
-              </div>
-
-              <div className="flex justify-center gap-4 mb-6">
-                {hasVoucher ? (
-                  <div className="flex items-center gap-2 text-green-500">
-                    <Unlock className="w-5 h-5" />
-                    <span>Unlimited plays (Voucher holder)</span>
-                  </div>
-                ) : canPlay ? (
-                  <div className="flex items-center gap-2 text-yellow-500">
-                    <Sparkles className="w-5 h-5" />
-                    <span>Free play available today!</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2 text-red-500">
-                    <Lock className="w-5 h-5" />
-                    <span>Come back tomorrow or purchase a voucher!</span>
-                  </div>
-                )}
-              </div>
-
-              <Button
-                onClick={spin}
-                disabled={!canPlay || spinning}
-                size="lg"
-                className="w-full"
-              >
-                {spinning ? (
-                  <>
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                      className="mr-2"
-                    >
-                      🎰
-                    </motion.div>
-                    Spinning...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="mr-2" />
-                    Spin the Slots!
-                  </>
-                )}
-              </Button>
-            </div>
-
-            <AnimatePresence>
-              {wonVoucher && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border-2 border-yellow-500 rounded-lg p-6 text-center"
-                >
-                  <Trophy className="w-12 h-12 mx-auto mb-3 text-yellow-500" />
-                  <h3 className="text-2xl font-bold mb-2">Congratulations!</h3>
-                  <p className="text-lg mb-3">Your voucher code:</p>
-                  <code className="block bg-background px-4 py-2 rounded font-mono text-xl font-bold">
-                    {wonVoucher}
-                  </code>
-                  <p className="text-sm text-muted-foreground mt-3">
-                    Save this code to use on your next purchase!
-                  </p>
-                </motion.div>
+        <div className="max-w-6xl mx-auto">
+          {/* Play Status Banner */}
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8 flex justify-center"
+          >
+            <div className={`px-6 py-3 rounded-full border-2 flex items-center gap-3 ${
+              hasVoucher 
+                ? "bg-green-500/20 border-green-500" 
+                : canPlay 
+                ? "bg-yellow-500/20 border-yellow-500"
+                : "bg-red-500/20 border-red-500"
+            }`}>
+              {hasVoucher ? (
+                <>
+                  <Unlock className="w-5 h-5 text-green-500" />
+                  <span className="text-green-500 font-semibold">Unlimited plays (Voucher holder)</span>
+                </>
+              ) : canPlay ? (
+                <>
+                  <Sparkles className="w-5 h-5 text-yellow-500" />
+                  <span className="text-yellow-500 font-semibold">Free play available today!</span>
+                </>
+              ) : (
+                <>
+                  <Lock className="w-5 h-5 text-red-500" />
+                  <span className="text-red-500 font-semibold">Come back tomorrow or purchase a voucher!</span>
+                </>
               )}
-            </AnimatePresence>
-
-            <div className="mt-8 text-center text-sm text-muted-foreground">
-              <p className="mb-2">🎰 Match 3 symbols to win!</p>
-              <p>Free users: 1 play per day</p>
-              <p>Voucher holders: Unlimited plays</p>
             </div>
-          </Card>
+          </motion.div>
+
+          {/* Game Menu */}
+          <AnimatePresence mode="wait">
+            {currentGame === "menu" ? (
+              <motion.div
+                key="menu"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="grid md:grid-cols-3 gap-6"
+              >
+                <GameCard
+                  title="Slot Machine"
+                  description="Match 3 symbols to win big!"
+                  icon={Sparkles}
+                  gradient="from-purple-500 to-pink-500"
+                  onClick={() => setCurrentGame("slots")}
+                />
+                <GameCard
+                  title="Roulette"
+                  description="Pick a color and spin the wheel!"
+                  icon={Target}
+                  gradient="from-red-500 to-yellow-500"
+                  onClick={() => setCurrentGame("roulette")}
+                />
+                <GameCard
+                  title="Coin Flip"
+                  description="Heads or tails? Make your choice!"
+                  icon={Coins}
+                  gradient="from-blue-500 to-cyan-500"
+                  onClick={() => setCurrentGame("coinflip")}
+                />
+              </motion.div>
+            ) : (
+              <motion.div
+                key={currentGame}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                className="space-y-6"
+              >
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentGame("menu")}
+                  className="mb-4"
+                >
+                  <ArrowLeft className="mr-2" />
+                  Back to Games
+                </Button>
+
+                {currentGame === "slots" && (
+                  <SlotMachine
+                    onSpin={handleGamePlay}
+                    spinning={spinning}
+                    canPlay={canPlay}
+                  />
+                )}
+                {currentGame === "roulette" && (
+                  <Roulette
+                    onSpin={handleGamePlay}
+                    spinning={spinning}
+                    canPlay={canPlay}
+                  />
+                )}
+                {currentGame === "coinflip" && (
+                  <CoinFlip
+                    onFlip={handleGamePlay}
+                    flipping={spinning}
+                    canPlay={canPlay}
+                  />
+                )}
+
+                {/* Win Display */}
+                <AnimatePresence>
+                  {wonVoucher && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.8, y: 20 }}
+                      className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border-4 border-yellow-500 rounded-xl p-8 text-center backdrop-blur-lg"
+                    >
+                      <motion.div
+                        animate={{ rotate: [0, 10, -10, 0] }}
+                        transition={{ duration: 0.5, repeat: Infinity }}
+                      >
+                        <Trophy className="w-16 h-16 mx-auto mb-4 text-yellow-500" />
+                      </motion.div>
+                      <h3 className="text-3xl font-bold mb-3 bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
+                        CONGRATULATIONS!
+                      </h3>
+                      <p className="text-xl mb-4">You won a $10 voucher!</p>
+                      <code className="block bg-background/80 px-6 py-4 rounded-lg font-mono text-2xl font-bold border-2 border-yellow-500">
+                        {wonVoucher}
+                      </code>
+                      <p className="text-sm text-muted-foreground mt-4">
+                        💾 Save this code to use on your next purchase!
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Game Info */}
+                <div className="text-center text-sm text-muted-foreground space-y-1 pt-4">
+                  <p>🎮 Play daily for a chance to win!</p>
+                  <p>Free users: 1 play per day | Voucher holders: Unlimited plays</p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
