@@ -13,6 +13,7 @@ import Shop from "./pages/Shop";
 import Casino from "./pages/Casino";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import ServerError from "./pages/ServerError";
 
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/casino" element={<Casino />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/error" element={<ServerError />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
