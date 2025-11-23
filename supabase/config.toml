@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.order-webhook-notifier]
 verify_jwt = false
+
+[functions.sync-discord-roles]
+verify_jwt = true

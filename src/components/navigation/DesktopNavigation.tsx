@@ -91,9 +91,21 @@ const DesktopNavigation = ({ navItems, scrollToSection }: DesktopNavigationProps
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
+                <Link to="/dashboard" className="cursor-pointer">
+                  <User className="mr-2 h-4 w-4" />
+                  Dashboard
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
                 <Link to="/orders" className="cursor-pointer">
                   <User className="mr-2 h-4 w-4" />
                   My Orders
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/dashboard/settings" className="cursor-pointer">
+                  <User className="mr-2 h-4 w-4" />
+                  Settings
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
