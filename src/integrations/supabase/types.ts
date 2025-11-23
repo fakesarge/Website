@@ -89,6 +89,33 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          created_at: string
+          discord_avatar_url: string | null
+          discord_id: string | null
+          discord_username: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          discord_avatar_url?: string | null
+          discord_id?: string | null
+          discord_username?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          discord_avatar_url?: string | null
+          discord_id?: string | null
+          discord_username?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       voucher_codes: {
         Row: {
           code: string
