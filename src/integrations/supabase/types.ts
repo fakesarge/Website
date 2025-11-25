@@ -99,6 +99,7 @@ export type Database = {
           discord_id: string | null
           discord_username: string | null
           id: string
+          last_signed_in_ip: string | null
           updated_at: string
         }
         Insert: {
@@ -107,6 +108,7 @@ export type Database = {
           discord_id?: string | null
           discord_username?: string | null
           id: string
+          last_signed_in_ip?: string | null
           updated_at?: string
         }
         Update: {
@@ -115,6 +117,7 @@ export type Database = {
           discord_id?: string | null
           discord_username?: string | null
           id?: string
+          last_signed_in_ip?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -182,6 +185,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_current_user_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user" | "vip"

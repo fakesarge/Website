@@ -1,4 +1,4 @@
-project_id = "aqpjgfvsxxlwgcapxres"
+project_id = "otpcqazflitoexnhcwza"
 
 [functions.discord-webhook]
 verify_jwt = false
@@ -10,4 +10,16 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.sync-discord-roles]
+verify_jwt = true
+
+[functions.update-profile-ip]
+verify_jwt = true
+
+[functions.admin-orders]
+verify_jwt = true
+
+[functions.admin-users]
+verify_jwt = true
+
+[functions.create-order]
 verify_jwt = true

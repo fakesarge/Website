@@ -42,6 +42,12 @@ export const useAuth = () => {
         
         if (session?.user) {
           await fetchProfile(session.user.id);
+          // Update IP on successful login
+          if (event === 'SIGNED_IN') {
+            setTimeout(() => {
+              updateProfileIP();
+            }, 0);
+          }
         } else {
           setProfile(null);
           setLoading(false);
@@ -54,6 +60,17 @@ export const useAuth = () => {
       subscription.unsubscribe();
     };
   }, []);
+
+  const updateProfileIP = async () => {
+    try {
+      const { error } = await supabase.functions.invoke('update-profile-ip');
+      if (error) {
+        console.error('Error updating profile IP:', error);
+      }
+    } catch (error) {
+      console.error('Error calling update-profile-ip:', error);
+    }
+  };
 
   const fetchProfile = async (userId: string) => {
     try {

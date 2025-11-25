@@ -16,6 +16,7 @@ import Terms from "./pages/Terms";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import ServerError from "./pages/ServerError";
 
@@ -39,8 +40,9 @@ const App = () => (
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/dashboard/settings" element={<Settings />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/settings" element={<Settings />} />
+          <Route path="/admin" element={<Admin />} />
             <Route path="/error" element={<ServerError />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
