@@ -1,5 +1,4 @@
-
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -11,7 +10,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
-import { LogOut, User } from "lucide-react";
+import { useUserRoles } from "@/hooks/useUserRoles";
+import { LogOut, User, Shield } from "lucide-react";
 
 interface NavItem {
   name: string;
@@ -27,6 +27,8 @@ interface DesktopNavigationProps {
 
 const DesktopNavigation = ({ navItems, scrollToSection }: DesktopNavigationProps) => {
   const { user, profile, signOut } = useAuth();
+  const { data: roles } = useUserRoles(user?.id);
+  const navigate = useNavigate();
 
   const handleSignOut = async () => {
     await signOut();
@@ -108,6 +110,15 @@ const DesktopNavigation = ({ navItems, scrollToSection }: DesktopNavigationProps
                   Settings
                 </Link>
               </DropdownMenuItem>
+              {roles?.includes('admin') && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => navigate("/admin")} className="cursor-pointer">
+                    <Shield className="mr-2 h-4 w-4" />
+                    Admin Panel
+                  </DropdownMenuItem>
+                </>
+              )}
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive focus:text-destructive">
                 <LogOut className="mr-2 h-4 w-4" />
