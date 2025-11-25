@@ -48,6 +48,7 @@ export type Database = {
           customer_email: string
           customer_name: string
           description: string | null
+          discord_id: string | null
           id: string
           order_code: string
           order_name: string
@@ -63,6 +64,7 @@ export type Database = {
           customer_email: string
           customer_name: string
           description?: string | null
+          discord_id?: string | null
           id?: string
           order_code?: string
           order_name: string
@@ -78,6 +80,7 @@ export type Database = {
           customer_email?: string
           customer_name?: string
           description?: string | null
+          discord_id?: string | null
           id?: string
           order_code?: string
           order_name?: string
