@@ -22,7 +22,7 @@ const Dashboard = () => {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [syncing, setSyncing] = useState(false);
 
-  const userOrders = orders?.filter(order => order.customer_email === user?.email) || [];
+  const userOrders = orders?.filter(order => order.discord_id === profile?.discord_id) || [];
 
   const handleSyncRoles = async () => {
     setSyncing(true);
@@ -61,10 +61,13 @@ const Dashboard = () => {
     }
   };
 
-  if (authLoading) {
+  if (authLoading || rolesLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
+          <p className="text-muted-foreground">Loading dashboard...</p>
+        </div>
       </div>
     );
   }
@@ -74,12 +77,37 @@ const Dashboard = () => {
     return null;
   }
 
+  if (!profile?.discord_id) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <main className="container mx-auto px-4 pt-24 pb-16">
+          <Card className="max-w-md mx-auto">
+            <CardHeader>
+              <CardTitle>Discord Account Required</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                You need to connect your Discord account to view your orders.
+                Please log in with Discord.
+              </p>
+            </CardContent>
+          </Card>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
       
       <main className="container mx-auto px-4 pt-24 pb-16">
-        <h1 className="text-4xl font-bold mb-8">Dashboard</h1>
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold mb-2">Dashboard</h1>
+          <p className="text-muted-foreground">Welcome back, {profile?.discord_username || 'User'}!</p>
+        </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
           {/* User Profile Card */}
@@ -161,11 +189,25 @@ const Dashboard = () => {
           </CardHeader>
           <CardContent>
             {ordersLoading ? (
-              <div className="flex justify-center py-8">
-                <Loader2 className="h-8 w-8 animate-spin" />
+              <div className="flex flex-col items-center justify-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+                <p className="text-muted-foreground">Loading your orders...</p>
               </div>
             ) : userOrders.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">No orders yet</p>
+              <div className="text-center py-12">
+                <div className="mb-4">
+                  <div className="w-16 h-16 rounded-full bg-muted mx-auto flex items-center justify-center">
+                    <svg className="w-8 h-8 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                    </svg>
+                  </div>
+                </div>
+                <h3 className="text-lg font-semibold mb-2">No orders yet</h3>
+                <p className="text-muted-foreground mb-6">You haven't placed any orders yet. Start exploring our services!</p>
+                <Button onClick={() => window.location.href = '/shop'}>
+                  Browse Shop
+                </Button>
+              </div>
             ) : (
               <Table>
                 <TableHeader>
