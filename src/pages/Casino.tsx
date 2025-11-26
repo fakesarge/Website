@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Trophy, Lock, Unlock, Coins, Target, ArrowLeft } from "lucide-react";
+import { Sparkles, Trophy, Lock, Unlock, Coins, Target, ArrowLeft, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -12,6 +12,9 @@ import { Roulette } from "@/components/casino/Roulette";
 import { CoinFlip } from "@/components/casino/CoinFlip";
 
 type GameType = "menu" | "slots" | "roulette" | "coinflip";
+
+// MAINTENANCE MODE - Set to true to enable maintenance page
+const MAINTENANCE_MODE = true;
 
 const Casino = () => {
   const [currentGame, setCurrentGame] = useState<GameType>("menu");
@@ -108,6 +111,42 @@ const Casino = () => {
       }
     }, 100);
   };
+
+  // Maintenance mode page
+  if (MAINTENANCE_MODE) {
+    return (
+      <div className="min-h-screen bg-background relative overflow-hidden flex items-center justify-center">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-purple-500/5 to-pink-500/5" />
+        <Navigation />
+        <div className="container mx-auto px-4 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="max-w-2xl mx-auto text-center"
+          >
+            <motion.div
+              animate={{ rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <Wrench className="w-24 h-24 mx-auto mb-6 text-primary" />
+            </motion.div>
+            <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              Under Maintenance
+            </h1>
+            <p className="text-xl text-muted-foreground mb-8">
+              We're currently upgrading our casino for an even better experience. Check back soon!
+            </p>
+            <div className="flex justify-center gap-4">
+              <Button size="lg" onClick={() => window.location.href = '/'}>
+                Back to Home
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
