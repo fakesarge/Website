@@ -49,11 +49,22 @@ Deno.serve(async (req) => {
     const url = new URL(req.url);
     const method = req.method;
 
+    // Parse request body for parameters (POST requests from invoke())
+    let params: any = {};
+    if (req.body) {
+      try {
+        const body = await req.json();
+        params = body.params || {};
+      } catch (e) {
+        // No body or invalid JSON, continue with empty params
+      }
+    }
+
     // GET /admin-users - List all users with their profiles and roles
-    if (method === 'GET') {
-      const search = url.searchParams.get('search') || '';
-      const page = parseInt(url.searchParams.get('page') || '1');
-      const limit = parseInt(url.searchParams.get('limit') || '50');
+    if (method === 'GET' || (method === 'POST' && params.page)) {
+      const search = params.search || url.searchParams.get('search') || '';
+      const page = parseInt(params.page || url.searchParams.get('page') || '1');
+      const limit = parseInt(params.limit || url.searchParams.get('limit') || '50');
       const offset = (page - 1) * limit;
 
       let query = supabaseAdmin
@@ -82,8 +93,8 @@ Deno.serve(async (req) => {
     }
 
     // POST /admin-users - Update user role
-    if (method === 'POST') {
-      const body = await req.json();
+    if (method === 'POST' && !params.page) {
+      const body = await req.clone().json();
       const { user_id, role, action } = body;
 
       if (!user_id || !role) {

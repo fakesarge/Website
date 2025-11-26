@@ -35,11 +35,13 @@ export const AdminOrders = () => {
       if (statusFilter) params.append('status', statusFilter);
 
       const { data, error } = await supabase.functions.invoke('admin-orders', {
-        method: 'GET',
-        body: null,
+        body: { params: Object.fromEntries(params) },
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Admin orders fetch error:', error);
+        throw error;
+      }
       return data;
     },
   });
