@@ -27,11 +27,13 @@ export const AdminUsers = () => {
       if (search) params.append('search', search);
 
       const { data, error } = await supabase.functions.invoke('admin-users', {
-        method: 'GET',
-        body: null,
+        body: { params: Object.fromEntries(params) },
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Admin users fetch error:', error);
+        throw error;
+      }
       return data;
     },
   });

@@ -53,11 +53,22 @@ Deno.serve(async (req) => {
     const url = new URL(req.url);
     const method = req.method;
 
-    // GET /admin-orders - List all orders with filters
-    if (method === 'GET') {
-      const search = url.searchParams.get('search') || '';
-      const status = url.searchParams.get('status') || '';
-      const page = parseInt(url.searchParams.get('page') || '1');
+    // Parse request body for parameters (POST requests from invoke())
+    let params: any = {};
+    if (req.body) {
+      try {
+        const body = await req.json();
+        params = body.params || {};
+      } catch (e) {
+        // No body or invalid JSON, continue with empty params
+      }
+    }
+
+    // GET or POST /admin-orders - List all orders with filters
+    if (method === 'GET' || (method === 'POST' && params.page)) {
+      const search = params.search || url.searchParams.get('search') || '';
+      const status = params.status || url.searchParams.get('status') || '';
+      const page = parseInt(params.page || url.searchParams.get('page') || '1');
       const limit = parseInt(url.searchParams.get('limit') || '50');
       const offset = (page - 1) * limit;
 
@@ -91,8 +102,9 @@ Deno.serve(async (req) => {
     }
 
     // POST /admin-orders - Create new order
-    if (method === 'POST') {
-      const body = await req.json();
+    // POST /admin-orders - Create new order
+    if (method === 'POST' && !params.page) {
+      const body = await req.clone().json();
       
       const { data, error } = await supabaseAdmin
         .from('orders')
