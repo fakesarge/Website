@@ -33,16 +33,16 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/orders" element={<Orders />} />
-            <Route path="/order-queue" element={<OrderQueue />} />
+            <Route path="/queue" element={<OrderQueue />} />
             <Route path="/partners" element={<Partners />} />
             <Route path="/shop" element={<Shop />} />
-            <Route path="/casino" element={<Casino />} />
+            {/* <Route path="/casino" element={<Casino />} /> */}
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/settings" element={<Settings />} />
-          <Route path="/admin" element={<Admin />} />
+          {/* <Route path="/admin" element={<Admin />} /> */}
             <Route path="/error" element={<ServerError />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

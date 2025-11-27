@@ -182,38 +182,7 @@ const OrdersPage = () => {
         </section>
 
 
-        {/* Recent Orders */}
-        <section className="container px-4 py-12">
-          <div className="max-w-6xl mx-auto">
-            <Card className="glass border-white/10">
-              <CardHeader>
-                <CardTitle>Recent Orders</CardTitle>
-                <CardDescription>Latest orders in the system</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {orders?.slice(0, 10).map((order) => (
-                    <div key={order.id} className="flex items-center justify-between p-4 rounded-lg bg-background/50 border border-white/10">
-                      <div>
-                        <p className="font-medium">{order.order_name}</p>
-                        <p className="text-sm text-muted-foreground">{order.order_code}</p>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div className="text-right">
-                          <p className="font-medium">${order.price}</p>
-                          <p className="text-sm text-muted-foreground">{order.category}</p>
-                        </div>
-                        <Badge variant={getStatusBadgeVariant(order.status)}>
-                          {order.status}
-                        </Badge>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
+       
       </main>
 
       <Footer />

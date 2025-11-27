@@ -11,60 +11,60 @@ const Shop = () => {
   const [selectedCategory, setSelectedCategory] = useState<"templates" | "services">("templates");
 
   const templates = [
-    {
-      id: 1,
-      name: "Cinematic VFX Pack",
-      price: 149,
-      image: "/lovable-uploads/79f2b901-8a4e-42a5-939f-fae0828e0aef.png",
-      category: "VFX",
-      features: ["50+ Effects", "4K Quality", "Cinema Grade"],
-      popular: true,
-    },
-    {
-      id: 2,
-      name: "Motion Graphics Bundle",
-      price: 99,
-      image: "/lovable-uploads/7335619d-58a9-41ad-a233-f7826f56f3e9.png",
-      category: "Motion",
-      features: ["100+ Templates", "Customizable", "After Effects"],
-      popular: false,
-    },
-    {
-      id: 3,
-      name: "Logo Animation Pack",
-      price: 79,
-      image: "/lovable-uploads/5830bd79-3511-41dc-af6c-8db32d91fc2c.png",
-      category: "Animation",
-      features: ["25 Animations", "Full HD", "Easy Setup"],
-      popular: false,
-    },
+    // {
+    //   id: 1,
+    //   name: "Cinematic VFX Pack",
+    //   price: 149,
+    //   image: "/images/79f2b901-8a4e-42a5-939f-fae0828e0aef.png",
+    //   category: "VFX",
+    //   features: ["50+ Effects", "4K Quality", "Cinema Grade"],
+    //   popular: true,
+    // },
+    // {
+    //   id: 2,
+    //   name: "Motion Graphics Bundle",
+    //   price: 99,
+    //   image: "/images/7335619d-58a9-41ad-a233-f7826f56f3e9.png",
+    //   category: "Motion",
+    //   features: ["100+ Templates", "Customizable", "After Effects"],
+    //   popular: false,
+    // },
+    // {
+    //   id: 3,
+    //   name: "Logo Animation Pack",
+    //   price: 79,
+    //   image: "/images/5830bd79-3511-41dc-af6c-8db32d91fc2c.png",
+    //   category: "Animation",
+    //   features: ["25 Animations", "Full HD", "Easy Setup"],
+    //   popular: false,
+    // },
   ];
 
   const services = [
-    {
-      id: 1,
-      name: "Custom VFX Production",
-      price: 499,
-      duration: "Starting at",
-      features: ["Unlimited Revisions", "4K Delivery", "2 Week Turnaround", "Commercial Rights"],
-      popular: true,
-    },
-    {
-      id: 2,
-      name: "Character Animation",
-      price: 299,
-      duration: "Per Character",
-      features: ["Full Body Rigging", "Facial Animation", "Motion Capture", "Source Files"],
-      popular: false,
-    },
-    {
-      id: 3,
-      name: "Post-Production Package",
-      price: 399,
-      duration: "Per Project",
-      features: ["Color Grading", "Sound Design", "VFX Integration", "Final Render"],
-      popular: false,
-    },
+    // {
+    //   id: 1,
+    //   name: "Custom VFX Production",
+    //   price: 499,
+    //   duration: "Starting at",
+    //   features: ["Unlimited Revisions", "4K Delivery", "2 Week Turnaround", "Commercial Rights"],
+    //   popular: true,
+    // },
+    // {
+    //   id: 2,
+    //   name: "Character Animation",
+    //   price: 299,
+    //   duration: "Per Character",
+    //   features: ["Full Body Rigging", "Facial Animation", "Motion Capture", "Source Files"],
+    //   popular: false,
+    // },
+    // {
+    //   id: 3,
+    //   name: "Post-Production Package",
+    //   price: 399,
+    //   duration: "Per Project",
+    //   features: ["Color Grading", "Sound Design", "VFX Integration", "Final Render"],
+    //   popular: false,
+    // },
   ];
 
   const currentItems = selectedCategory === "templates" ? templates : services;

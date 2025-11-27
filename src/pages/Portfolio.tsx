@@ -8,52 +8,52 @@ import Footer from "@/components/Footer";
 
 const portfolioItems = {
   gfx: [
-    {
-      id: 1,
-      title: "FiveM Server Logo Pack",
-      type: "image",
-      thumbnail: "/lovable-uploads/7335619d-58a9-41ad-a233-f7826f56f3e9.png",
-      description: "Professional logo designs for FiveM servers"
-    },
-    {
-      id: 2,
-      title: "Custom Banner Set",
-      type: "image", 
-      thumbnail: "/lovable-uploads/79f2b901-8a4e-42a5-939f-fae0828e0aef.png",
-      description: "High-quality banners for Discord and social media"
-    },
-    {
-      id: 3,
-      title: "UI Element Package",
-      type: "image",
-      thumbnail: "/lovable-uploads/b6436838-5c1a-419a-9cdc-1f9867df073d.png", 
-      description: "Complete UI graphics for server interfaces"
-    }
+    // {
+    //   id: 1,
+    //   title: "FiveM Server Logo Pack",
+    //   type: "image",
+    //   thumbnail: "/images/7335619d-58a9-41ad-a233-f7826f56f3e9.png",
+    //   description: "Professional logo designs for FiveM servers"
+    // },
+    // {
+    //   id: 2,
+    //   title: "Custom Banner Set",
+    //   type: "image", 
+    //   thumbnail: "/images/79f2b901-8a4e-42a5-939f-fae0828e0aef.png",
+    //   description: "High-quality banners for Discord and social media"
+    // },
+    // {
+    //   id: 3,
+    //   title: "UI Element Package",
+    //   type: "image",
+    //   thumbnail: "/images/b6436838-5c1a-419a-9cdc-1f9867df073d.png", 
+    //   description: "Complete UI graphics for server interfaces"
+    // }
   ],
   vfx: [
     {
       id: 4,
-      title: "Cinematic Loading Screen",
+      title: "Treches WL Loading Screen",
       type: "video",
-      thumbnail: "/lovable-uploads/86329743-ee49-4f2e-96f7-50508436273d.png",
-      videoUrl: "https://example.com/video1.mp4",
-      description: "Epic Blender-rendered loading screen with particles"
+      thumbnail: "/images/dwan9duhawd-awdawdawd.png",
+      videoUrl: "https://cdn.discordapp.com/attachments/1392669728559992973/1392669730980237372/07091.mp4?ex=69284982&is=6926f802&hm=21cbe44d02d02e001cd149278686052329bcb1b5cccd9b28baee7de0ac9bdb87&",
+      description: "Blender Loading screen for Treches WL FiveM server. 2 Custom Characters With 2 Scenes. Made by @fakesarge"
     },
     {
       id: 5,
-      title: "3D Animation Intro",
+      title: "Stream Intro Blender Animation",
       type: "video", 
-      thumbnail: "/lovable-uploads/21f3edfb-62b5-4e35-9d03-7339d803b980.png",
-      videoUrl: "https://example.com/video2.mp4",
-      description: "Stunning 3D animated server introduction"
+      thumbnail: "/images/i0j43098fj-3v90.png",
+      videoUrl: "https://cdn.discordapp.com/attachments/1406833828680695808/1406833834124644444/0817_1.mp4?ex=6928665b&is=692714db&hm=8b4cd63aa6090b8542b6b6b6fbf21ca0d37af91af7dcaae01c213ffc3e896316&",
+      description: "Twitch Stream intro animation with dynamic VFX elements"
     },
     {
       id: 6,
       title: "VFX Transition Pack",
       type: "video",
-      thumbnail: "/lovable-uploads/c32c6788-5e4a-4fee-afee-604b03113c7f.png",
-      videoUrl: "https://example.com/video3.mp4", 
-      description: "Smooth transition effects for video content"
+      thumbnail: "/images/dw9audn10-2893124.png",
+      videoUrl: "https://cdn.discordapp.com/attachments/1385994351708078100/1385994353578868777/QlvCw3e.mp4?ex=69286454&is=692712d4&hm=021d22750d0e734bdc725cf8fb8547312e9ccb032106d52c81f1c21475ff39d1&", 
+      description: "Fivem Blender Loading Screen with custom character and 1 scene. Made by @fakesarge"
     }
   ],
   templates: [
@@ -61,7 +61,7 @@ const portfolioItems = {
       id: 7,
       title: "Premium Loading Screen Template",
       type: "template",
-      thumbnail: "/lovable-uploads/86329743-ee49-4f2e-96f7-50508436273d.png",
+      thumbnail: "/images/86329743-ee49-4f2e-96f7-50508436273d.png",
       price: 15,
       description: "Customizable Blender template for loading screens"
     },
@@ -69,7 +69,7 @@ const portfolioItems = {
       id: 8,
       title: "Logo Animation Template",
       type: "template",
-      thumbnail: "/lovable-uploads/7335619d-58a9-41ad-a233-f7826f56f3e9.png", 
+      thumbnail: "/images/7335619d-58a9-41ad-a233-f7826f56f3e9.png", 
       price: 25,
       description: "Animated logo template with multiple variations"
     },
@@ -77,7 +77,7 @@ const portfolioItems = {
       id: 9,
       title: "Complete Branding Kit",
       type: "template",
-      thumbnail: "/lovable-uploads/79f2b901-8a4e-42a5-939f-fae0828e0aef.png",
+      thumbnail: "/images/79f2b901-8a4e-42a5-939f-fae0828e0aef.png",
       price: 45, 
       description: "Full branding template package for servers"
     }
@@ -297,7 +297,7 @@ const Portfolio = () => {
         </section>
 
         {/* Portfolio Content */}
-        <section className="container px-4 pb-20">
+        <section className="container px-1 pb-2">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -312,9 +312,7 @@ const Portfolio = () => {
               >
                 <TabsList className="glass p-2 backdrop-blur-xl border border-white/10">
                   {[
-                    { value: "gfx", label: "GFX Graphics" },
                     { value: "vfx", label: "VFX Animations" },
-                    { value: "templates", label: "Templates" }
                   ].map((tab, index) => (
                     <motion.div key={tab.value} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                       <TabsTrigger 
@@ -426,9 +424,9 @@ const Portfolio = () => {
                 whileHover={{ scale: 1.1, rotate: 90 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setSelectedItem(null)}
-                className="absolute top-4 right-4 w-8 h-8 glass hover:glass-hover rounded-full flex items-center justify-center cursor-pointer z-10"
+                className="absolute top-[-10px] right-2 w-8 h-8 glass hover:glass-hover rounded-full flex items-center justify-center cursor-pointer z-10"
               >
-                <X className="w-4 h-4" />
+                <X className="w- h-4" />
               </motion.button>
 
               {/* Content */}

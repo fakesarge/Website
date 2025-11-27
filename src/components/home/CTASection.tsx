@@ -5,39 +5,11 @@ import { Button } from "@/components/ui/button";
 
 const CTASection = () => {
   const handleShopNowClick = () => {
-    window.open('https://discord.gg/VFX', '_blank');
+    window.open('https://discord.gg/74hrs', '_blank');
   };
 
   return (
-    <section className="container px-4 py-20 relative bg-black">
-      <div 
-        className="absolute inset-0 opacity-40"
-        style={{
-          backgroundImage: 'url("/lovable-uploads/21f3edfb-62b5-4e35-9d03-7339d803b980.png")',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      />
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="bg-[#0A0A0A]/80 backdrop-blur-lg border border-white/10 rounded-2xl p-8 md:p-12 text-center relative z-10"
-      >
-        <h2 className="text-3xl md:text-4xl font-bold mb-4">
-          Ready to elevate your FiveM server?
-        </h2>
-        <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-          Join thousands of server owners who have transformed their communities with our premium VFX graphics and Blender animations.
-        </p>
-        <Button size="lg" className="button-gradient interactive-element" onClick={() => {
-          const event = new CustomEvent('openPriceEstimator');
-          window.dispatchEvent(event);
-        }}>
-          Order Now
-          <ArrowRight className="ml-2 w-4 h-4" />
-        </Button>
-      </motion.div>
+    <section className="container relative bg-black">
     </section>
   );
 };

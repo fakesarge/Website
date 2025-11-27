@@ -28,19 +28,19 @@ const PriceEstimator = ({ isOpen, onClose }: PriceEstimatorProps) => {
     
     if (serviceType === 'VFX') {
       if (vfxType === 'Custom') {
-        basePrice = 150;
-        if (customCharacter) basePrice += 75;
-        if (fps && fps > 60) basePrice += 50;
-        if (fps && fps > 100) basePrice += 25;
-        basePrice += scenes * 25;
-        basePrice += additionalEffects.length * 30;
+        basePrice = 80;
+        if (customCharacter) basePrice += 30;
+        if (fps && fps > 60) basePrice += 20;
+        if (fps && fps > 100) basePrice += 80;
+        basePrice += scenes * 30;
+        basePrice += additionalEffects.length * 10;
       } else if (vfxType === 'Premade') {
-        basePrice = 35;
+        basePrice = 50;
       }
     } else if (serviceType === 'GFX') {
-      if (gfxServices.includes('Logo')) basePrice += 45;
-      if (gfxServices.includes('Banner')) basePrice += 35;
-      if (gfxServices.includes('Animation')) basePrice += 65;
+      if (gfxServices.includes('Logo')) basePrice += 30;
+      if (gfxServices.includes('Banner')) basePrice += 30;
+      if (gfxServices.includes('Animation')) basePrice += 15;
     }
     
     return basePrice;
@@ -62,7 +62,7 @@ const PriceEstimator = ({ isOpen, onClose }: PriceEstimatorProps) => {
   };
 
   const handleDiscordJoin = () => {
-    window.open('https://discord.gg/VFX', '_blank');
+    window.open('https://discord.gg/74hrs', '_blank');
   };
 
   const handleGfxServiceToggle = (service: string) => {

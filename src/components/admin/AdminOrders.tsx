@@ -34,9 +34,8 @@ export const AdminOrders = () => {
       if (search) params.append('search', search);
       if (statusFilter) params.append('status', statusFilter);
 
-      const { data, error } = await supabase.functions.invoke('admin-orders', {
+      const { data, error } = await supabase.functions.invoke(`admin-orders?${params.toString()}`, {
         method: 'GET',
-        body: null,
       });
 
       if (error) throw error;
@@ -65,10 +64,8 @@ export const AdminOrders = () => {
 
   const deleteOrderMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.functions.invoke('admin-orders', {
-        method: 'DELETE',
-        body: null,
-      });
+      const { error } = await supabase.functions.invoke(`admin-orders?id=${id}`, { method: 'DELETE' });
+
       if (error) throw error;
     },
     onSuccess: () => {

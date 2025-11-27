@@ -32,19 +32,19 @@ const StatsCounter = () => {
     {
       icon: Users,
       label: "Total Clients",
-      value: 245,
+      value: 1324,
       suffix: "+"
     },
     {
       icon: ShoppingBag,
       label: "Products Sold",
-      value: 430,
+      value: 2032,
       suffix: "+"
     },
     {
       icon: Star,
-      label: "Reocuring Orders",
-      value: 150,
+      label: "Avrage Rating",
+      value: 4.98,
       suffix: "+"
     }
   ];

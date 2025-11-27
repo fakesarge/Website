@@ -9,37 +9,15 @@ import Footer from "@/components/Footer";
 const PartnersPage = () => {
   const partners = [
     {
-      name: "Netflix Studios",
-      logo: "/lovable-uploads/0dbe1b75-2c74-4ff8-ba55-4be4d74abe72.png",
-      description: "Leading streaming platform with global reach",
-      tier: "Premium",
-      projects: 15,
-      specialty: "Original Series VFX"
-    },
-    {
-      name: "Warner Bros",
-      logo: "/lovable-uploads/1e2a48dc-059b-4919-a1ed-44685d771a32.png", 
-      description: "Iconic entertainment company",
-      tier: "Premium",
-      projects: 12,
-      specialty: "Blockbuster Films"
-    },
-    {
-      name: "Disney Studios",
-      logo: "/lovable-uploads/21f3edfb-62b5-4e35-9d03-7339d803b980.png",
-      description: "Magic through innovative storytelling",
+      name: "Storm - Automated PC Checker",
+      logo: "/images/8fda5ca4124b19e025330d3ca1abfb69.jpg",
+      description: "Advanced Methods. Automated PC Checking. International Support. All in one click."+"\n"+
+      "Supports FiveM, RageMP, AltV, GTA San Andreas, Roblox, and more.",
       tier: "Gold",
-      projects: 8,
-      specialty: "Animation & Fantasy"
-    },
-    {
-      name: "Universal Pictures",
-      logo: "/lovable-uploads/5830bd79-3511-41dc-af6c-8db32d91fc2c.png",
-      description: "Global entertainment leader",
-      tier: "Gold",
-      projects: 10,
-      specialty: "Action Sequences"
+      projects: 1,
+      specialty: "PC Checking Solutions"
     }
+    
   ];
 
   const partnerships = [
@@ -92,27 +70,7 @@ const PartnersPage = () => {
       </div>
 
       <main className="pt-20 pb-20">
-        {/* Hero Section */}
-        <section className="container px-4 py-20">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <h1 className="text-5xl md:text-7xl font-bold mb-6">
-                <span className="text-gradient">Elite</span> Partnerships
-              </h1>
-              <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-                Collaborating with industry giants to create cinematic masterpieces that push the boundaries of visual storytelling.
-              </p>
-              <Button className="button-gradient text-lg px-8 py-3">
-                Become a Partner
-                <ExternalLink className="ml-2 h-5 w-5" />
-              </Button>
-            </motion.div>
-          </div>
-        </section>
+       
 
         {/* Partners Grid */}
         <section className="container px-4 py-20">
@@ -179,7 +137,7 @@ const PartnersPage = () => {
                         {/* Action Button */}
                         <Button 
                           className="w-full button-gradient hover:scale-105 transition-transform"
-                          onClick={() => window.open('#', '_blank')}
+                          onClick={() => window.open('https://stormss.cc/', '_blank')}
                         >
                           Visit Website
                           <ExternalLink className="ml-2 h-4 w-4" />
@@ -230,34 +188,7 @@ const PartnersPage = () => {
           </div>
         </section>
 
-        {/* Affiliate CTA */}
-        <section className="container px-4 py-20">
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-            >
-              <Card className="glass border-primary/20 text-center">
-                <CardContent className="pt-8 pb-8">
-                  <h3 className="text-2xl md:text-3xl font-bold mb-4">
-                    Join Our <span className="text-gradient">Affiliate Program</span>
-                  </h3>
-                  <p className="text-lg text-muted-foreground mb-8">
-                    Earn commission by promoting our premium VFX content to your audience
-                  </p>
-                  <Button 
-                    className="button-gradient text-lg px-8 py-3"
-                    onClick={() => window.location.href = '/affiliates'}
-                  >
-                    Learn More
-                    <ExternalLink className="ml-2 h-5 w-5" />
-                  </Button>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </div>
-        </section>
+        
       </main>
 
       <Footer />

@@ -30,6 +30,7 @@ const Terms = () => {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-white mb-4">Payment Terms</h2>
               <p>Payment is required before work begins unless otherwise agreed upon. All prices are in USD and subject to applicable taxes.</p>
+              <p>No refunds will be offerd whatsoever. If the work is not completed on time a compensation may be offered by the designer.</p>
             </section>
 
             <section className="mb-8">

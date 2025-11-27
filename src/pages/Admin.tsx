@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AdminOrders } from '@/components/admin/AdminOrders';
 import { AdminUsers } from '@/components/admin/AdminUsers';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Shield, Loader2 } from 'lucide-react';
 
 const Admin = () => {
@@ -15,21 +14,24 @@ const Admin = () => {
   const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
-    if (!authLoading && !rolesLoading) {
-      const hasAdminRole = roles?.includes('admin');
-      
-      if (!user || !hasAdminRole) {
-        navigate('/');
-      } else {
-        setIsAuthorized(true);
-      }
+    if (authLoading || rolesLoading) return; // still loading
+    if (!user) return; // not logged in yet
+
+    const hasAdminRole = roles?.includes('admin');
+
+    if (!hasAdminRole) {
+      navigate('/'); // redirect non-admins after roles are known
+    } else {
+      setIsAuthorized(true);
     }
   }, [user, roles, authLoading, rolesLoading, navigate]);
 
+  // Show loader while fetching data
   if (authLoading || rolesLoading || !isAuthorized) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-background">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        <p className="text-white mt-2">Loading admin panel...</p>
       </div>
     );
   }

@@ -14,7 +14,6 @@ const NavigationLogo = () => {
           target.style.display = 'none';
         }}
       />
-      <Command className="w-5 h-5 text-primary" />
       <span className="font-bold text-base">74hrs</span>
     </Link>
   );
