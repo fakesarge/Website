@@ -19,20 +19,33 @@ const Admin = () => {
     if (!authLoading && !rolesLoading) {
       const hasAdminRole = roles?.includes('admin');
       
-      if (!user || !hasAdminRole) {
-        navigate('/');
-      } else {
-        setIsAuthorized(true);
+      if (!user) {
+        navigate('/login');
+        return;
       }
+      
+      if (!hasAdminRole) {
+        navigate('/');
+        return;
+      }
+      
+      setIsAuthorized(true);
     }
   }, [user, roles, authLoading, rolesLoading, navigate]);
 
-  if (authLoading || rolesLoading || !isAuthorized) {
+  if (authLoading || rolesLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-background">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin text-primary mb-4 mx-auto" />
+          <p className="text-muted-foreground">Loading admin panel...</p>
+        </div>
       </div>
     );
+  }
+
+  if (!isAuthorized) {
+    return null;
   }
 
   return (
