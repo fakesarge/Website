@@ -1,11 +1,14 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Check, Sparkles, Zap } from "lucide-react";
+import { Check, Sparkles, Zap, Wrench } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+
+// MAINTENANCE MODE - Set to true to enable maintenance page
+const MAINTENANCE_MODE = true;
 
 const Shop = () => {
   const [selectedCategory, setSelectedCategory] = useState<"templates" | "services">("templates");
@@ -68,6 +71,45 @@ const Shop = () => {
   ];
 
   const currentItems = selectedCategory === "templates" ? templates : services;
+
+  // Maintenance mode page
+  if (MAINTENANCE_MODE) {
+    return (
+      <div className="min-h-screen bg-background text-foreground relative overflow-hidden flex items-center justify-center">
+        <div className="fixed inset-0 -z-10">
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-primary/5" />
+          <div className="absolute top-20 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[128px] animate-pulse" />
+        </div>
+        <Navigation />
+        <div className="container mx-auto px-4 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="max-w-2xl mx-auto text-center"
+          >
+            <motion.div
+              animate={{ rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <Wrench className="w-24 h-24 mx-auto mb-6 text-primary" />
+            </motion.div>
+            <h1 className="text-5xl md:text-6xl font-bold mb-4">
+              Coming <span className="text-gradient">Soon</span>
+            </h1>
+            <p className="text-xl text-muted-foreground mb-8">
+              We're preparing an amazing shop experience. Stay tuned for exclusive templates and services!
+            </p>
+            <div className="flex justify-center gap-4">
+              <Button size="lg" onClick={() => window.location.href = '/'}>
+                Back to Home
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">

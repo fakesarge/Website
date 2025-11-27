@@ -27,11 +27,13 @@ export const AdminUsers = () => {
       if (search) params.append('search', search);
 
       const { data, error } = await supabase.functions.invoke('admin-users', {
-        method: 'GET',
-        body: null,
+        body: { params: Object.fromEntries(params) },
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Admin users fetch error:', error);
+        throw error;
+      }
       return data;
     },
   });
@@ -73,6 +75,7 @@ export const AdminUsers = () => {
 
     return userRoles.map((role: any, idx: number) => (
       <Badge key={idx} className={roleColors[role.role] || ''} variant="outline">
+        {role.role === 'admin' && <Shield className="w-3 h-3 mr-1" />}
         {role.role}
       </Badge>
     ));
@@ -108,7 +111,7 @@ export const AdminUsers = () => {
                 <TableRow>
                   <TableHead>User</TableHead>
                   <TableHead>Discord ID</TableHead>
-                  <TableHead>Last IP</TableHead>
+                  <TableHead className="font-semibold">Last Sign-in IP</TableHead>
                   <TableHead>Roles</TableHead>
                   <TableHead>Joined</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
@@ -124,13 +127,24 @@ export const AdminUsers = () => {
                           <AvatarFallback>{user.discord_username?.[0] || 'U'}</AvatarFallback>
                         </Avatar>
                         <div>
-                          <div className="font-medium">{user.discord_username || 'Unknown'}</div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium">{user.discord_username || 'Unknown'}</span>
+                            {user.user_roles?.some((r: any) => r.role === 'admin') && (
+                              <Shield className="w-4 h-4 text-red-500" />
+                            )}
+                          </div>
                           <div className="text-sm text-muted-foreground font-mono">{user.id.slice(0, 8)}...</div>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell className="font-mono text-sm">{user.discord_id || 'N/A'}</TableCell>
-                    <TableCell className="font-mono text-sm">{user.last_signed_in_ip || 'N/A'}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="font-mono text-xs bg-muted/50">
+                          {user.last_signed_in_ip || 'N/A'}
+                        </Badge>
+                      </div>
+                    </TableCell>
                     <TableCell>
                       <div className="flex gap-1 flex-wrap">
                         {user.user_roles?.length > 0 ? getRoleBadges(user.user_roles) : (

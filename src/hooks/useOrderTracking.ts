@@ -2,18 +2,49 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
+interface Order {
+  id: string;
+  order_code: string;
+  order_name: string;
+  customer_name: string;
+  customer_email: string;
+  service: string;
+  category: string;
+  description: string;
+  price: number;
+  status: string;
+  discord_id: string;
+  referral_code: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export const useOrders = () => {
-  return useQuery({
+  return useQuery<Order[]>({
     queryKey: ['orders'],
     queryFn: async () => {
+      // Check if user is authenticated first
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        return [];
+      }
+
       const { data, error } = await supabase
         .from('orders')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      return data;
+      if (error) {
+        console.error('Error fetching orders:', error);
+        return [];
+      }
+      
+      return data || [];
     },
+    staleTime: 30000, // 30 seconds
+    gcTime: 5 * 60 * 1000, // 5 minutes
+    retry: 2,
   });
 };
 

@@ -17,10 +17,17 @@ export const useUserRoles = (userId?: string) => {
         .select('role')
         .eq('user_id', adminUserId);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching user roles:', error);
+        return [];
+      }
+      
       return data.map(r => r.role as AppRole);
     },
-    enabled: !!adminUserId,
+    enabled: !!userId,
+    staleTime: 60000, // 1 minute
+    gcTime: 5 * 60 * 1000, // 5 minutes
+    retry: 2,
   });
 };
 

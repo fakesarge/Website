@@ -34,11 +34,14 @@ export const AdminOrders = () => {
       if (search) params.append('search', search);
       if (statusFilter) params.append('status', statusFilter);
 
-      const { data, error } = await supabase.functions.invoke(`admin-orders?${params.toString()}`, {
-        method: 'GET',
+      const { data, error } = await supabase.functions.invoke('admin-orders', {
+        body: { params: Object.fromEntries(params) },
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Admin orders fetch error:', error);
+        throw error;
+      }
       return data;
     },
   });
@@ -98,13 +101,17 @@ export const AdminOrders = () => {
   });
 
   const getStatusBadge = (status: string) => {
-    const variants: Record<string, 'default' | 'secondary' | 'destructive'> = {
-      pending: 'secondary',
-      in_progress: 'default',
-      completed: 'default',
-      cancelled: 'destructive',
+    const colorClasses: Record<string, string> = {
+      pending: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20 hover:bg-yellow-500/20',
+      in_progress: 'bg-blue-500/10 text-blue-500 border-blue-500/20 hover:bg-blue-500/20',
+      completed: 'bg-green-500/10 text-green-500 border-green-500/20 hover:bg-green-500/20',
+      cancelled: 'bg-red-500/10 text-red-500 border-red-500/20 hover:bg-red-500/20',
     };
-    return <Badge variant={variants[status] || 'default'}>{status}</Badge>;
+    return (
+      <Badge variant="outline" className={colorClasses[status] || ''}>
+        {status.replace('_', ' ')}
+      </Badge>
+    );
   };
 
   const handleSubmitEdit = (e: React.FormEvent<HTMLFormElement>) => {
