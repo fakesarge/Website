@@ -17,9 +17,10 @@ const iconMap = {
 interface ShopProductCardProps {
   item: ShopItem;
   index: number;
+  onClick?: () => void;
 }
 
-const ShopProductCard = ({ item, index }: ShopProductCardProps) => {
+const ShopProductCard = ({ item, index, onClick }: ShopProductCardProps) => {
   const Icon = iconMap[item.icon];
 
   return (
@@ -27,7 +28,8 @@ const ShopProductCard = ({ item, index }: ShopProductCardProps) => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="group relative h-full"
+      className="group relative h-full cursor-pointer"
+      onClick={onClick}
     >
       <div
         className={`relative h-full rounded-2xl border bg-card/60 backdrop-blur-md p-6 flex flex-col transition-all duration-500 hover:bg-card/80 ${

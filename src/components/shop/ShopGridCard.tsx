@@ -23,9 +23,10 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 interface ShopGridCardProps {
   item: ShopItem;
   index: number;
+  onClick?: () => void;
 }
 
-const ShopGridCard = ({ item, index }: ShopGridCardProps) => {
+const ShopGridCard = ({ item, index, onClick }: ShopGridCardProps) => {
   const Icon = iconMap[item.icon] || Box;
 
   return (
@@ -33,7 +34,8 @@ const ShopGridCard = ({ item, index }: ShopGridCardProps) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.05 }}
-      className="group relative flex flex-col rounded-xl border border-border/30 bg-card/50 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:border-border/60 hover:shadow-lg hover:shadow-primary/5"
+      onClick={onClick}
+      className="group relative flex flex-col rounded-xl border border-border/30 bg-card/50 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:border-border/60 hover:shadow-lg hover:shadow-primary/5 cursor-pointer"
     >
       {/* Image / Icon area */}
       <div className="relative flex items-center justify-center h-44 bg-secondary/40">
