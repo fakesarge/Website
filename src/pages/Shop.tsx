@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ShopHero from "@/components/shop/ShopHero";
 import ShopCategoryTabs from "@/components/shop/ShopCategoryTabs";
 import ShopProductCard from "@/components/shop/ShopProductCard";
+import ShopGridCard from "@/components/shop/ShopGridCard";
 import { shopCategories } from "@/config/shopData";
 
 const Shop = () => {
   const [activeCategory, setActiveCategory] = useState("services");
-
   const activeCat = shopCategories.find((c) => c.id === activeCategory)!;
 
   return (
@@ -22,10 +22,8 @@ const Shop = () => {
       </div>
 
       <Navigation />
-
       <ShopHero />
 
-      {/* Tabs */}
       <section className="container px-4 mb-6">
         <ShopCategoryTabs
           categories={shopCategories}
@@ -34,7 +32,6 @@ const Shop = () => {
         />
       </section>
 
-      {/* Category description */}
       <section className="container px-4 mb-12 text-center">
         <AnimatePresence mode="wait">
           <motion.p
@@ -50,21 +47,35 @@ const Shop = () => {
         </AnimatePresence>
       </section>
 
-      {/* Product grid */}
       <section className="container px-4 pb-32">
         <AnimatePresence mode="wait">
-          <motion.div
-            key={activeCategory}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
-          >
-            {activeCat.items.map((item, index) => (
-              <ShopProductCard key={item.id} item={item} index={index} />
-            ))}
-          </motion.div>
+          {activeCat.layout === "services" ? (
+            <motion.div
+              key={activeCategory}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+            >
+              {activeCat.items.map((item, index) => (
+                <ShopProductCard key={item.id} item={item} index={index} />
+              ))}
+            </motion.div>
+          ) : (
+            <motion.div
+              key={activeCategory}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="mx-auto grid max-w-7xl grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4 xl:gap-6"
+            >
+              {activeCat.items.map((item, index) => (
+                <ShopGridCard key={item.id} item={item} index={index} />
+              ))}
+            </motion.div>
+          )}
         </AnimatePresence>
       </section>
 
