@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -6,12 +7,11 @@ import ShopHero from "@/components/shop/ShopHero";
 import ShopCategoryTabs from "@/components/shop/ShopCategoryTabs";
 import ShopProductCard from "@/components/shop/ShopProductCard";
 import ShopGridCard from "@/components/shop/ShopGridCard";
-import ShopItemDetail from "@/components/shop/ShopItemDetail";
-import { shopCategories, type ShopItem } from "@/config/shopData";
+import { shopCategories } from "@/config/shopData";
 
 const Shop = () => {
   const [activeCategory, setActiveCategory] = useState("services");
-  const [selectedItem, setSelectedItem] = useState<ShopItem | null>(null);
+  const navigate = useNavigate();
   const activeCat = shopCategories.find((c) => c.id === activeCategory)!;
 
   return (
@@ -61,7 +61,7 @@ const Shop = () => {
               className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
             >
               {activeCat.items.map((item, index) => (
-                <ShopProductCard key={item.id} item={item} index={index} onClick={() => setSelectedItem(item)} />
+                <ShopProductCard key={item.id} item={item} index={index} onClick={() => navigate(`/shop/${item.id}`)} />
               ))}
             </motion.div>
           ) : (
@@ -74,14 +74,13 @@ const Shop = () => {
               className="mx-auto grid max-w-7xl grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4 xl:gap-6"
             >
               {activeCat.items.map((item, index) => (
-                <ShopGridCard key={item.id} item={item} index={index} onClick={() => setSelectedItem(item)} />
+                <ShopGridCard key={item.id} item={item} index={index} onClick={() => navigate(`/shop/${item.id}`)} />
               ))}
             </motion.div>
           )}
         </AnimatePresence>
       </section>
 
-      <ShopItemDetail item={selectedItem} open={!!selectedItem} onOpenChange={(open) => !open && setSelectedItem(null)} />
       <Footer />
     </div>
   );
