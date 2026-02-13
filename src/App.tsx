@@ -39,9 +39,9 @@ const App = () => (
             {/* <Route path="/casino" element={<Casino />} /> */}
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
-            <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dashboard/settings" element={<Settings />} />
+            {/* <Route path="/login" element={<Login />} /> */}
+          {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+          {/* <Route path="/dashboard/settings" element={<Settings />} /> */}
           {/* <Route path="/admin" element={<Admin />} /> */}
             <Route path="/error" element={<ServerError />} />
             <Route path="*" element={<NotFound />} />

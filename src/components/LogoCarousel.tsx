@@ -7,6 +7,8 @@ const LogoCarousel = () => {
     "/images/1e2a48dc-059b-4919-a1ed-44685d771a32.png",
     "/images/bf56a0c6-48e4-49f7-b286-8e3fda9a3385.png",
     "/images/7cc724d4-3e14-4e7c-9e7a-8d613fde54d0.png",
+    "/images/club44watermark.png",
+    "/images/1Dada.png"
   ];
 
   const extendedLogos = [...logos, ...logos, ...logos];

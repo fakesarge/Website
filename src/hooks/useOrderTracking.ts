@@ -19,17 +19,11 @@ interface Order {
   updated_at: string;
 }
 
+// Fetch all orders regardless of authentication
 export const useOrders = () => {
   return useQuery<Order[]>({
     queryKey: ['orders'],
     queryFn: async () => {
-      // Check if user is authenticated first
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        return [];
-      }
-
       const { data, error } = await supabase
         .from('orders')
         .select('*')
@@ -39,11 +33,11 @@ export const useOrders = () => {
         console.error('Error fetching orders:', error);
         return [];
       }
-      
+
       return data || [];
     },
-    staleTime: 30000, // 30 seconds
-    gcTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 30000,
+    gcTime: 5 * 60 * 1000,
     retry: 2,
   });
 };
@@ -56,17 +50,8 @@ export const useRealtimeOrders = () => {
       .channel('orders_changes')
       .on(
         'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'orders'
-        },
-        (payload) => {
-          console.log('Real-time order change:', payload);
-          
-          // Webhook notifications are handled server-side only
-          
-          // Refetch orders when any change occurs
+        { event: '*', schema: 'public', table: 'orders' },
+        () => {
           queryClient.invalidateQueries({ queryKey: ['orders'] });
         }
       )
@@ -89,7 +74,6 @@ export const useCreateOrder = () => {
       service: string;
       category: string;
       price: number;
-      description?: string;
     }) => {
       const { data, error } = await supabase
         .from('orders')
@@ -105,5 +89,3 @@ export const useCreateOrder = () => {
     },
   });
 };
-
-// Removed affiliate and webhook functionality from frontend

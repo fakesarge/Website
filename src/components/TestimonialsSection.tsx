@@ -7,40 +7,34 @@ import { Card } from "./ui/card";
 
 const testimonials = [
   {
-    name: "Alex Rodriguez",
-    role: "FiveM Server Owner",
-    image: "https://avatars.githubusercontent.com/u/1234567?v=4",
-    content: "The custom loading screens and GFX from NOVA VFX completely transformed our server's aesthetic. Players constantly compliment the professional quality and smooth animations."
+    name: "Tiger Woods",
+    role: "Bypass Owner & Youtuber",
+    image: "https://cdn.discordapp.com/avatars/1127102245394190346/42441f069b7186182f0b4bcc898e6615.webp?size=1024",
+    content: "Exactly what I wanted, Was so good I hired the guy."
   },
   {
-    name: "Sarah Johnson",
-    role: "Gaming Community Manager",
-    image: "https://avatars.githubusercontent.com/u/2345678?v=4",
-    content: "NOVA VFX delivered exactly what we needed - stunning Blender animations and logos that perfectly matched our brand. The turnaround time was incredible!"
+    name: "Ayznn",
+    role: "Owner of WaveSheild AC",
+    image: "https://cdn.discordapp.com/avatars/746079627751063644/7556b4df6f035f96cc12e9f09f865a23.webp?size=1024",
+    content: "fast and clean"
   },
   {
-    name: "Mike Chen",
-    role: "Roleplay Server Admin",
-    image: "https://avatars.githubusercontent.com/u/3456789?v=4",
-    content: "The loading screen GFX package we purchased elevated our server to the next level. Professional quality at an affordable price - couldn't ask for more!"
+    name: "Fastlifejay",
+    role: "Fivem Server Owner",
+    image: "https://cdn.discordapp.com/avatars/1006775634036531220/091a0cddd021557d059fccbf20ed39e7.webp?size=1024",
+    content: "Vfx is in fucking sane real shark shit💯 Tap in with bro any gfx/vfx needs he will score i promise you🗣️ W sarge❤️"
   },
   {
-    name: "Emma Wilson",
+    name: "Not Disclosed",
     role: "Content Creator",
     image: "https://avatars.githubusercontent.com/u/4567890?v=4",
-    content: "Working with NOVA VFX for our custom logo design was seamless. They understood our vision and delivered premium Blender graphics that exceeded expectations."
+    content: "Working with sarge for our custom logo design was seamless. They understood our vision and delivered premium Blender graphics that exceeded expectations."
   },
   {
-    name: "David Thompson",
+    name: "Not Disclosed",
     role: "Server Developer",
     image: "https://avatars.githubusercontent.com/u/5678901?v=4",
-    content: "The attention to detail in their FiveM graphics is outstanding. Every element is perfectly optimized and looks incredible in-game."
-  },
-  {
-    name: "Lisa Garcia",
-    role: "Community Owner",
-    image: "https://avatars.githubusercontent.com/u/6789012?v=4",
-    content: "NOVA VFX created the most professional loading screens we've ever had. Our players love the immersive experience from the moment they connect to our server."
+    content: "The attention to detail in their FiveM VFX is outstanding. Every element is perfectly optimized and looks incredible in-game."
   }
 ];
 

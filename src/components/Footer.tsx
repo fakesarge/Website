@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 
 const Footer = () => {
   const handleDiscordClick = () => {
-    window.open('https://discord.gg/VFX', '_blank');
+    window.open('https://discord.gg/74hrs', '_blank');
   };
 
   return (

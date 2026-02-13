@@ -8,7 +8,7 @@ import { AdminUsers } from '@/components/admin/AdminUsers';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Shield, Loader2 } from 'lucide-react';
-
+const MAINTENANCE_MODE = true;
 const Admin = () => {
   const { user, loading: authLoading } = useAuth();
   const { data: roles, isLoading: rolesLoading } = useUserRoles(user?.id);
@@ -48,7 +48,12 @@ const Admin = () => {
     return null;
   }
 
+  
+
+  
+
   return (
+    
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
