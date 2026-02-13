@@ -1,13 +1,13 @@
-
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { FeaturesSection } from "@/components/features/FeaturesSection";
+import WhatWeDoSection from "./WhatWeDoSection";
+import FeaturedWorkSection from "./FeaturedWorkSection";
+import StatsSection from "./StatsSection";
+import WhyUsSection from "./WhyUsSection";
 import LogoCarousel from "@/components/LogoCarousel";
 import TestimonialsSection from "@/components/TestimonialsSection";
-import CTASection from "./CTASection";
 import Footer from "@/components/Footer";
 import PriceEstimator from "@/components/PriceEstimator";
-import StatsCounter from "@/components/StatsCounter";
 
 interface ContentSectionProps {
   contentRef: React.RefObject<HTMLDivElement>;
@@ -26,68 +26,67 @@ const ContentSection = ({ contentRef }: ContentSectionProps) => {
   }, []);
 
   return (
-    <motion.div 
+    <motion.div
       ref={contentRef}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
-      className="w-full"
+      className="w-full relative"
     >
-
-      {/* Features Section */}
-      <div id="features" className="bg-black" data-animate>
-        <FeaturesSection />
+      {/* Ambient background effects */}
+      <div className="fixed inset-0 -z-10 pointer-events-none">
+        <div className="absolute top-[30%] left-[10%] w-[500px] h-[500px] bg-primary/[0.02] rounded-full blur-[150px]" />
+        <div className="absolute top-[60%] right-[10%] w-[400px] h-[400px] bg-primary/[0.03] rounded-full blur-[120px]" />
       </div>
+
+      {/* Section 1 – What We Do */}
+      <WhatWeDoSection />
 
       {/* Logo Carousel */}
       <LogoCarousel />
 
-      {/* Stats Counter */}
-      <div className="bg-black" data-animate>
-        <StatsCounter />
-      </div>
+      {/* Section 2 – Featured Work */}
+      <FeaturedWorkSection />
 
-      {/* Price Calculator Section */}
-      <div id="pricing" className="bg-black" data-animate>
+      {/* Section 3 – Social Proof Stats */}
+      <StatsSection />
+
+      {/* Section 4 – Why 74hrs */}
+      <WhyUsSection />
+
+      {/* Price Calculator */}
+      <div id="pricing">
         <section className="container px-4 py-24">
           <div className="max-w-4xl mx-auto text-center mb-12">
-            <h2 className="text-5xl md:text-6xl font-normal mb-6">
-              Get Your{" "}
-              <span className="text-gradient font-medium">Custom Quote</span>
+            <div className="w-8 h-[1px] bg-primary/50 mx-auto mb-6" />
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+              Get Your <span className="text-gradient">Custom Quote</span>
             </h2>
-            <p className="text-lg text-gray-400 mb-8">
+            <p className="text-muted-foreground text-lg mb-8">
               Use our price calculator to get an instant quote for your project
             </p>
-            <button 
-              onClick={() => {
-                const event = new CustomEvent('openPriceEstimator');
-                window.dispatchEvent(event);
-              }}
-              className="button-gradient text-lg px-8 py-3 rounded-lg hover:scale-105 transition-transform duration-200"
+            <motion.button
+              whileHover={{ scale: 1.04, boxShadow: "0 0 30px hsl(var(--primary) / 0.3)" }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => setShowPriceEstimator(true)}
+              className="button-gradient text-sm px-8 py-3.5 rounded-full font-medium cursor-pointer"
             >
               Calculate Price
-            </button>
+            </motion.button>
           </div>
         </section>
       </div>
 
-      {/* Testimonials Section */}
-      <div className="bg-black">
-        <TestimonialsSection />
-      </div>
-
-      {/* CTA Section */}
-      <CTASection />
+      {/* Testimonials */}
+      <TestimonialsSection />
 
       {/* Footer */}
-      <div className="bg-black">
-        <Footer />
-      </div>
-      
+      <Footer />
+
       {/* Price Estimator Modal */}
-      <PriceEstimator 
-        isOpen={showPriceEstimator} 
-        onClose={() => setShowPriceEstimator(false)} 
+      <PriceEstimator
+        isOpen={showPriceEstimator}
+        onClose={() => setShowPriceEstimator(false)}
       />
     </motion.div>
   );

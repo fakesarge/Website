@@ -99,6 +99,7 @@ export type Database = {
           discord_id: string | null
           discord_username: string | null
           id: string
+          is_admin: boolean | null
           last_signed_in_ip: string | null
           updated_at: string
         }
@@ -108,6 +109,7 @@ export type Database = {
           discord_id?: string | null
           discord_username?: string | null
           id: string
+          is_admin?: boolean | null
           last_signed_in_ip?: string | null
           updated_at?: string
         }
@@ -117,6 +119,7 @@ export type Database = {
           discord_id?: string | null
           discord_username?: string | null
           id?: string
+          is_admin?: boolean | null
           last_signed_in_ip?: string | null
           updated_at?: string
         }
