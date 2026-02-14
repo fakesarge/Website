@@ -64,15 +64,6 @@ const MobileNavigation = ({
             ))}
             
             <Link 
-              to="/login" 
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              <Button variant="outline" className="glass w-full mb-2">
-                Login
-              </Button>
-            </Link>
-            
-            <Link 
               to="/shop" 
               onClick={() => setIsMobileMenuOpen(false)}
             >

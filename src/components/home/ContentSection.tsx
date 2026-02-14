@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import WhatWeDoSection from "./WhatWeDoSection";
-import FeaturedWorkSection from "./FeaturedWorkSection";
 import StatsSection from "./StatsSection";
 import WhyUsSection from "./WhyUsSection";
 import LogoCarousel from "@/components/LogoCarousel";
@@ -45,10 +44,7 @@ const ContentSection = ({ contentRef }: ContentSectionProps) => {
       {/* Logo Carousel */}
       <LogoCarousel />
 
-      {/* Section 2 – Featured Work */}
-      <FeaturedWorkSection />
-
-      {/* Section 3 – Social Proof Stats */}
+      {/* Section 2 – Social Proof Stats */}
       <StatsSection />
 
       {/* Section 4 – Why 74hrs */}
