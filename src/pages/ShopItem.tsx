@@ -1,16 +1,11 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Star, Check, ExternalLink, ChevronRight, ArrowLeft } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Star, Check, ExternalLink, ChevronRight, ChevronLeft, Play } from "lucide-react";
+import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ShopGridCard from "@/components/shop/ShopGridCard";
-import { getItemById, getCategoryByItemId, getRelatedItems, type ShopItem as ShopItemType } from "@/config/shopData";
-
-const iconEmoji: Record<string, string> = {
-  palette: "🎨", code: "💻", video: "🎬", box: "📦", headphones: "🎧",
-  star: "⭐", gift: "🎁", shield: "🛡️", zap: "⚡", layers: "📚",
-  sparkles: "✨", crown: "👑", music: "🎵", monitor: "🖥️", image: "🖼️",
-};
+import { getItemById, getCategoryByItemId, getRelatedItems, type MediaItem } from "@/config/shopData";
 
 const ShopItemPage = () => {
   const { itemId } = useParams<{ itemId: string }>();
@@ -18,6 +13,7 @@ const ShopItemPage = () => {
   const item = itemId ? getItemById(itemId) : undefined;
   const category = itemId ? getCategoryByItemId(itemId) : undefined;
   const related = itemId ? getRelatedItems(itemId, 4) : [];
+  const [activeMediaIndex, setActiveMediaIndex] = useState(0);
 
   if (!item) {
     return (
@@ -30,9 +26,26 @@ const ShopItemPage = () => {
     );
   }
 
+  // Build media list from images + media fields
+  const allMedia: MediaItem[] = [];
+  if (item.images?.length) {
+    item.images.forEach((img) => allMedia.push({ type: "image", url: img }));
+  }
+  if (item.media?.length) {
+    item.media.forEach((m) => allMedia.push(m));
+  }
+  // Fallback to icon if no media
+  const hasMedia = allMedia.length > 0;
+  const currentMedia = hasMedia ? allMedia[activeMediaIndex] : null;
+
+  const iconEmoji: Record<string, string> = {
+    palette: "🎨", code: "💻", video: "🎬", box: "📦", headphones: "🎧",
+    star: "⭐", gift: "🎁", shield: "🛡️", zap: "⚡", layers: "📚",
+    sparkles: "✨", crown: "👑", music: "🎵", monitor: "🖥️", image: "🖼️",
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Ambient */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
         <div className="absolute top-32 left-1/4 h-[500px] w-[500px] rounded-full bg-primary/5 blur-[120px]" />
@@ -63,28 +76,111 @@ const ShopItemPage = () => {
       {/* Hero Section */}
       <section className="container px-4 pb-16">
         <div className="mx-auto max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
-          {/* Left — Visual */}
+          {/* Left — Media Gallery */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="relative"
+            className="relative space-y-4"
           >
-            <div className="relative flex items-center justify-center aspect-square rounded-3xl bg-secondary/40 border border-border/30 overflow-hidden">
-              <div className="flex h-28 w-28 items-center justify-center rounded-3xl bg-background/60 backdrop-blur-sm">
-                <span className="text-7xl">{iconEmoji[item.icon] || "📦"}</span>
-              </div>
+            {/* Main display */}
+            <div className="relative aspect-[4/3] rounded-2xl bg-secondary/40 border border-border/30 overflow-hidden">
+              <AnimatePresence mode="wait">
+                {currentMedia ? (
+                  currentMedia.type === "video" ? (
+                    <motion.div
+                      key={`video-${activeMediaIndex}`}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="w-full h-full"
+                    >
+                      <iframe
+                        src={`https://www.youtube.com/embed/${currentMedia.url}`}
+                        className="w-full h-full"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        title={item.name}
+                      />
+                    </motion.div>
+                  ) : (
+                    <motion.img
+                      key={`img-${activeMediaIndex}`}
+                      initial={{ opacity: 0, scale: 1.05 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.3 }}
+                      src={currentMedia.url}
+                      alt={item.name}
+                      className="w-full h-full object-cover"
+                    />
+                  )
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="flex items-center justify-center h-full"
+                  >
+                    <span className="text-7xl">{iconEmoji[item.icon] || "📦"}</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               {item.badge && (
-                <span className="absolute top-5 left-5 rounded-full bg-primary px-4 py-1.5 text-xs font-bold text-primary-foreground shadow-lg">
+                <span className="absolute top-4 left-4 rounded-full bg-primary px-4 py-1.5 text-xs font-bold text-primary-foreground shadow-lg">
                   {item.badge}
                 </span>
               )}
               {item.originalPrice && (
-                <span className="absolute top-5 right-5 rounded-full bg-destructive/90 px-3 py-1 text-xs font-bold text-white">
+                <span className="absolute top-4 right-4 rounded-full bg-destructive/90 px-3 py-1 text-xs font-bold text-white">
                   Save {Math.round(((parseInt(item.originalPrice.replace("$", "")) - parseInt(item.price.replace("$", ""))) / parseInt(item.originalPrice.replace("$", ""))) * 100)}%
                 </span>
               )}
+
+              {/* Navigation arrows */}
+              {allMedia.length > 1 && (
+                <>
+                  <button
+                    onClick={() => setActiveMediaIndex((prev) => (prev - 1 + allMedia.length) % allMedia.length)}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-background/80 backdrop-blur-sm text-foreground shadow-md transition-all hover:bg-background hover:scale-110"
+                  >
+                    <ChevronLeft className="h-5 w-5" />
+                  </button>
+                  <button
+                    onClick={() => setActiveMediaIndex((prev) => (prev + 1) % allMedia.length)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-background/80 backdrop-blur-sm text-foreground shadow-md transition-all hover:bg-background hover:scale-110"
+                  >
+                    <ChevronRight className="h-5 w-5" />
+                  </button>
+                </>
+              )}
             </div>
+
+            {/* Thumbnails */}
+            {allMedia.length > 1 && (
+              <div className="flex gap-2 overflow-x-auto pb-1">
+                {allMedia.map((media, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveMediaIndex(i)}
+                    className={`relative flex-shrink-0 w-20 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
+                      i === activeMediaIndex
+                        ? "border-primary shadow-md shadow-primary/20"
+                        : "border-border/30 opacity-60 hover:opacity-100"
+                    }`}
+                  >
+                    {media.type === "video" ? (
+                      <div className="w-full h-full bg-secondary/60 flex items-center justify-center">
+                        <Play className="h-5 w-5 text-foreground/60" />
+                      </div>
+                    ) : (
+                      <img src={media.url} alt="" className="w-full h-full object-cover" />
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
           </motion.div>
 
           {/* Right — Details */}
@@ -102,7 +198,6 @@ const ShopItemPage = () => {
 
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">{item.name}</h1>
 
-            {/* Rating */}
             {item.rating && (
               <div className="flex items-center gap-3">
                 <div className="flex">
@@ -122,18 +217,14 @@ const ShopItemPage = () => {
               {item.fullDescription || item.description}
             </p>
 
-            {/* Price */}
             <div className="flex items-baseline gap-3">
-              {item.priceNote && (
-                <span className="text-sm text-muted-foreground">{item.priceNote}</span>
-              )}
+              {item.priceNote && <span className="text-sm text-muted-foreground">{item.priceNote}</span>}
               <span className="text-4xl font-bold text-foreground">{item.price}</span>
               {item.originalPrice && (
                 <span className="text-xl text-muted-foreground line-through">{item.originalPrice}</span>
               )}
             </div>
 
-            {/* Features */}
             <div className="rounded-2xl border border-border/30 bg-card/50 backdrop-blur-sm p-5">
               <h4 className="mb-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">What's Included</h4>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -148,7 +239,6 @@ const ShopItemPage = () => {
               </ul>
             </div>
 
-            {/* CTA */}
             <button
               onClick={() => window.open("https://discord.gg/74hrs", "_blank")}
               className="flex w-full items-center justify-center gap-2.5 rounded-full bg-primary py-4 text-sm font-bold text-primary-foreground transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary/20"
@@ -163,7 +253,7 @@ const ShopItemPage = () => {
         </div>
       </section>
 
-      {/* Reviews Section */}
+      {/* Reviews */}
       {item.userReviews && item.userReviews.length > 0 && (
         <section className="container px-4 pb-20">
           <div className="mx-auto max-w-5xl">
