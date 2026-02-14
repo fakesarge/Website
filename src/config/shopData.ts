@@ -6,6 +6,13 @@ export interface ShopReview {
   helpful?: boolean;
 }
 
+export interface MediaItem {
+  type: "image" | "video";
+  url: string;
+  thumbnail?: string;
+  label?: string;
+}
+
 export interface ShopItem {
   id: string;
   name: string;
@@ -18,6 +25,8 @@ export interface ShopItem {
   badge?: string;
   icon: "palette" | "code" | "video" | "box" | "headphones" | "star" | "gift" | "shield" | "zap" | "image" | "layers" | "monitor" | "music" | "sparkles" | "crown";
   image?: string;
+  images?: string[];
+  media?: MediaItem[];
   rating?: number;
   reviews?: number;
   originalPrice?: string;
@@ -120,6 +129,8 @@ export const shopCategories: ShopCategory[] = [
         features: ["500+ Components", "Figma & Sketch", "Dark & Light Modes", "Auto Layout", "Design Tokens", "Regular Updates"],
         icon: "box",
         badge: "New",
+        image: "/images/products/ui-kit-pro.jpg",
+        images: ["/images/products/ui-kit-pro.jpg"],
         rating: 4.8,
         reviews: 124,
         userReviews: [
@@ -138,6 +149,8 @@ export const shopCategories: ShopCategory[] = [
         features: ["50+ VFX Templates", "4K Resolution", "After Effects", "Drag & Drop", "Tutorial Videos", "Commercial License"],
         popular: true,
         icon: "star",
+        image: "/images/products/vfx-template-pack.jpg",
+        images: ["/images/products/vfx-template-pack.jpg"],
         rating: 4.9,
         reviews: 287,
         userReviews: defaultReviews,
@@ -150,6 +163,8 @@ export const shopCategories: ShopCategory[] = [
         price: "$59",
         features: ["200+ Sound Effects", "Royalty Free", "WAV & MP3", "Cinematic Quality", "Game-Ready", "Stems Included"],
         icon: "headphones",
+        image: "/images/products/sound-design.jpg",
+        images: ["/images/products/sound-design.jpg"],
         rating: 4.7,
         reviews: 93,
         userReviews: defaultReviews,
@@ -164,6 +179,8 @@ export const shopCategories: ShopCategory[] = [
         features: ["100+ Models", "PBR Textures", "FBX & OBJ", "Multiple LODs", "Clean Topology", "Engine Ready"],
         icon: "layers",
         badge: "Hot",
+        image: "/images/products/3d-assets.jpg",
+        images: ["/images/products/3d-assets.jpg"],
         rating: 4.6,
         reviews: 58,
         userReviews: defaultReviews,
@@ -176,6 +193,8 @@ export const shopCategories: ShopCategory[] = [
         price: "$39",
         features: ["2000+ Icons", "SVG & PNG", "6 Styles", "Multiple Sizes", "Figma Plugin", "Weekly Updates"],
         icon: "sparkles",
+        image: "/images/products/icon-pack.jpg",
+        images: ["/images/products/icon-pack.jpg"],
         rating: 4.5,
         reviews: 312,
         userReviews: defaultReviews,
@@ -189,6 +208,8 @@ export const shopCategories: ShopCategory[] = [
         originalPrice: "$149",
         features: ["150+ Presets", "One-Click Apply", "Tutorials", "AE & Premiere", "Customizable", "Free Updates"],
         icon: "video",
+        image: "/images/products/motion-presets.jpg",
+        images: ["/images/products/motion-presets.jpg"],
         rating: 4.8,
         reviews: 176,
         userReviews: defaultReviews,

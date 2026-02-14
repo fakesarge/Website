@@ -38,10 +38,21 @@ const ShopGridCard = ({ item, index, onClick }: ShopGridCardProps) => {
       className="group relative flex flex-col rounded-xl border border-border/30 bg-card/50 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:border-border/60 hover:shadow-lg hover:shadow-primary/5 cursor-pointer"
     >
       {/* Image / Icon area */}
-      <div className="relative flex items-center justify-center h-44 bg-secondary/40">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-background/60 backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
-          <Icon className="h-8 w-8 text-foreground/70" />
-        </div>
+      <div className="relative h-44 bg-secondary/40 overflow-hidden">
+        {item.image ? (
+          <img
+            src={item.image}
+            alt={item.name}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            loading="lazy"
+          />
+        ) : (
+          <div className="flex items-center justify-center h-full">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-background/60 backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
+              <Icon className="h-8 w-8 text-foreground/70" />
+            </div>
+          </div>
+        )}
         {item.badge && (
           <span className="absolute top-3 left-3 rounded-full bg-primary px-2.5 py-0.5 text-[11px] font-semibold text-primary-foreground">
             {item.badge}
