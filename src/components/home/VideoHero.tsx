@@ -49,9 +49,9 @@ const VideoHero = ({ scrollToContent }: VideoHeroProps) => {
           transition={{ duration: 1, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="text-4xl sm:text-6xl md:text-8xl font-bold tracking-tight text-white leading-[1.1] mb-6"
         >
-          Custom VFX.
+          Where Your Vision
           <br />
-          <span className="text-gradient">Built for Elite Servers.</span>
+          <span className="text-gradient">Becomes Reality.</span>
         </motion.h1>
 
         <motion.p
@@ -60,7 +60,7 @@ const VideoHero = ({ scrollToContent }: VideoHeroProps) => {
           transition={{ duration: 0.8, delay: 0.8 }}
           className="text-muted-foreground text-base md:text-lg max-w-lg mb-10"
         >
-          Premium Blender animations, loading screens & graphics for FiveM communities.
+          Premium Blender animations, loading screens & graphics for you're communities.
         </motion.p>
 
         <motion.div

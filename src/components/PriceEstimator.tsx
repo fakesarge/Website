@@ -32,7 +32,9 @@ const PriceEstimator = ({ isOpen, onClose }: PriceEstimatorProps) => {
         if (customCharacter) basePrice += 30;
         if (fps && fps > 60) basePrice += 20;
         if (fps && fps > 100) basePrice += 80;
-        basePrice += scenes * 30;
+        if(scenes==2) basePrice+=80;
+        if(scenes==3) basePrice+=200;
+        if(scenes>3) basePrice+= 200 + (scenes-3)*100;
         basePrice += additionalEffects.length * 10;
       } else if (vfxType === 'Premade') {
         basePrice = 50;
@@ -197,7 +199,7 @@ const PriceEstimator = ({ isOpen, onClose }: PriceEstimatorProps) => {
                     <div>
                       <h4 className="font-medium mb-2">Additional Effects</h4>
                       <div className="grid grid-cols-2 gap-2">
-                        {['Particle Effects', 'Advanced Lighting', 'Sound Design', 'Motion Graphics'].map((effect) => (
+                        {['Sound Design', 'Motion Graphics', 'Extra Revisions', 'Custom Assets'].map((effect) => (
                           <Button
                             key={effect}
                             variant={additionalEffects.includes(effect) ? "default" : "outline"}

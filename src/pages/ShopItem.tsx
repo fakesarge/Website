@@ -240,7 +240,13 @@ const ShopItemPage = () => {
             </div>
 
             <button
-              onClick={() => window.open("https://discord.gg/74hrs", "_blank")}
+              onClick={() => {
+                if (item.purchaseUrl) {
+                  window.open(item.purchaseUrl, "_blank", "noopener,noreferrer");
+                } else {
+                  alert("Purchase link not available.");
+                }
+              }}
               className="flex w-full items-center justify-center gap-2.5 rounded-full bg-primary py-4 text-sm font-bold text-primary-foreground transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary/20"
             >
               Buy Now

@@ -88,7 +88,7 @@ const ShopItemDetail = ({ item, open, onOpenChange }: ShopItemDetailProps) => {
             <ExternalLink className="h-4 w-4" />
           </button>
           <p className="text-center text-xs text-muted-foreground">
-            You'll be redirected to our Discord to complete your order
+            You'll be redirected to our Discord or Stripe to complete your order
           </p>
         </div>
       </DialogContent>

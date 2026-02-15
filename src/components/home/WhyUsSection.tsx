@@ -3,11 +3,10 @@ import { Check, X } from "lucide-react";
 
 const comparisons = [
   { feature: "Custom Blender Renders", us: true, them: false },
-  { feature: "Server-Optimized Assets", us: true, them: false },
+  { feature: "Server Optimized Assets", us: true, them: false },
   { feature: "Dedicated Support", us: true, them: false },
-  { feature: "Unlimited Revisions", us: true, them: false },
-  { feature: "Fast Turnaround", us: true, them: true },
-  { feature: "Source Files Included", us: true, them: false },
+  { feature: "Fast Turnaround", us: true, them: false },
+  { feature: "Source Files Included", us: false, them: false },
 ];
 
 const WhyUsSection = () => {

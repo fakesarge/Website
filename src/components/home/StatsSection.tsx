@@ -21,9 +21,9 @@ const useCountUp = (end: number, duration: number, shouldStart: boolean) => {
 };
 
 const stats = [
-  { icon: Sparkles, label: "Effects Delivered", value: 2032, suffix: "+" },
-  { icon: Users, label: "Active Clients", value: 1324, suffix: "+" },
-  { icon: Hammer, label: "Custom Builds", value: 860, suffix: "+" },
+  { icon: Sparkles, label: "Products Delivered", value: 2032, suffix: "+" },
+  { icon: Users, label: "Active Clients", value: 120, suffix: "+" },
+  { icon: Hammer, label: "Hours Rendered", value: 12030, suffix: "+" },
 ];
 
 const StatsSection = () => {
