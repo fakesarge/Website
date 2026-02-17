@@ -30,6 +30,20 @@ const VideoHero = ({ scrollToContent }: VideoHeroProps) => {
         <div className="absolute inset-0 bg-gradient-to-r from-background/60 via-transparent to-background/60" />
       </div>
 
+      {/* Ambient floating lights */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <motion.div
+          animate={{ x: [0, 60, -40, 0], y: [0, -50, 30, 0], opacity: [0.15, 0.25, 0.1, 0.15] }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-1/4 left-1/3 h-[300px] w-[300px] rounded-full bg-primary/10 blur-[100px]"
+        />
+        <motion.div
+          animate={{ x: [0, -50, 40, 0], y: [0, 40, -30, 0], opacity: [0.1, 0.2, 0.08, 0.1] }}
+          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-1/3 right-1/4 h-[250px] w-[250px] rounded-full bg-primary/8 blur-[80px]"
+        />
+      </div>
+
       {/* Hero content */}
       <motion.div
         style={{ y: contentY }}
@@ -44,9 +58,9 @@ const VideoHero = ({ scrollToContent }: VideoHeroProps) => {
         />
 
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+          initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 1.2, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="text-4xl sm:text-6xl md:text-8xl font-bold tracking-tight text-white leading-[1.1] mb-6"
         >
           Where Your Vision
@@ -55,9 +69,9 @@ const VideoHero = ({ scrollToContent }: VideoHeroProps) => {
         </motion.h1>
 
         <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.9 }}
           className="text-muted-foreground text-base md:text-lg max-w-lg mb-10"
         >
           Premium Blender animations, loading screens & graphics for you're communities.
@@ -66,7 +80,7 @@ const VideoHero = ({ scrollToContent }: VideoHeroProps) => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.1 }}
+          transition={{ duration: 0.8, delay: 1.2 }}
           className="flex flex-col sm:flex-row gap-4"
         >
           <motion.button

@@ -45,7 +45,7 @@ serve(async (req) => {
     }
 
     // Prepare Discord message based on action type
-    let discordPayload
+    let discordPayload: any
     
     if (type === 'INSERT') {
       discordPayload = {

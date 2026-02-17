@@ -166,7 +166,7 @@ async function handleListOrders(supabase: any, body: any) {
       })
     }
 
-    const ordersList = orders.map(order => 
+    const ordersList = orders.map((order: any) => 
       `• **${order.order_name}** - $${order.price} - ${order.status}\n  📋 ID: ${order.id.slice(0, 8)}...`
     ).join('\n')
 
