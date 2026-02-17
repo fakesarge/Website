@@ -32,7 +32,8 @@ export interface ShopItem {
   originalPrice?: string;
   userReviews?: ShopReview[];
   purchaseUrl?: string;
-  
+  hoverPreview?: string;
+  glowColor?: string;
 }
 
 export interface ShopCategory {

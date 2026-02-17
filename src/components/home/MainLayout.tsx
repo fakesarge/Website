@@ -3,6 +3,7 @@ import { useRef } from "react";
 import Navigation from "@/components/Navigation";
 import VideoHero from "@/components/home/VideoHero";
 import ContentSection from "@/components/home/ContentSection";
+import SalePopup from "@/components/SalePopup";
 
 interface MainLayoutProps {
   showLoading: boolean;
@@ -28,6 +29,7 @@ const MainLayout = ({ showLoading }: MainLayoutProps) => {
 
       {/* Main Content Section with Reveal Animation */}
       <ContentSection contentRef={contentRef} />
+      <SalePopup />
     </div>
   );
 };
