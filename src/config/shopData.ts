@@ -104,8 +104,27 @@ export const shopCategories: ShopCategory[] = [
     description: "Ready-to-use digital assets crafted with precision",
     layout: "grid",
     items: [
+        {
+        id: "blender-optimization-pack",
+        name: "Blender Optimization Pack",
+        description: "PDF with proven techniques to optimize Blender performance and workflow.",
+        fullDescription: "Easy to follow PDF guide packed with proven techniques to optimize Blender performance and workflow. Learn how to speed up your projects, reduce render times, and enhance your creative process with tips on viewport optimization, render settings, asset management, and more. Perfect for artists of all levels looking to get the most out of Blender.",
+        price: "$21",
+        originalPrice: "$30",
+        features: ["Render Time Reduction by 50-80%", "Viewport Optimization", "Cool tips and tricks", "Workflow Enhancements", "Proven Techniques"],
+        icon: "box",
+        badge: "New",
+        image: "/images/products/sdfsdfntitle.png",
+        images: ["/images/products/sdfsdfntitle.png","/images/products/blender.png"],
+        rating: 5,
+        reviews: 2,
+        userReviews: [
+         ],
+        purchaseUrl: "https://buy.stripe.com/00w3co3g9eTB80k45h6Ri05?prefilled_promo_code=SAVE30",
+
+      },
       {
-        id: "p1",
+        id: "social-pop-ups",
         name: "Social Pop Ups",
         description: "ZIP File with After Effect + Premier Pro + Photoshop Templates",
         fullDescription: "Easy to use social media pop-up templates for After Effects, Premiere Pro, and Photoshop. Each template is fully customizable with intuitive controls, allowing you to quickly create eye-catching pop-ups for YouTube, Twitch, Instagram, and more. Perfect for streamers and content creators looking to enhance their videos with professional-quality graphics.",
@@ -124,7 +143,7 @@ export const shopCategories: ShopCategory[] = [
 
       },
       {
-        id: "p2",
+        id: "ghetto-room-template",
         name: "Ghetto Room Template",
         description: "Blender File with a fully customizable 3D room scene, perfect for resellers and people who want to learn how to make loading screens.",
         fullDescription: "[PREVIEW IN PORTFOLIO] \n A fully customizable 3D room scene created in Blender, perfect for resellers and aspiring loading screen creators. This template includes a detailed interior with dynamic lighting, animated elements, and modular components that can be easily modified to fit your unique style. Ideal for learning the art of loading screen design or for creating high-quality assets to sell.",
@@ -140,7 +159,7 @@ export const shopCategories: ShopCategory[] = [
         purchaseUrl: "https://buy.stripe.com/8x28wI9Ex8vd1BWdFR6Ri04?prefilled_promo_code=SAVE15",
       },
             {
-        id: "p3",
+        id: "christmas-room-template",
         name: "Christmas Room Template",
         description: "Blender File with a fully customizable 3D room scene, perfect for resellers and people who want to learn how to make loading screens.",
         fullDescription: "[PREVIEW IN PORTFOLIO] \n A fully customizable 3D room scene created in Blender, perfect for resellers and aspiring loading screen creators. This template includes a detailed interior with dynamic lighting, animated elements, and modular components that can be easily modified to fit your unique style. Ideal for learning the art of loading screen design or for creating high-quality assets to sell.",
