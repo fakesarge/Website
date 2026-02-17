@@ -1,22 +1,8 @@
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
-  Star,
-  ShoppingCart,
-  Palette,
-  Code,
-  Video,
-  Box,
-  Headphones,
-  Gift,
-  Shield,
-  Zap,
-  Layers,
-  Monitor,
-  Music,
-  Sparkles,
-  Crown,
-  Image,
+  Star, ShoppingCart, Palette, Code, Video, Box, Headphones, Gift, Shield, Zap,
+  Layers, Monitor, Music, Sparkles, Crown, Image,
 } from "lucide-react";
 import type { ShopItem } from "@/config/shopData";
 
@@ -41,25 +27,22 @@ const ShopGridCard = ({ item, index, onClick }: ShopGridCardProps) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.05 }}
-      whileHover={{ y: -6 }}
-      onMouseEnter={() => {
-        setHovered(true);
-        videoRef.current?.play();
-      }}
+      initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
+      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      transition={{ duration: 0.5, delay: index * 0.06, ease: [0.25, 0.46, 0.45, 0.94] }}
+      whileHover={{ y: -6, transition: { duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] } }}
+      onMouseEnter={() => { setHovered(true); videoRef.current?.play(); }}
       onMouseLeave={() => {
         setHovered(false);
-        if (videoRef.current) {
-          videoRef.current.pause();
-          videoRef.current.currentTime = 0;
-        }
+        if (videoRef.current) { videoRef.current.pause(); videoRef.current.currentTime = 0; }
       }}
       onClick={onClick}
-      className="group relative flex flex-col rounded-2xl border border-border/30 bg-card/60 backdrop-blur-md overflow-hidden transition-all duration-500 cursor-pointer"
+      className="group relative flex flex-col rounded-2xl border border-border/30 bg-card/60 backdrop-blur-md overflow-hidden cursor-pointer transition-colors duration-500 hover:border-border/50"
       style={{
-        boxShadow: hovered ? `0 20px 50px -12px ${glowColor}` : "0 0 0 transparent",
+        boxShadow: hovered
+          ? `0 20px 50px -12px ${glowColor}, 0 0 0 1px hsl(var(--border) / 0.1)`
+          : "0 2px 12px -4px hsl(var(--primary) / 0.04)",
+        transition: "box-shadow 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
       }}
     >
       {/* Image / Video Area */}
@@ -69,8 +52,8 @@ const ShopGridCard = ({ item, index, onClick }: ShopGridCardProps) => {
             <img
               src={item.image}
               alt={item.name}
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-                hovered && item.hoverPreview ? "opacity-0" : "opacity-100"
+              className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ${
+                hovered && item.hoverPreview ? "opacity-0 scale-105" : "opacity-100 scale-100"
               }`}
               loading="lazy"
             />
@@ -79,11 +62,8 @@ const ShopGridCard = ({ item, index, onClick }: ShopGridCardProps) => {
                 <video
                   ref={videoRef}
                   src={item.hoverPreview}
-                  muted
-                  loop
-                  playsInline
-                  preload="none"
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+                  muted loop playsInline preload="none"
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
                     hovered ? "opacity-100" : "opacity-0"
                   }`}
                 />
@@ -91,7 +71,7 @@ const ShopGridCard = ({ item, index, onClick }: ShopGridCardProps) => {
                 <img
                   src={item.hoverPreview}
                   alt=""
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
                     hovered ? "opacity-100" : "opacity-0"
                   }`}
                 />
@@ -105,6 +85,9 @@ const ShopGridCard = ({ item, index, onClick }: ShopGridCardProps) => {
             </div>
           </div>
         )}
+
+        {/* Subtle inner gradient overlay for depth */}
+        <div className="absolute inset-0 bg-gradient-to-t from-card/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
         {item.badge && (
           <span className="absolute top-3 left-3 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground shadow-sm">
@@ -129,7 +112,7 @@ const ShopGridCard = ({ item, index, onClick }: ShopGridCardProps) => {
 
       {/* Content */}
       <div className="flex flex-1 flex-col p-6 gap-4">
-        <h3 className="text-lg font-semibold text-foreground leading-snug line-clamp-2">
+        <h3 className="text-lg font-semibold text-foreground leading-snug line-clamp-2 group-hover:text-primary transition-colors duration-500">
           {item.name}
         </h3>
 
@@ -175,11 +158,8 @@ const ShopGridCard = ({ item, index, onClick }: ShopGridCardProps) => {
           </div>
 
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              window.open(item.purchaseUrl, "_blank");
-            }}
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground transition-all duration-200 hover:opacity-90 hover:scale-105 active:scale-95 shadow-md"
+            onClick={(e) => { e.stopPropagation(); window.open(item.purchaseUrl, "_blank"); }}
+            className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground transition-all duration-300 hover:opacity-90 hover:scale-105 hover:shadow-[0_0_20px_hsl(var(--primary)/0.3)] active:scale-95 shadow-md"
             aria-label="Buy Now"
           >
             <ShoppingCart className="h-5 w-5" />
