@@ -111,6 +111,20 @@ const ShopGridCard = ({ item, index, onClick }: ShopGridCardProps) => {
             {item.badge}
           </span>
         )}
+
+        {item.originalPrice && (
+          <motion.div
+            initial={{ scale: 0, rotate: -12 }}
+            animate={{ scale: 1, rotate: -12 }}
+            transition={{ type: "spring", stiffness: 400, damping: 15, delay: index * 0.05 + 0.2 }}
+            className="absolute top-3 right-3 flex flex-col items-center justify-center h-12 w-12 rounded-full bg-red-500 shadow-lg shadow-red-500/30"
+          >
+            <span className="text-[10px] font-bold text-white leading-none">SAVE</span>
+            <span className="text-sm font-black text-white leading-none">
+              {Math.round(((parseFloat(item.originalPrice.replace(/[^0-9.]/g, '')) - parseFloat(item.price.replace(/[^0-9.]/g, ''))) / parseFloat(item.originalPrice.replace(/[^0-9.]/g, ''))) * 100)}%
+            </span>
+          </motion.div>
+        )}
       </div>
 
       {/* Content */}
