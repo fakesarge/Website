@@ -1,9 +1,9 @@
-
 import { useRef } from "react";
 import Navigation from "@/components/Navigation";
 import VideoHero from "@/components/home/VideoHero";
 import ContentSection from "@/components/home/ContentSection";
 import SalePopup from "@/components/SalePopup";
+import AmbientBackground from "@/components/AmbientBackground";
 
 interface MainLayoutProps {
   showLoading: boolean;
@@ -21,7 +21,8 @@ const MainLayout = ({ showLoading }: MainLayoutProps) => {
   }
 
   return (
-    <div className="min-h-screen bg-black text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
+      <AmbientBackground />
       <Navigation />
       
       {/* Full-screen YouTube Video Hero Section */}

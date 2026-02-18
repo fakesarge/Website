@@ -4,8 +4,10 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import GalleryCard from "@/components/gallery/GalleryCard";
 import GalleryShowcase from "@/components/gallery/GalleryShowcase";
-import GalleryParticles from "@/components/gallery/GalleryParticles";
+import AmbientBackground from "@/components/AmbientBackground";
 import { galleryProjects, type GalleryProject } from "@/config/galleryData";
+
+const premiumEase = [0.25, 0.46, 0.45, 0.94] as const;
 
 const Portfolio = () => {
   const [activeProject, setActiveProject] = useState<GalleryProject | null>(null);
@@ -13,15 +15,7 @@ const Portfolio = () => {
   return (
     <div className="min-h-screen bg-background relative">
       <Navigation />
-
-      {/* Ambient background */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/30 to-background" />
-        <GalleryParticles />
-        {/* Accent glow blobs */}
-        <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-primary/[0.03] rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-primary/[0.04] rounded-full blur-[100px]" />
-      </div>
+      <AmbientBackground />
 
       <main className="pt-20">
         {/* Hero */}
@@ -30,23 +24,22 @@ const Portfolio = () => {
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.8, ease: premiumEase }}
             >
-              {/* Accent line */}
               <motion.div
                 className="w-12 h-[2px] bg-primary mx-auto mb-8"
                 initial={{ width: 0 }}
                 animate={{ width: 48 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
+                transition={{ duration: 0.8, delay: 0.3, ease: premiumEase }}
               />
-              <h1 className="text-5xl md:text-8xl font-bold tracking-tight text-white mb-4">
+              <h1 className="text-5xl md:text-8xl font-bold tracking-tight text-foreground mb-4">
                 Our Work<span className="text-primary">.</span>
               </h1>
               <motion.p
                 className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.4, duration: 0.6 }}
+                transition={{ delay: 0.4, duration: 0.6, ease: premiumEase }}
               >
                 Built for elite FiveM servers.
               </motion.p>
@@ -71,7 +64,6 @@ const Portfolio = () => {
 
       <Footer />
 
-      {/* Fullscreen Showcase */}
       <GalleryShowcase
         project={activeProject}
         onClose={() => setActiveProject(null)}

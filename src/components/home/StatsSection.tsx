@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Sparkles, Users, Hammer } from "lucide-react";
 
+const premiumEase = [0.25, 0.46, 0.45, 0.94] as const;
+
 const useCountUp = (end: number, duration: number, shouldStart: boolean) => {
   const [count, setCount] = useState(0);
 
@@ -42,7 +44,12 @@ const StatsSection = () => {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.15 }}
+                transition={{ duration: 0.6, delay: index * 0.15, ease: premiumEase }}
+                whileHover={{
+                  y: -4,
+                  boxShadow: "0 20px 40px -15px hsl(var(--primary) / 0.1)",
+                  transition: { duration: 0.3, ease: premiumEase },
+                }}
                 className="glass rounded-2xl p-10 text-center hover:border-primary/20 transition-all duration-500"
               >
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-5">
