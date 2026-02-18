@@ -14,7 +14,11 @@ const LogoCarousel = () => {
   const extendedLogos = [...logos, ...logos, ...logos];
 
   return (
-    <div className="w-full overflow-hidden bg-background/50 backdrop-blur-sm py-12 mt-20">
+    <div className="w-full overflow-hidden py-12 mt-20 relative">
+      {/* Fade edges */}
+      <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+      
       <motion.div 
         className="flex space-x-16"
         initial={{ opacity: 0, x: "0%" }}
@@ -25,7 +29,7 @@ const LogoCarousel = () => {
         transition={{
           opacity: { duration: 0.5 },
           x: {
-            duration: 15, // Reduced from 25 to 15 seconds
+            duration: 15,
             repeat: Infinity,
             ease: "linear",
             delay: 0.5
@@ -42,12 +46,14 @@ const LogoCarousel = () => {
             key={`logo-${index}`}
             src={logo}
             alt={`Partner logo ${index + 1}`}
-            className="h-8 object-contain"
-            initial={{ opacity: 0.5 }}
+            className="h-8 object-contain transition-all duration-300"
+            style={{ transitionTimingFunction: "cubic-bezier(0.25, 0.46, 0.45, 0.94)" }}
+            initial={{ opacity: 0.4 }}
             whileHover={{ 
               opacity: 1,
-              scale: 1.05,
-              transition: { duration: 0.2 }
+              scale: 1.08,
+              filter: "drop-shadow(0 0 8px hsl(var(--primary) / 0.3))",
+              transition: { duration: 0.3 }
             }}
           />
         ))}

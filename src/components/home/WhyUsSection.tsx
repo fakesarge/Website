@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { Check, X } from "lucide-react";
 
+const premiumEase = [0.25, 0.46, 0.45, 0.94] as const;
+
 const comparisons = [
   { feature: "Custom Blender Renders", us: true, them: false },
   { feature: "Server Optimized Assets", us: true, them: false },
@@ -16,7 +18,7 @@ const WhyUsSection = () => {
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.7 }}
+        transition={{ duration: 0.7, ease: premiumEase }}
         className="max-w-2xl mx-auto text-center mb-16"
       >
         <div className="w-8 h-[1px] bg-primary/50 mx-auto mb-6" />
@@ -34,7 +36,7 @@ const WhyUsSection = () => {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.5, ease: premiumEase }}
           className="grid grid-cols-3 gap-4 mb-4 px-4"
         >
           <div />
@@ -52,8 +54,13 @@ const WhyUsSection = () => {
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.07 }}
-              className="grid grid-cols-3 gap-4 glass rounded-xl p-4 items-center"
+              transition={{ duration: 0.5, delay: index * 0.07, ease: premiumEase }}
+              whileHover={{
+                x: 4,
+                boxShadow: "0 4px 20px -5px hsl(var(--primary) / 0.08)",
+                transition: { duration: 0.3, ease: premiumEase },
+              }}
+              className="grid grid-cols-3 gap-4 glass rounded-xl p-4 items-center transition-all duration-300"
             >
               <span className="text-sm text-foreground">{row.feature}</span>
               <div className="flex justify-center">

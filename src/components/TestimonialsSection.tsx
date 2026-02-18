@@ -1,9 +1,10 @@
-
 "use client";
 
 import { motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Card } from "./ui/card";
+
+const premiumEase = [0.25, 0.46, 0.45, 0.94] as const;
 
 const testimonials = [
   {
@@ -38,61 +39,57 @@ const testimonials = [
   }
 ];
 
+const TestimonialCard = ({ testimonial }: { testimonial: typeof testimonials[0] }) => (
+  <Card className="w-[400px] shrink-0 bg-card/40 backdrop-blur-xl border-border/10 hover:border-primary/15 transition-all duration-500 p-8 group"
+    style={{ transitionTimingFunction: "cubic-bezier(0.25, 0.46, 0.45, 0.94)" }}>
+    <div className="flex items-center gap-4 mb-6">
+      <Avatar className="h-12 w-12 ring-1 ring-border/20 group-hover:ring-primary/20 transition-all duration-300">
+        <AvatarImage src={testimonial.image} />
+        <AvatarFallback>{testimonial.name[0]}</AvatarFallback>
+      </Avatar>
+      <div>
+        <h4 className="font-medium text-foreground/90">{testimonial.name}</h4>
+        <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+      </div>
+    </div>
+    <p className="text-muted-foreground leading-relaxed">
+      {testimonial.content}
+    </p>
+  </Card>
+);
+
 const TestimonialsSection = () => {
   return (
-    <section className="py-20 overflow-hidden bg-black">
+    <section className="py-20 overflow-hidden">
       <div className="container px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.8, ease: premiumEase }}
           className="text-center mb-16"
         >
-          <h2 className="text-5xl font-normal mb-4">Trusted by Gaming Communities</h2>
+          <div className="w-8 h-[1px] bg-primary/50 mx-auto mb-6" />
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">Trusted by Gaming Communities</h2>
           <p className="text-muted-foreground text-lg">
             Join thousands of satisfied FiveM server owners using our premium VFX graphics
           </p>
         </motion.div>
 
         <div className="relative flex flex-col antialiased">
+          {/* Fade edges */}
+          <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+          
           <div className="relative flex overflow-hidden py-4">
             <div className="animate-marquee flex min-w-full shrink-0 items-stretch gap-8">
               {testimonials.map((testimonial, index) => (
-                <Card key={`${index}-1`} className="w-[400px] shrink-0 bg-black/40 backdrop-blur-xl border-white/5 hover:border-white/10 transition-all duration-300 p-8">
-                  <div className="flex items-center gap-4 mb-6">
-                    <Avatar className="h-12 w-12">
-                      <AvatarImage src={testimonial.image} />
-                      <AvatarFallback>{testimonial.name[0]}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <h4 className="font-medium text-white/90">{testimonial.name}</h4>
-                      <p className="text-sm text-white/60">{testimonial.role}</p>
-                    </div>
-                  </div>
-                  <p className="text-white/70 leading-relaxed">
-                    {testimonial.content}
-                  </p>
-                </Card>
+                <TestimonialCard key={`${index}-1`} testimonial={testimonial} />
               ))}
             </div>
             <div className="animate-marquee flex min-w-full shrink-0 items-stretch gap-8">
               {testimonials.map((testimonial, index) => (
-                <Card key={`${index}-2`} className="w-[400px] shrink-0 bg-black/40 backdrop-blur-xl border-white/5 hover:border-white/10 transition-all duration-300 p-8">
-                  <div className="flex items-center gap-4 mb-6">
-                    <Avatar className="h-12 w-12">
-                      <AvatarImage src={testimonial.image} />
-                      <AvatarFallback>{testimonial.name[0]}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <h4 className="font-medium text-white/90">{testimonial.name}</h4>
-                      <p className="text-sm text-white/60">{testimonial.role}</p>
-                    </div>
-                  </div>
-                  <p className="text-white/70 leading-relaxed">
-                    {testimonial.content}
-                  </p>
-                </Card>
+                <TestimonialCard key={`${index}-2`} testimonial={testimonial} />
               ))}
             </div>
           </div>

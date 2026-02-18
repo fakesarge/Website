@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { Zap, Shield, Gauge, Clock } from "lucide-react";
 
+const premiumEase = [0.25, 0.46, 0.45, 0.94] as const;
+
 const capabilities = [
   {
     icon: Zap,
@@ -40,7 +42,7 @@ const WhatWeDoSection = () => {
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.7 }}
+        transition={{ duration: 0.7, ease: premiumEase }}
         className="max-w-2xl mb-16"
       >
         <div className="w-8 h-[1px] bg-primary/50 mb-6" />
@@ -57,10 +59,11 @@ const WhatWeDoSection = () => {
         {showcaseImages.map((img, index) => (
           <motion.div
             key={img.alt}
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.5, delay: index * 0.08 }}
+            transition={{ duration: 0.6, delay: index * 0.08, ease: premiumEase }}
+            whileHover={{ y: -4, transition: { duration: 0.3, ease: premiumEase } }}
             className="group relative aspect-[4/3] rounded-xl overflow-hidden border border-border/20"
           >
             <img
@@ -68,9 +71,13 @@ const WhatWeDoSection = () => {
               alt={img.alt}
               loading="lazy"
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              style={{ transitionTimingFunction: "cubic-bezier(0.25, 0.46, 0.45, 0.94)" }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
-            <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-400">
+            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+              style={{ boxShadow: "inset 0 0 40px hsl(var(--primary) / 0.08)" }} />
+            <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-500"
+              style={{ transitionTimingFunction: "cubic-bezier(0.25, 0.46, 0.45, 0.94)" }}>
               <span className="text-xs font-medium text-foreground">{img.alt}</span>
             </div>
           </motion.div>
@@ -85,10 +92,11 @@ const WhatWeDoSection = () => {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
+            transition={{ duration: 0.6, delay: index * 0.1, ease: premiumEase }}
             whileHover={{
               y: -6,
-              transition: { duration: 0.3 },
+              boxShadow: "0 20px 40px -15px hsl(var(--primary) / 0.1)",
+              transition: { duration: 0.3, ease: premiumEase },
             }}
             className="group relative glass rounded-2xl p-7 hover:border-primary/20 transition-all duration-500"
           >

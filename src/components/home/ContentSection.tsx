@@ -7,6 +7,7 @@ import LogoCarousel from "@/components/LogoCarousel";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import Footer from "@/components/Footer";
 import PriceEstimator from "@/components/PriceEstimator";
+import SectionDivider from "@/components/SectionDivider";
 
 interface ContentSectionProps {
   contentRef: React.RefObject<HTMLDivElement>;
@@ -32,36 +33,54 @@ const ContentSection = ({ contentRef }: ContentSectionProps) => {
       transition={{ duration: 0.8 }}
       className="w-full relative"
     >
-      {/* Ambient background effects */}
-      <div className="fixed inset-0 -z-10 pointer-events-none">
-        <div className="absolute top-[30%] left-[10%] w-[500px] h-[500px] bg-primary/[0.02] rounded-full blur-[150px]" />
-        <div className="absolute top-[60%] right-[10%] w-[400px] h-[400px] bg-primary/[0.03] rounded-full blur-[120px]" />
-      </div>
-
       {/* Section 1 – What We Do */}
       <WhatWeDoSection />
+
+      <SectionDivider />
 
       {/* Logo Carousel */}
       <LogoCarousel />
 
+      <SectionDivider />
+
       {/* Section 2 – Social Proof Stats */}
       <StatsSection />
 
+      <SectionDivider />
+
       {/* Section 4 – Why 74hrs */}
       <WhyUsSection />
+
+      <SectionDivider />
 
       {/* Price Calculator */}
       <div id="pricing">
         <section className="container px-4 py-24">
           <div className="max-w-4xl mx-auto text-center mb-12">
             <div className="w-8 h-[1px] bg-primary/50 mx-auto mb-6" />
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="text-4xl md:text-5xl font-bold tracking-tight mb-4"
+            >
               Get Your <span className="text-gradient">Custom Quote</span>
-            </h2>
-            <p className="text-muted-foreground text-lg mb-8">
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="text-muted-foreground text-lg mb-8"
+            >
               Use our price calculator to get an instant quote for your project
-            </p>
+            </motion.p>
             <motion.button
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
               whileHover={{ scale: 1.04, boxShadow: "0 0 30px hsl(var(--primary) / 0.3)" }}
               whileTap={{ scale: 0.97 }}
               onClick={() => setShowPriceEstimator(true)}
@@ -72,6 +91,8 @@ const ContentSection = ({ contentRef }: ContentSectionProps) => {
           </div>
         </section>
       </div>
+
+      <SectionDivider />
 
       {/* Testimonials */}
       <TestimonialsSection />
