@@ -1,8 +1,9 @@
-
 import { Link } from "react-router-dom";
-import { Menu } from "lucide-react";
+import { Menu, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useAuth } from "@/hooks/useAuth";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface NavItem {
   name: string;
@@ -24,6 +25,7 @@ const MobileNavigation = ({
   isMobileMenuOpen, 
   setIsMobileMenuOpen 
 }: MobileNavigationProps) => {
+  const { user, profile, loading } = useAuth();
 
   return (
     <div className="md:hidden">
@@ -63,16 +65,36 @@ const MobileNavigation = ({
               )
             ))}
             
-            <Link 
-              to="/shop" 
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              <Button 
-                className="button-gradient w-full"
-              >
+            <Link to="/shop" onClick={() => setIsMobileMenuOpen(false)}>
+              <Button className="button-gradient w-full">
                 Shop Now
               </Button>
             </Link>
+
+            {!loading && (
+              user ? (
+                <Link
+                  to="/dashboard"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-3 text-lg text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <Avatar className="h-7 w-7 ring-1 ring-border/20">
+                    <AvatarImage src={profile?.discord_avatar_url || ''} />
+                    <AvatarFallback className="bg-primary/10 text-primary text-xs">
+                      {profile?.discord_username?.[0]?.toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                  Dashboard
+                </Link>
+              ) : (
+                <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Button variant="outline" className="w-full gap-2 glass">
+                    <LogIn className="h-4 w-4" />
+                    Login with Discord
+                  </Button>
+                </Link>
+              )
+            )}
           </div>
         </SheetContent>
       </Sheet>
