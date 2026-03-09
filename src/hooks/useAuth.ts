@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -17,6 +17,39 @@ export const useAuth = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [profileLoading, setProfileLoading] = useState(false);
+
+  const fetchProfile = useCallback(async (userId: string) => {
+    setProfileLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Error fetching profile:', error);
+        setProfile(null);
+      } else {
+        setProfile(data);
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+      setProfile(null);
+    } finally {
+      setProfileLoading(false);
+      setLoading(false);
+    }
+  }, []);
+
+  const updateProfileIP = async () => {
+    try {
+      await supabase.functions.invoke('update-profile-ip');
+    } catch (error) {
+      console.error('Error calling update-profile-ip:', error);
+    }
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -29,30 +62,28 @@ export const useAuth = () => {
         setUser(session?.user ?? null);
 
         if (session?.user) {
-          // Use setTimeout to avoid potential deadlocks with Supabase client
-          setTimeout(() => {
-            if (mounted) fetchProfile(session.user.id);
-          }, 0);
+          // Fetch profile directly (no setTimeout) to avoid race conditions
+          await fetchProfile(session.user.id);
           if (event === 'SIGNED_IN') {
-            setTimeout(() => {
-              updateProfileIP();
-            }, 100);
+            // Fire-and-forget IP update
+            updateProfileIP();
           }
         } else {
           setProfile(null);
+          setProfileLoading(false);
           setLoading(false);
         }
       }
     );
 
     // Then check existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (!mounted) return;
       setSession(session);
       setUser(session?.user ?? null);
 
       if (session?.user) {
-        fetchProfile(session.user.id);
+        await fetchProfile(session.user.id);
       } else {
         setLoading(false);
       }
@@ -62,58 +93,18 @@ export const useAuth = () => {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, []);
-
-  const updateProfileIP = async () => {
-    try {
-      const { error } = await supabase.functions.invoke('update-profile-ip');
-      if (error) {
-        console.error('Error updating profile IP:', error);
-      }
-    } catch (error) {
-      console.error('Error calling update-profile-ip:', error);
-    }
-  };
-
-  const fetchProfile = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .maybeSingle();
-
-      if (error) {
-        console.error('Error fetching profile:', error);
-        setProfile(null);
-        setLoading(false);
-        return;
-      }
-
-      setProfile(data);
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-      setProfile(null);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [fetchProfile]);
 
   const signInWithDiscord = async () => {
     const redirectUrl = `${window.location.origin}/dashboard`;
-
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'discord',
-      options: {
-        redirectTo: redirectUrl,
-      }
+      options: { redirectTo: redirectUrl },
     });
-
     if (error) {
       console.error('Error signing in with Discord:', error);
       return { error };
     }
-
     return { error: null };
   };
 
@@ -131,7 +122,7 @@ export const useAuth = () => {
     user,
     session,
     profile,
-    loading,
+    loading: loading || profileLoading,
     signInWithDiscord,
     signOut,
   };
