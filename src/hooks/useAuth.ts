@@ -7,6 +7,7 @@ interface Profile {
   discord_id: string | null;
   discord_username: string | null;
   discord_avatar_url: string | null;
+  is_admin: boolean | null;
   created_at: string;
   updated_at: string;
 }
@@ -20,33 +21,22 @@ export const useAuth = () => {
   useEffect(() => {
     let mounted = true;
 
-    // Check for existing session first
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!mounted) return;
-      setSession(session);
-      setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        fetchProfile(session.user.id);
-      } else {
-        setLoading(false);
-      }
-    });
-
-    // Set up auth state listener
+    // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!mounted) return;
         setSession(session);
         setUser(session?.user ?? null);
-        
+
         if (session?.user) {
-          await fetchProfile(session.user.id);
-          // Update IP on successful login
+          // Use setTimeout to avoid potential deadlocks with Supabase client
+          setTimeout(() => {
+            if (mounted) fetchProfile(session.user.id);
+          }, 0);
           if (event === 'SIGNED_IN') {
             setTimeout(() => {
               updateProfileIP();
-            }, 0);
+            }, 100);
           }
         } else {
           setProfile(null);
@@ -54,6 +44,19 @@ export const useAuth = () => {
         }
       }
     );
+
+    // Then check existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!mounted) return;
+      setSession(session);
+      setUser(session?.user ?? null);
+
+      if (session?.user) {
+        fetchProfile(session.user.id);
+      } else {
+        setLoading(false);
+      }
+    });
 
     return () => {
       mounted = false;
@@ -86,7 +89,7 @@ export const useAuth = () => {
         setLoading(false);
         return;
       }
-      
+
       setProfile(data);
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -97,8 +100,9 @@ export const useAuth = () => {
   };
 
   const signInWithDiscord = async () => {
-    const redirectUrl = `${window.location.origin}/`;
-    
+    // Redirect back to current origin (works for both main domain and dashboard subdomain)
+    const redirectUrl = `${window.location.origin}/dashboard`;
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'discord',
       options: {
@@ -120,6 +124,7 @@ export const useAuth = () => {
       console.error('Error signing out:', error);
       return { error };
     }
+    setProfile(null);
     return { error: null };
   };
 
