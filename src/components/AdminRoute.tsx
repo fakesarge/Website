@@ -10,7 +10,8 @@ interface AdminRouteProps {
 const AdminRoute = ({ children }: AdminRouteProps) => {
   const { user, profile, loading } = useAuth();
 
-  if (loading) {
+  // Wait for both auth AND profile to load
+  if (loading || (user && !profile)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
