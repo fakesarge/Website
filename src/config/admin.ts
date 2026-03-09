@@ -1,6 +1,6 @@
 // Owner Discord ID — only this account has admin access
 // Replace with your Discord user ID (right-click your profile in Discord → Copy User ID)
-export const OWNER_DISCORD_ID = "REPLACE_WITH_YOUR_DISCORD_ID";
+export const OWNER_DISCORD_ID = "1201255976683196426";
 
 // Check if a Discord ID is the owner
 export const isOwner = (discordId: string | null | undefined): boolean => {
