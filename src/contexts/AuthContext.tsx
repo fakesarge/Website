@@ -28,9 +28,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-  const initializedRef = useRef(false);
+  const profileFetchedForRef = useRef<string | null>(null);
 
-  const fetchProfile = useCallback(async (userId: string): Promise<Profile | null> => {
+  const fetchProfile = useCallback(async (userId: string) => {
+    // Avoid duplicate fetches for same user
+    if (profileFetchedForRef.current === userId) return;
+    profileFetchedForRef.current = userId;
+    
     console.log('[Auth] Fetching profile for:', userId);
     try {
       const { data, error } = await supabase
@@ -40,74 +44,57 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         .maybeSingle();
 
       if (error) {
-        console.error('[Auth] Profile fetch error:', error);
-        return null;
+        console.error('[Auth] Profile fetch error:', JSON.stringify(error));
+        setProfile(null);
+        profileFetchedForRef.current = null;
+      } else {
+        console.log('[Auth] Profile fetched OK:', data?.discord_id, data?.discord_username);
+        setProfile(data);
       }
-      console.log('[Auth] Profile fetched:', data?.discord_id, data?.discord_username);
-      return data;
     } catch (error) {
       console.error('[Auth] Profile fetch exception:', error);
-      return null;
+      setProfile(null);
+      profileFetchedForRef.current = null;
     }
   }, []);
 
   useEffect(() => {
-    if (initializedRef.current) return;
-    initializedRef.current = true;
-
     let mounted = true;
 
-    const initialize = async () => {
-      console.log('[Auth] Initializing...');
-      try {
-        const { data: { session: currentSession } } = await supabase.auth.getSession();
-        console.log('[Auth] Session:', currentSession ? 'exists' : 'none', currentSession?.user?.id);
-        
+    console.log('[Auth] Setting up auth listener...');
+
+    // Use onAuthStateChange as the SOLE source of truth (Supabase recommended pattern)
+    // INITIAL_SESSION fires automatically with the restored session
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, currentSession) => {
         if (!mounted) return;
+        
+        console.log('[Auth] onAuthStateChange:', event, 'user:', currentSession?.user?.id ?? 'none');
+        
+        setSession(currentSession);
+        setUser(currentSession?.user ?? null);
 
         if (currentSession?.user) {
-          setSession(currentSession);
-          setUser(currentSession.user);
-          const profileData = await fetchProfile(currentSession.user.id);
-          if (mounted) {
-            setProfile(profileData);
-            console.log('[Auth] Init complete. Profile:', profileData?.discord_id);
+          // Fetch profile - use setTimeout to avoid potential Supabase client deadlock
+          // when making DB queries inside onAuthStateChange
+          setTimeout(async () => {
+            if (!mounted) return;
+            await fetchProfile(currentSession.user.id);
+            if (mounted) {
+              setLoading(false);
+              console.log('[Auth] Ready with profile');
+            }
+          }, 0);
+          
+          if (event === 'SIGNED_IN') {
+            // Fire-and-forget IP update
+            supabase.functions.invoke('update-profile-ip').catch(() => {});
           }
         } else {
-          setSession(null);
-          setUser(null);
           setProfile(null);
-        }
-      } catch (err) {
-        console.error('[Auth] Init error:', err);
-      } finally {
-        if (mounted) {
+          profileFetchedForRef.current = null;
           setLoading(false);
-          console.log('[Auth] Loading set to false');
-        }
-      }
-    };
-
-    initialize();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, newSession) => {
-        if (!mounted) return;
-        console.log('[Auth] Auth state changed:', event);
-
-        // Only handle actual changes, not initial session
-        if (event === 'INITIAL_SESSION') return;
-
-        setSession(newSession);
-        setUser(newSession?.user ?? null);
-
-        if (newSession?.user) {
-          // Fetch profile without blocking
-          fetchProfile(newSession.user.id).then((profileData) => {
-            if (mounted) setProfile(profileData);
-          });
-        } else {
-          setProfile(null);
+          console.log('[Auth] No session, loading done');
         }
       }
     );
@@ -140,10 +127,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setProfile(null);
     setUser(null);
     setSession(null);
+    profileFetchedForRef.current = null;
     return { error: null };
   };
-
-  console.log('[Auth] Render - loading:', loading, 'user:', !!user, 'profile:', profile?.discord_id);
 
   return (
     <AuthContext.Provider value={{
