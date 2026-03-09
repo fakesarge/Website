@@ -14,14 +14,11 @@ import Shop from "./pages/Shop";
 import ShopItemPage from "./pages/ShopItem";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
-import Admin from "./pages/Admin";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import ServerError from "./pages/ServerError";
-import ProtectedRoute from "./components/ProtectedRoute";
-import AdminRoute from "./components/AdminRoute";
 
 const queryClient = new QueryClient();
 
@@ -44,9 +41,9 @@ const App = () => (
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-              <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
-              <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/admin" element={<Dashboard />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="/error" element={<ServerError />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
