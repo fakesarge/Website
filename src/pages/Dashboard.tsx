@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -16,8 +16,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Plus, Pencil, Trash2, Search, Shield, ShieldOff, LogOut, Package, DollarSign, Clock, Users } from 'lucide-react';
+import { Loader2, Plus, Pencil, Trash2, Search, Shield, ShieldOff, LogOut, Package, DollarSign, Clock, Users, MessageSquare, Image, Send, Upload, X, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const OWNER_DISCORD_ID = '1201255976683196426';
@@ -158,7 +159,7 @@ const Dashboard = () => {
             </TabsList>
 
             <TabsContent value="orders">
-              <OrdersPanel toast={toast} queryClient={queryClient} />
+              <OrdersPanel toast={toast} queryClient={queryClient} profile={authData.profile} />
             </TabsContent>
             <TabsContent value="users">
               <UsersPanel toast={toast} queryClient={queryClient} />
@@ -219,12 +220,13 @@ const StatsRow = () => {
 
 // ─── Orders Panel ─────────────────────────────────────────────────────────────
 
-const OrdersPanel = ({ toast, queryClient }: { toast: any; queryClient: any }) => {
+const OrdersPanel = ({ toast, queryClient, profile }: { toast: any; queryClient: any; profile: any }) => {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [editingOrder, setEditingOrder] = useState<any>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<any>(null);
 
   const { data: orders, isLoading } = useQuery({
     queryKey: ['admin-orders-direct', search, statusFilter],
@@ -313,132 +315,477 @@ const OrdersPanel = ({ toast, queryClient }: { toast: any; queryClient: any }) =
   };
 
   return (
-    <Card className="glass border-border/10">
-      <CardHeader>
-        <div className="flex items-center justify-between flex-wrap gap-3">
-          <div>
-            <CardTitle>Order Management</CardTitle>
-            <CardDescription>Create, edit and delete all customer orders</CardDescription>
+    <>
+      <Card className="glass border-border/10">
+        <CardHeader>
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div>
+              <CardTitle>Order Management</CardTitle>
+              <CardDescription>Create, edit and delete all customer orders</CardDescription>
+            </div>
+            <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm" className="gap-2">
+                  <Plus className="w-4 h-4" /> New Order
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>Create Order</DialogTitle>
+                  <DialogDescription>Add a new order to the system</DialogDescription>
+                </DialogHeader>
+                <OrderForm onSubmit={handleCreate} isPending={createMutation.isPending} onCancel={() => setCreateOpen(false)} />
+              </DialogContent>
+            </Dialog>
           </div>
-          <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" className="gap-2">
-                <Plus className="w-4 h-4" /> New Order
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl">
-              <DialogHeader>
-                <DialogTitle>Create Order</DialogTitle>
-                <DialogDescription>Add a new order to the system</DialogDescription>
-              </DialogHeader>
-              <OrderForm onSubmit={handleCreate} isPending={createMutation.isPending} onCancel={() => setCreateOpen(false)} />
-            </DialogContent>
-          </Dialog>
-        </div>
-      </CardHeader>
+        </CardHeader>
 
-      <CardContent>
-        {/* Filters */}
-        <div className="flex gap-3 mb-5 flex-wrap">
-          <div className="flex-1 min-w-[200px] relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input placeholder="Search name, email, Discord ID, code..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
+        <CardContent>
+          {/* Filters */}
+          <div className="flex gap-3 mb-5 flex-wrap">
+            <div className="flex-1 min-w-[200px] relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input placeholder="Search name, email, Discord ID, code..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
+            </div>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-[160px]"><SelectValue placeholder="All statuses" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All statuses</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="in_progress">In Progress</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+                <SelectItem value="cancelled">Cancelled</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[160px]"><SelectValue placeholder="All statuses" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All statuses</SelectItem>
-              <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="in_progress">In Progress</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
-              <SelectItem value="cancelled">Cancelled</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
 
-        {isLoading ? (
-          <div className="flex justify-center py-12"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
-        ) : (
-          <div className="rounded-lg border border-border/20 overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow className="border-border/20">
-                  <TableHead>Code</TableHead>
-                  <TableHead>Customer</TableHead>
-                  <TableHead>Service</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Discord</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {orders?.map((order: any) => (
-                  <TableRow key={order.id} className="border-border/10 hover:bg-white/[0.02]">
-                    <TableCell className="font-mono text-xs">{order.order_code}</TableCell>
-                    <TableCell>
-                      <div className="text-sm font-medium">{order.customer_name}</div>
-                      <div className="text-xs text-muted-foreground">{order.customer_email}</div>
-                    </TableCell>
-                    <TableCell className="text-sm">{order.service}</TableCell>
-                    <TableCell className="font-medium">${Number(order.price).toFixed(2)}</TableCell>
-                    <TableCell><StatusBadge status={order.status} /></TableCell>
-                    <TableCell className="font-mono text-xs text-muted-foreground">{order.discord_id || '—'}</TableCell>
-                    <TableCell className="text-xs text-muted-foreground">{new Date(order.created_at).toLocaleDateString()}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-1">
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button variant="ghost" size="sm" onClick={() => setEditingOrder(order)}>
-                              <Pencil className="w-3.5 h-3.5" />
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent className="max-w-2xl">
-                            <DialogHeader>
-                              <DialogTitle>Edit Order</DialogTitle>
-                              <DialogDescription>Update order details</DialogDescription>
-                            </DialogHeader>
-                            {editingOrder?.id === order.id && (
-                              <OrderForm defaults={editingOrder} onSubmit={handleEdit} isPending={updateMutation.isPending} />
-                            )}
-                          </DialogContent>
-                        </Dialog>
-                        <Button variant="ghost" size="sm" onClick={() => setDeletingId(order.id)}>
-                          <Trash2 className="w-3.5 h-3.5 text-destructive" />
-                        </Button>
-                      </div>
-                    </TableCell>
+          {isLoading ? (
+            <div className="flex justify-center py-12"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
+          ) : (
+            <div className="rounded-lg border border-border/20 overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-border/20">
+                    <TableHead>Code</TableHead>
+                    <TableHead>Customer</TableHead>
+                    <TableHead>Service</TableHead>
+                    <TableHead>Price</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Discord</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
-                ))}
-                {orders?.length === 0 && (
-                  <TableRow><TableCell colSpan={8} className="text-center py-10 text-muted-foreground">No orders found</TableCell></TableRow>
+                </TableHeader>
+                <TableBody>
+                  {orders?.map((order: any) => (
+                    <TableRow key={order.id} className="border-border/10 hover:bg-white/[0.02] cursor-pointer" onClick={() => setSelectedOrder(order)}>
+                      <TableCell className="font-mono text-xs">{order.order_code}</TableCell>
+                      <TableCell>
+                        <div className="text-sm font-medium">{order.customer_name}</div>
+                        <div className="text-xs text-muted-foreground">{order.customer_email}</div>
+                      </TableCell>
+                      <TableCell className="text-sm">{order.service}</TableCell>
+                      <TableCell className="font-medium">${Number(order.price).toFixed(2)}</TableCell>
+                      <TableCell><StatusBadge status={order.status} /></TableCell>
+                      <TableCell className="font-mono text-xs text-muted-foreground">{order.discord_id || '—'}</TableCell>
+                      <TableCell className="text-xs text-muted-foreground">{new Date(order.created_at).toLocaleDateString()}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-1" onClick={e => e.stopPropagation()}>
+                          <Button variant="ghost" size="sm" onClick={() => setSelectedOrder(order)}>
+                            <Eye className="w-3.5 h-3.5" />
+                          </Button>
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button variant="ghost" size="sm" onClick={() => setEditingOrder(order)}>
+                                <Pencil className="w-3.5 h-3.5" />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-2xl">
+                              <DialogHeader>
+                                <DialogTitle>Edit Order</DialogTitle>
+                                <DialogDescription>Update order details</DialogDescription>
+                              </DialogHeader>
+                              {editingOrder?.id === order.id && (
+                                <OrderForm defaults={editingOrder} onSubmit={handleEdit} isPending={updateMutation.isPending} />
+                              )}
+                            </DialogContent>
+                          </Dialog>
+                          <Button variant="ghost" size="sm" onClick={() => setDeletingId(order.id)}>
+                            <Trash2 className="w-3.5 h-3.5 text-destructive" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  {orders?.length === 0 && (
+                    <TableRow><TableCell colSpan={8} className="text-center py-10 text-muted-foreground">No orders found</TableCell></TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+
+        {/* Delete confirm */}
+        <AlertDialog open={!!deletingId} onOpenChange={() => setDeletingId(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Order?</AlertDialogTitle>
+              <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-destructive hover:bg-destructive/90"
+                onClick={() => deletingId && deleteMutation.mutate(deletingId)}
+              >
+                {deleteMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Delete'}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </Card>
+
+      {/* Order Detail Panel */}
+      <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
+        <DialogContent className="max-w-4xl max-h-[90vh] p-0 overflow-hidden">
+          {selectedOrder && (
+            <OrderDetailPanel 
+              order={selectedOrder} 
+              profile={profile}
+              toast={toast}
+              queryClient={queryClient}
+              onClose={() => setSelectedOrder(null)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
+
+// ─── Order Detail Panel with Chat & Images ────────────────────────────────────
+
+const OrderDetailPanel = ({ order, profile, toast, queryClient, onClose }: { order: any; profile: any; toast: any; queryClient: any; onClose: () => void }) => {
+  const [message, setMessage] = useState('');
+  const [activeTab, setActiveTab] = useState('chat');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+
+  // Fetch messages
+  const { data: messages, isLoading: messagesLoading } = useQuery({
+    queryKey: ['order-messages', order.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('order_messages')
+        .select('*')
+        .eq('order_id', order.id)
+        .order('created_at', { ascending: true });
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
+  // Fetch images
+  const { data: images, isLoading: imagesLoading } = useQuery({
+    queryKey: ['order-images', order.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('order_images')
+        .select('*')
+        .eq('order_id', order.id)
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
+  // Send message mutation
+  const sendMessageMutation = useMutation({
+    mutationFn: async (text: string) => {
+      const { error } = await supabase.from('order_messages').insert({
+        order_id: order.id,
+        sender_name: profile?.discord_username || 'Admin',
+        sender_avatar_url: profile?.discord_avatar_url,
+        message: text,
+        is_admin: true,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['order-messages', order.id] });
+      setMessage('');
+    },
+    onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
+  });
+
+  // Delete image mutation
+  const deleteImageMutation = useMutation({
+    mutationFn: async (image: any) => {
+      // Delete from storage
+      const { error: storageError } = await supabase.storage
+        .from('order-images')
+        .remove([image.file_path]);
+      if (storageError) console.warn('Storage delete error:', storageError);
+      
+      // Delete from database
+      const { error } = await supabase.from('order_images').delete().eq('id', image.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['order-images', order.id] });
+      toast({ title: 'Image deleted' });
+    },
+    onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
+  });
+
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!message.trim()) return;
+    sendMessageMutation.mutate(message.trim());
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploading(true);
+    try {
+      for (const file of Array.from(files)) {
+        const fileExt = file.name.split('.').pop();
+        const filePath = `${order.id}/${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+
+        // Upload to storage
+        const { error: uploadError } = await supabase.storage
+          .from('order-images')
+          .upload(filePath, file);
+        
+        if (uploadError) throw uploadError;
+
+        // Save to database
+        const { error: dbError } = await supabase.from('order_images').insert({
+          order_id: order.id,
+          file_name: file.name,
+          file_path: filePath,
+          file_size: file.size,
+        });
+
+        if (dbError) throw dbError;
+      }
+
+      queryClient.invalidateQueries({ queryKey: ['order-images', order.id] });
+      toast({ title: 'Images uploaded successfully' });
+    } catch (error: any) {
+      toast({ title: 'Upload failed', description: error.message, variant: 'destructive' });
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const getImageUrl = (filePath: string) => {
+    const { data } = supabase.storage.from('order-images').getPublicUrl(filePath);
+    return data.publicUrl;
+  };
+
+  return (
+    <div className="flex flex-col h-[80vh]">
+      {/* Header */}
+      <div className="p-4 border-b border-border/20 bg-secondary/30">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-2">
+              <h2 className="text-lg font-semibold">{order.order_name}</h2>
+              <Badge variant="outline" className="font-mono text-xs">{order.order_code}</Badge>
+              <StatusBadge status={order.status} />
+            </div>
+            <p className="text-sm text-muted-foreground mt-1">
+              {order.customer_name} • {order.service} • ${Number(order.price).toFixed(2)}
+            </p>
+          </div>
+          <Button variant="ghost" size="sm" onClick={onClose}>
+            <X className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="border-b border-border/20">
+        <div className="flex">
+          <button
+            onClick={() => setActiveTab('chat')}
+            className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'chat' 
+                ? 'border-primary text-primary' 
+                : 'border-transparent text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            <MessageSquare className="w-4 h-4" />
+            Chat
+            {messages && messages.length > 0 && (
+              <Badge variant="secondary" className="text-xs">{messages.length}</Badge>
+            )}
+          </button>
+          <button
+            onClick={() => setActiveTab('images')}
+            className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'images' 
+                ? 'border-primary text-primary' 
+                : 'border-transparent text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            <Image className="w-4 h-4" />
+            Images
+            {images && images.length > 0 && (
+              <Badge variant="secondary" className="text-xs">{images.length}</Badge>
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 overflow-hidden">
+        {activeTab === 'chat' ? (
+          <div className="flex flex-col h-full">
+            {/* Messages */}
+            <ScrollArea className="flex-1 p-4">
+              {messagesLoading ? (
+                <div className="flex justify-center py-8">
+                  <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                </div>
+              ) : messages && messages.length > 0 ? (
+                <div className="space-y-4">
+                  {messages.map((msg: any) => (
+                    <div key={msg.id} className={`flex gap-3 ${msg.is_admin ? 'flex-row-reverse' : ''}`}>
+                      <Avatar className="h-8 w-8 flex-shrink-0">
+                        <AvatarImage src={msg.sender_avatar_url} />
+                        <AvatarFallback className="text-xs">{msg.sender_name?.[0] || 'U'}</AvatarFallback>
+                      </Avatar>
+                      <div className={`max-w-[70%] ${msg.is_admin ? 'text-right' : ''}`}>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs font-medium">{msg.sender_name}</span>
+                          {msg.is_admin && <Badge variant="outline" className="text-[10px] px-1">Admin</Badge>}
+                          <span className="text-[10px] text-muted-foreground">
+                            {new Date(msg.created_at).toLocaleTimeString()}
+                          </span>
+                        </div>
+                        <div className={`rounded-lg px-3 py-2 text-sm ${
+                          msg.is_admin 
+                            ? 'bg-primary text-primary-foreground' 
+                            : 'bg-muted'
+                        }`}>
+                          {msg.message}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
+                  <MessageSquare className="w-8 h-8 mb-2 opacity-50" />
+                  <p className="text-sm">No messages yet</p>
+                  <p className="text-xs">Start a conversation about this order</p>
+                </div>
+              )}
+            </ScrollArea>
+
+            {/* Message Input */}
+            <form onSubmit={handleSendMessage} className="p-4 border-t border-border/20 bg-secondary/20">
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Type a message..."
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  className="flex-1"
+                />
+                <Button type="submit" size="sm" disabled={sendMessageMutation.isPending || !message.trim()}>
+                  {sendMessageMutation.isPending ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Send className="w-4 h-4" />
+                  )}
+                </Button>
+              </div>
+            </form>
+          </div>
+        ) : (
+          <div className="p-4 h-full overflow-auto">
+            {/* Upload Button */}
+            <div className="mb-4">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileUpload}
+                accept="image/*"
+                multiple
+                className="hidden"
+              />
+              <Button
+                variant="outline"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+                className="gap-2"
+              >
+                {uploading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Upload className="w-4 h-4" />
                 )}
-              </TableBody>
-            </Table>
+                Upload Images
+              </Button>
+            </div>
+
+            {/* Images Grid */}
+            {imagesLoading ? (
+              <div className="flex justify-center py-8">
+                <Loader2 className="w-6 h-6 animate-spin text-primary" />
+              </div>
+            ) : images && images.length > 0 ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {images.map((img: any) => (
+                  <div key={img.id} className="group relative rounded-lg overflow-hidden border border-border/20 bg-secondary/30">
+                    <img
+                      src={getImageUrl(img.file_path)}
+                      alt={img.file_name}
+                      className="w-full h-32 object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => window.open(getImageUrl(img.file_path), '_blank')}
+                      >
+                        <Eye className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => deleteImageMutation.mutate(img)}
+                        disabled={deleteImageMutation.isPending}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    <div className="p-2">
+                      <p className="text-xs truncate">{img.file_name}</p>
+                      <p className="text-[10px] text-muted-foreground">
+                        {new Date(img.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
+                <Image className="w-8 h-8 mb-2 opacity-50" />
+                <p className="text-sm">No images yet</p>
+                <p className="text-xs">Upload images related to this order</p>
+              </div>
+            )}
           </div>
         )}
-      </CardContent>
-
-      {/* Delete confirm */}
-      <AlertDialog open={!!deletingId} onOpenChange={() => setDeletingId(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete Order?</AlertDialogTitle>
-            <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              className="bg-destructive hover:bg-destructive/90"
-              onClick={() => deletingId && deleteMutation.mutate(deletingId)}
-            >
-              {deleteMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Delete'}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </Card>
+      </div>
+    </div>
   );
 };
 
