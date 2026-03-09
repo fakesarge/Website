@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { Zap, Shield, Gauge, Clock } from "lucide-react";
 
 const premiumEase = [0.25, 0.46, 0.45, 0.94] as const;
