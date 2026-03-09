@@ -79,10 +79,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
     });
 
-    // Then set up listener for changes
+    // Then set up listener for future changes only
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         if (!mounted) return;
+        
+        // Skip INITIAL_SESSION — getSession() above handles it
+        if (event === 'INITIAL_SESSION') return;
+        
+        console.log('[Auth] onAuthStateChange event:', event);
         setSession(session);
         setUser(session?.user ?? null);
 
