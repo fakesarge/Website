@@ -100,7 +100,6 @@ export const useAuth = () => {
   };
 
   const signInWithDiscord = async () => {
-    // Redirect back to current origin (works for both main domain and dashboard subdomain)
     const redirectUrl = `${window.location.origin}/dashboard`;
 
     const { error } = await supabase.auth.signInWithOAuth({
