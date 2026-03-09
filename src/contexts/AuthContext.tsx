@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -28,10 +28,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [profileLoading, setProfileLoading] = useState(false);
+  const initializedRef = useRef(false);
 
-  const fetchProfile = useCallback(async (userId: string) => {
-    setProfileLoading(true);
+  const fetchProfile = useCallback(async (userId: string): Promise<Profile | null> => {
+    console.log('[Auth] Fetching profile for:', userId);
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -40,70 +40,74 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         .maybeSingle();
 
       if (error) {
-        console.error('Error fetching profile:', error);
-        setProfile(null);
-      } else {
-        setProfile(data);
+        console.error('[Auth] Profile fetch error:', error);
+        return null;
       }
+      console.log('[Auth] Profile fetched:', data?.discord_id, data?.discord_username);
+      return data;
     } catch (error) {
-      console.error('Error fetching profile:', error);
-      setProfile(null);
-    } finally {
-      setProfileLoading(false);
+      console.error('[Auth] Profile fetch exception:', error);
+      return null;
     }
   }, []);
 
-  const updateProfileIP = async () => {
-    try {
-      await supabase.functions.invoke('update-profile-ip');
-    } catch (error) {
-      console.error('Error calling update-profile-ip:', error);
-    }
-  };
-
   useEffect(() => {
+    if (initializedRef.current) return;
+    initializedRef.current = true;
+
     let mounted = true;
 
-    // Check existing session first
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!mounted) return;
-      setSession(session);
-      setUser(session?.user ?? null);
-
-      if (session?.user) {
-        fetchProfile(session.user.id).then(() => {
-          if (mounted) setLoading(false);
-        });
-      } else {
-        setLoading(false);
-      }
-    });
-
-    // Then set up listener for future changes only
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+    const initialize = async () => {
+      console.log('[Auth] Initializing...');
+      try {
+        const { data: { session: currentSession } } = await supabase.auth.getSession();
+        console.log('[Auth] Session:', currentSession ? 'exists' : 'none', currentSession?.user?.id);
+        
         if (!mounted) return;
-        
-        // Skip INITIAL_SESSION — getSession() above handles it
-        if (event === 'INITIAL_SESSION') return;
-        
-        console.log('[Auth] onAuthStateChange event:', event);
-        setSession(session);
-        setUser(session?.user ?? null);
 
-        if (session?.user) {
-          // Use setTimeout to avoid Supabase deadlock with async in callback
-          setTimeout(() => {
-            if (!mounted) return;
-            fetchProfile(session.user.id);
-            if (event === 'SIGNED_IN') {
-              updateProfileIP();
-            }
-          }, 0);
+        if (currentSession?.user) {
+          setSession(currentSession);
+          setUser(currentSession.user);
+          const profileData = await fetchProfile(currentSession.user.id);
+          if (mounted) {
+            setProfile(profileData);
+            console.log('[Auth] Init complete. Profile:', profileData?.discord_id);
+          }
+        } else {
+          setSession(null);
+          setUser(null);
+          setProfile(null);
+        }
+      } catch (err) {
+        console.error('[Auth] Init error:', err);
+      } finally {
+        if (mounted) {
+          setLoading(false);
+          console.log('[Auth] Loading set to false');
+        }
+      }
+    };
+
+    initialize();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, newSession) => {
+        if (!mounted) return;
+        console.log('[Auth] Auth state changed:', event);
+
+        // Only handle actual changes, not initial session
+        if (event === 'INITIAL_SESSION') return;
+
+        setSession(newSession);
+        setUser(newSession?.user ?? null);
+
+        if (newSession?.user) {
+          // Fetch profile without blocking
+          fetchProfile(newSession.user.id).then((profileData) => {
+            if (mounted) setProfile(profileData);
+          });
         } else {
           setProfile(null);
-          setProfileLoading(false);
-          setLoading(false);
         }
       }
     );
@@ -134,15 +138,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       return { error };
     }
     setProfile(null);
+    setUser(null);
+    setSession(null);
     return { error: null };
   };
+
+  console.log('[Auth] Render - loading:', loading, 'user:', !!user, 'profile:', profile?.discord_id);
 
   return (
     <AuthContext.Provider value={{
       user,
       session,
       profile,
-      loading: loading || profileLoading,
+      loading,
       signInWithDiscord,
       signOut,
     }}>
