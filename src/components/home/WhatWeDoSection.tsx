@@ -36,6 +36,43 @@ const showcaseImages = [
   { src: "/images/products/djwoijfeoiwjf2.png", alt: "Room Detail 2" },
 ];
 
+const ParallaxImage = ({ img, index }: { img: { src: string; alt: string }; index: number }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], index % 2 === 0 ? [30, -30] : [-20, 20]);
+
+  return (
+    <motion.div
+      ref={ref}
+      style={{ y }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.6, delay: index * 0.08, ease: premiumEase }}
+      whileHover={{ scale: 1.02, transition: { duration: 0.3, ease: premiumEase } }}
+      className="group relative aspect-[4/3] rounded-xl overflow-hidden border border-border/20"
+    >
+      <img
+        src={img.src}
+        alt={img.alt}
+        loading="lazy"
+        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+        style={{ transitionTimingFunction: "cubic-bezier(0.25, 0.46, 0.45, 0.94)" }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+        style={{ boxShadow: "inset 0 0 40px hsl(var(--primary) / 0.08)" }} />
+      <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-500"
+        style={{ transitionTimingFunction: "cubic-bezier(0.25, 0.46, 0.45, 0.94)" }}>
+        <span className="text-xs font-medium text-foreground">{img.alt}</span>
+      </div>
+    </motion.div>
+  );
+};
+
 const WhatWeDoSection = () => {
   return (
     <section className="container px-4 py-28">
@@ -55,33 +92,10 @@ const WhatWeDoSection = () => {
         </p>
       </motion.div>
 
-      {/* Image Showcase Grid */}
+      {/* Image Showcase Grid with Parallax */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-16">
         {showcaseImages.map((img, index) => (
-          <motion.div
-            key={img.alt}
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.6, delay: index * 0.08, ease: premiumEase }}
-            whileHover={{ y: -4, transition: { duration: 0.3, ease: premiumEase } }}
-            className="group relative aspect-[4/3] rounded-xl overflow-hidden border border-border/20"
-          >
-            <img
-              src={img.src}
-              alt={img.alt}
-              loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              style={{ transitionTimingFunction: "cubic-bezier(0.25, 0.46, 0.45, 0.94)" }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-              style={{ boxShadow: "inset 0 0 40px hsl(var(--primary) / 0.08)" }} />
-            <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-500"
-              style={{ transitionTimingFunction: "cubic-bezier(0.25, 0.46, 0.45, 0.94)" }}>
-              <span className="text-xs font-medium text-foreground">{img.alt}</span>
-            </div>
-          </motion.div>
+          <ParallaxImage key={img.alt} img={img} index={index} />
         ))}
       </div>
 
