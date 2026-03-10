@@ -460,9 +460,14 @@ const OrderDetailPanel = ({ order, profile, toast, queryClient, onClose }: { ord
       });
       if (error) throw error;
     },
-    onSuccess: () => {
+    onSuccess: (_, text) => {
       queryClient.invalidateQueries({ queryKey: ['order-messages', order.id] });
       setMessage('');
+      // Send admin reply webhook
+      sendActivityWebhook('admin_message', {
+        order_name: order.order_name,
+        customer_name: order.customer_name,
+      });
     },
     onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
   });
