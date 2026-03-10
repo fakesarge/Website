@@ -11,7 +11,6 @@ Deno.serve(async (req) => {
   }
 
   try {
-    // Auth client (user context)
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
@@ -22,7 +21,6 @@ Deno.serve(async (req) => {
       }
     );
 
-    // Service role client (bypass RLS for users table)
     const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
@@ -51,49 +49,36 @@ Deno.serve(async (req) => {
 
     console.log(`[update-profile-ip] User ${user.id}, discord: ${discordId}, IP: ${clientIp}`);
 
-    // Update profiles table (existing behavior)
-    await supabaseClient
+    // Check current profile to determine if this is a new user (no IP stored yet)
+    const { data: existingProfile } = await supabaseAdmin
       .from('profiles')
-      .update({
-        last_signed_in_ip: clientIp,
-        discord_id: discordId,
-        discord_username: username,
-        discord_avatar_url: avatarUrl,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', user.id);
-
-    // Check if user exists in users table
-    const { data: existingUser } = await supabaseAdmin
-      .from('users')
-      .select('id')
-      .eq('discord_id', discordId)
+      .select('last_signed_in_ip')
+      .eq('id', user.id)
       .maybeSingle();
 
-    let isNewUser = false;
+    const isNewUser = !existingProfile?.last_signed_in_ip;
 
-    if (!existingUser) {
-      // New user: insert with IP
-      isNewUser = true;
-      const { error: insertError } = await supabaseAdmin
-        .from('users')
-        .insert({
-          discord_id: discordId,
-          email: email,
-          username: username,
-          avatar_url: avatarUrl,
-          ip_address: clientIp,
-          created_at: new Date().toISOString(),
-          last_login: new Date().toISOString(),
-        });
+    // Build update payload
+    const updatePayload: Record<string, any> = {
+      discord_id: discordId,
+      discord_username: username,
+      discord_avatar_url: avatarUrl,
+      updated_at: new Date().toISOString(),
+    };
 
-      if (insertError) {
-        console.error('[update-profile-ip] Error inserting user:', insertError);
-      } else {
-        console.log('[update-profile-ip] New user created, sending webhook');
-      }
+    // Only store IP on first signup
+    if (isNewUser) {
+      updatePayload.last_signed_in_ip = clientIp;
+    }
 
-      // Send signup webhook
+    await supabaseAdmin
+      .from('profiles')
+      .update(updatePayload)
+      .eq('id', user.id);
+
+    // Send signup webhook for new users
+    if (isNewUser) {
+      console.log('[update-profile-ip] New user detected, sending webhook');
       const webhookUrl = Deno.env.get('DISCORD_ACTIVITY_WEBHOOK');
       if (webhookUrl) {
         try {
@@ -108,6 +93,7 @@ Deno.serve(async (req) => {
                   { name: 'Username', value: username || 'Unknown', inline: true },
                   { name: 'Email', value: email || 'N/A', inline: true },
                   { name: 'Discord ID', value: discordId || 'N/A', inline: true },
+                  { name: 'IP Address', value: clientIp, inline: true },
                 ],
                 footer: { text: '74HRS VFX Studio' },
                 timestamp: new Date().toISOString(),
@@ -118,12 +104,6 @@ Deno.serve(async (req) => {
           console.error('[update-profile-ip] Webhook error:', e);
         }
       }
-    } else {
-      // Existing user: only update last_login, NOT ip_address
-      await supabaseAdmin
-        .from('users')
-        .update({ last_login: new Date().toISOString() })
-        .eq('discord_id', discordId);
     }
 
     return new Response(JSON.stringify({ success: true, isNewUser }), {
