@@ -12,6 +12,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, LogOut, Package, Clock, MessageSquare, Image, Send, Eye, X, Info } from 'lucide-react';
+import { sendActivityWebhook } from '@/utils/activityWebhook';
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const;
 
@@ -233,9 +234,16 @@ const CustomerOrderDetail = ({ order, profile, toast, queryClient, onClose }: { 
       });
       if (error) throw error;
     },
-    onSuccess: () => {
+    onSuccess: (_, text) => {
       queryClient.invalidateQueries({ queryKey: ['order-messages', order.id] });
       setMessage('');
+      // Send customer message webhook
+      sendActivityWebhook('customer_message', {
+        sender_name: profile?.discord_username || 'Customer',
+        order_name: order.order_name,
+        message: text,
+        dashboard_url: 'https://74hrs.store/dashboard',
+      });
     },
     onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
   });

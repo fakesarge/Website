@@ -17,6 +17,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Plus, Pencil, Trash2, Search, Shield, ShieldOff, LogOut, Package, DollarSign, Clock, Users, MessageSquare, Image, Send, Upload, X, Eye } from 'lucide-react';
+import { sendActivityWebhook } from '@/utils/activityWebhook';
+
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const;
 
@@ -192,11 +194,19 @@ const OrdersPanel = ({ toast, queryClient, profile }: { toast: any; queryClient:
       }).eq('id', order.id);
       if (error) throw error;
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['admin-orders-direct'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] });
       toast({ title: 'Order updated' });
       setEditingOrder(null);
+      // Send webhook if status changed
+      if (editingOrder && variables.status !== editingOrder.status) {
+        sendActivityWebhook('order_progress_updated', {
+          order_name: variables.order_name || editingOrder.order_name,
+          customer_name: variables.customer_name || editingOrder.customer_name,
+          new_status: variables.status,
+        });
+      }
     },
     onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
   });
@@ -230,11 +240,18 @@ const OrdersPanel = ({ toast, queryClient, profile }: { toast: any; queryClient:
       });
       if (error) throw error;
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['admin-orders-direct'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] });
       toast({ title: 'Order created' });
       setCreateOpen(false);
+      // Send webhook
+      sendActivityWebhook('order_created', {
+        customer_name: variables.customer_name,
+        order_name: variables.order_name,
+        service: variables.service,
+        price: variables.price,
+      });
     },
     onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
   });
@@ -443,9 +460,14 @@ const OrderDetailPanel = ({ order, profile, toast, queryClient, onClose }: { ord
       });
       if (error) throw error;
     },
-    onSuccess: () => {
+    onSuccess: (_, text) => {
       queryClient.invalidateQueries({ queryKey: ['order-messages', order.id] });
       setMessage('');
+      // Send admin reply webhook
+      sendActivityWebhook('admin_message', {
+        order_name: order.order_name,
+        customer_name: order.customer_name,
+      });
     },
     onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
   });
@@ -494,6 +516,11 @@ const OrderDetailPanel = ({ order, profile, toast, queryClient, onClose }: { ord
       }
       queryClient.invalidateQueries({ queryKey: ['order-images', order.id] });
       toast({ title: 'Images uploaded successfully' });
+      // Send image upload webhook
+      sendActivityWebhook('image_uploaded', {
+        order_name: order.order_name,
+        customer_name: order.customer_name,
+      });
     } catch (error: any) {
       toast({ title: 'Upload failed', description: error.message, variant: 'destructive' });
     } finally {
