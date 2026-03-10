@@ -232,11 +232,18 @@ const OrdersPanel = ({ toast, queryClient, profile }: { toast: any; queryClient:
       });
       if (error) throw error;
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['admin-orders-direct'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] });
       toast({ title: 'Order created' });
       setCreateOpen(false);
+      // Send webhook
+      sendActivityWebhook('order_created', {
+        customer_name: variables.customer_name,
+        order_name: variables.order_name,
+        service: variables.service,
+        price: variables.price,
+      });
     },
     onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
   });
