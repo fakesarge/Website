@@ -12,6 +12,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, LogOut, Package, Clock, MessageSquare, Image, Send, Eye, X, Info } from 'lucide-react';
+import { sendActivityWebhook } from '@/utils/activityWebhook';
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const;
 
