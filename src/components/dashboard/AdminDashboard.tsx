@@ -18,7 +18,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Plus, Pencil, Trash2, Search, Shield, ShieldOff, LogOut, Package, DollarSign, Clock, Users, MessageSquare, Image, Send, Upload, X, Eye } from 'lucide-react';
 import { sendActivityWebhook } from '@/utils/activityWebhook';
-import { Loader2, Plus, Pencil, Trash2, Search, Shield, ShieldOff, LogOut, Package, DollarSign, Clock, Users, MessageSquare, Image, Send, Upload, X, Eye } from 'lucide-react';
+
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const;
 
