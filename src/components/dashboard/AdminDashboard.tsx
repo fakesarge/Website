@@ -516,6 +516,11 @@ const OrderDetailPanel = ({ order, profile, toast, queryClient, onClose }: { ord
       }
       queryClient.invalidateQueries({ queryKey: ['order-images', order.id] });
       toast({ title: 'Images uploaded successfully' });
+      // Send image upload webhook
+      sendActivityWebhook('image_uploaded', {
+        order_name: order.order_name,
+        customer_name: order.customer_name,
+      });
     } catch (error: any) {
       toast({ title: 'Upload failed', description: error.message, variant: 'destructive' });
     } finally {

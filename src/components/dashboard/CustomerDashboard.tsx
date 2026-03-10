@@ -234,9 +234,16 @@ const CustomerOrderDetail = ({ order, profile, toast, queryClient, onClose }: { 
       });
       if (error) throw error;
     },
-    onSuccess: () => {
+    onSuccess: (_, text) => {
       queryClient.invalidateQueries({ queryKey: ['order-messages', order.id] });
       setMessage('');
+      // Send customer message webhook
+      sendActivityWebhook('customer_message', {
+        sender_name: profile?.discord_username || 'Customer',
+        order_name: order.order_name,
+        message: text,
+        dashboard_url: 'https://74hrs.store/dashboard',
+      });
     },
     onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
   });
