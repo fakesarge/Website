@@ -198,6 +198,39 @@ export type Database = {
         }
         Relationships: []
       }
+      users: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          discord_id: string
+          email: string | null
+          id: string
+          ip_address: string | null
+          last_login: string
+          username: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          discord_id: string
+          email?: string | null
+          id?: string
+          ip_address?: string | null
+          last_login?: string
+          username?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          discord_id?: string
+          email?: string | null
+          id?: string
+          ip_address?: string | null
+          last_login?: string
+          username?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
