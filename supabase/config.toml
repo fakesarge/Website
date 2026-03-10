@@ -23,3 +23,6 @@ verify_jwt = true
 
 [functions.create-order]
 verify_jwt = true
+
+[functions.discord-activity]
+verify_jwt = false
