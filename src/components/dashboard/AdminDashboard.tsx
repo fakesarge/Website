@@ -194,11 +194,19 @@ const OrdersPanel = ({ toast, queryClient, profile }: { toast: any; queryClient:
       }).eq('id', order.id);
       if (error) throw error;
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['admin-orders-direct'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] });
       toast({ title: 'Order updated' });
       setEditingOrder(null);
+      // Send webhook if status changed
+      if (editingOrder && variables.status !== editingOrder.status) {
+        sendActivityWebhook('order_progress_updated', {
+          order_name: variables.order_name || editingOrder.order_name,
+          customer_name: variables.customer_name || editingOrder.customer_name,
+          new_status: variables.status,
+        });
+      }
     },
     onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
   });
