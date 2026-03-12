@@ -128,7 +128,7 @@ export const AdminUsers = () => {
                         </Avatar>
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className="font-medium">{user.discord_username || 'Unknown'}</span>
+                            <span className="font-medium">{user.username || 'Unknown'}</span>
                             {user.user_roles?.some((r: any) => r.role === 'admin') && (
                               <Shield className="w-4 h-4 text-red-500" />
                             )}
