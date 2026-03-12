@@ -57,9 +57,9 @@ const DesktopNavigation = ({ navItems, scrollToSection }: DesktopNavigationProps
         user ? (
           <Link to="/dashboard">
             <Avatar className="h-8 w-8 ring-1 ring-border/20 hover:ring-primary/40 transition-all duration-300 cursor-pointer">
-              <AvatarImage src={profile?.discord_avatar_url || ''} />
+              <AvatarImage src={profile?.avatar_url || ''} />
               <AvatarFallback className="bg-primary/10 text-primary text-xs">
-                {profile?.discord_username?.[0]?.toUpperCase() || 'U'}
+                {profile?.username?.[0]?.toUpperCase() || 'U'}
               </AvatarFallback>
             </Avatar>
           </Link>

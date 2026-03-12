@@ -111,7 +111,7 @@ export const AdminUsers = () => {
                 <TableRow>
                   <TableHead>User</TableHead>
                   <TableHead>Discord ID</TableHead>
-                  <TableHead className="font-semibold">Last Sign-in IP</TableHead>
+                  <TableHead className="font-semibold">Signup IP</TableHead>
                   <TableHead>Roles</TableHead>
                   <TableHead>Joined</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
@@ -123,12 +123,12 @@ export const AdminUsers = () => {
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <Avatar>
-                          <AvatarImage src={user.discord_avatar_url} />
-                          <AvatarFallback>{user.discord_username?.[0] || 'U'}</AvatarFallback>
+                          <AvatarImage src={user.avatar_url} />
+                          <AvatarFallback>{user.username?.[0] || 'U'}</AvatarFallback>
                         </Avatar>
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className="font-medium">{user.discord_username || 'Unknown'}</span>
+                            <span className="font-medium">{user.username || 'Unknown'}</span>
                             {user.user_roles?.some((r: any) => r.role === 'admin') && (
                               <Shield className="w-4 h-4 text-red-500" />
                             )}
@@ -141,7 +141,7 @@ export const AdminUsers = () => {
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Badge variant="outline" className="font-mono text-xs bg-muted/50">
-                          {user.last_signed_in_ip || 'N/A'}
+                          {user.signup_ip || 'N/A'}
                         </Badge>
                       </div>
                     </TableCell>

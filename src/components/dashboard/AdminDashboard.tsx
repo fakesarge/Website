@@ -62,15 +62,15 @@ const AdminDashboard = ({ profile, onSignOut }: AdminDashboardProps) => {
             <Badge className="bg-destructive/10 text-destructive border-destructive/20 text-xs">Owner</Badge>
           </div>
           <p className="text-muted-foreground text-sm ml-9">
-            Welcome back, {profile?.discord_username}
+            Welcome back, {profile?.username}
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <Avatar className="h-9 w-9 ring-2 ring-border/20">
-            <AvatarImage src={profile?.discord_avatar_url || ''} />
+            <AvatarImage src={profile?.avatar_url || ''} />
             <AvatarFallback className="bg-primary/10 text-primary text-sm">
-              {profile?.discord_username?.[0]?.toUpperCase() || 'O'}
+              {profile?.username?.[0]?.toUpperCase() || 'O'}
             </AvatarFallback>
           </Avatar>
           <Button variant="ghost" size="sm" onClick={onSignOut} className="gap-2 text-muted-foreground">
@@ -453,8 +453,8 @@ const OrderDetailPanel = ({ order, profile, toast, queryClient, onClose }: { ord
     mutationFn: async (text: string) => {
       const { error } = await supabase.from('order_messages').insert({
         order_id: order.id,
-        sender_name: profile?.discord_username || 'Admin',
-        sender_avatar_url: profile?.discord_avatar_url,
+        sender_name: profile?.username || 'Admin',
+        sender_avatar_url: profile?.avatar_url,
         message: text,
         is_admin: true,
       });
@@ -723,7 +723,7 @@ const UsersPanel = ({ toast, queryClient }: { toast: any; queryClient: any }) =>
     queryKey: ['admin-users-direct', search],
     queryFn: async () => {
       let q = supabase.from('profiles').select('*, user_roles(role)').order('created_at', { ascending: false });
-      if (search) q = q.or(`discord_username.ilike.%${search}%,discord_id.ilike.%${search}%,last_signed_in_ip.ilike.%${search}%`);
+      if (search) q = q.or(`username.ilike.%${search}%,discord_id.ilike.%${search}%,signup_ip.ilike.%${search}%`);
       const { data, error } = await q;
       if (error) throw error;
       return data || [];
@@ -787,12 +787,12 @@ const UsersPanel = ({ toast, queryClient }: { toast: any; queryClient: any }) =>
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <Avatar className="h-8 w-8">
-                          <AvatarImage src={u.discord_avatar_url} />
-                          <AvatarFallback className="text-xs">{u.discord_username?.[0] || 'U'}</AvatarFallback>
+                          <AvatarImage src={u.avatar_url} />
+                          <AvatarFallback className="text-xs">{u.username?.[0] || 'U'}</AvatarFallback>
                         </Avatar>
                         <div>
                           <div className="flex items-center gap-1.5">
-                            <span className="text-sm font-medium">{u.discord_username || 'Unknown'}</span>
+                            <span className="text-sm font-medium">{u.username || 'Unknown'}</span>
                             {u.user_roles?.some((r: any) => r.role === 'admin') && (
                               <Shield className="w-3.5 h-3.5 text-red-400" />
                             )}
@@ -803,7 +803,7 @@ const UsersPanel = ({ toast, queryClient }: { toast: any; queryClient: any }) =>
                     </TableCell>
                     <TableCell className="font-mono text-xs text-muted-foreground">{u.discord_id || '—'}</TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="font-mono text-xs bg-muted/30">{u.last_signed_in_ip || '—'}</Badge>
+                      <Badge variant="outline" className="font-mono text-xs bg-muted/30">{u.signup_ip || '—'}</Badge>
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1 flex-wrap">

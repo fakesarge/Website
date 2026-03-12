@@ -49,26 +49,27 @@ Deno.serve(async (req) => {
 
     console.log(`[update-profile-ip] User ${user.id}, discord: ${discordId}, IP: ${clientIp}`);
 
-    // Check current profile to determine if this is a new user (no IP stored yet)
+    // Check current profile to determine if this is a new user (no signup_ip stored yet)
     const { data: existingProfile } = await supabaseAdmin
       .from('profiles')
-      .select('last_signed_in_ip')
+      .select('signup_ip')
       .eq('id', user.id)
       .maybeSingle();
 
-    const isNewUser = !existingProfile?.last_signed_in_ip;
+    const isNewUser = !existingProfile?.signup_ip;
 
     // Build update payload
     const updatePayload: Record<string, any> = {
       discord_id: discordId,
-      discord_username: username,
-      discord_avatar_url: avatarUrl,
-      updated_at: new Date().toISOString(),
+      username: username,
+      avatar_url: avatarUrl,
+      email: email,
+      last_login: new Date().toISOString(),
     };
 
     // Only store IP on first signup
     if (isNewUser) {
-      updatePayload.last_signed_in_ip = clientIp;
+      updatePayload.signup_ip = clientIp;
     }
 
     await supabaseAdmin
@@ -93,7 +94,7 @@ Deno.serve(async (req) => {
                   { name: 'Username', value: username || 'Unknown', inline: true },
                   { name: 'Email', value: email || 'N/A', inline: true },
                   { name: 'Discord ID', value: discordId || 'N/A', inline: true },
-                  { name: 'IP Address', value: clientIp, inline: true },
+                  { name: 'Signup IP', value: clientIp, inline: true },
                 ],
                 footer: { text: '74HRS VFX Studio' },
                 timestamp: new Date().toISOString(),

@@ -69,14 +69,14 @@ const CustomerDashboard = ({ profile, user, onSignOut }: CustomerDashboardProps)
       >
         <div className="flex items-center gap-4">
           <Avatar className="h-12 w-12 ring-2 ring-border/20">
-            <AvatarImage src={profile?.discord_avatar_url || ''} />
+            <AvatarImage src={profile?.avatar_url || ''} />
             <AvatarFallback className="bg-primary/10 text-primary">
-              {profile?.discord_username?.[0]?.toUpperCase() || 'U'}
+              {profile?.username?.[0]?.toUpperCase() || 'U'}
             </AvatarFallback>
           </Avatar>
           <div>
             <h1 className="text-2xl font-bold tracking-tight">
-              Welcome, {profile?.discord_username || 'User'}
+              Welcome, {profile?.username || 'User'}
             </h1>
             <p className="text-muted-foreground text-sm">
               {orders?.length || 0} orders • {activeCount} active
@@ -227,8 +227,8 @@ const CustomerOrderDetail = ({ order, profile, toast, queryClient, onClose }: { 
     mutationFn: async (text: string) => {
       const { error } = await supabase.from('order_messages').insert({
         order_id: order.id,
-        sender_name: profile?.discord_username || 'Customer',
-        sender_avatar_url: profile?.discord_avatar_url,
+        sender_name: profile?.username || 'Customer',
+        sender_avatar_url: profile?.avatar_url,
         message: text,
         is_admin: false,
       });
@@ -239,7 +239,7 @@ const CustomerOrderDetail = ({ order, profile, toast, queryClient, onClose }: { 
       setMessage('');
       // Send customer message webhook
       sendActivityWebhook('customer_message', {
-        sender_name: profile?.discord_username || 'Customer',
+        sender_name: profile?.username || 'Customer',
         order_name: order.order_name,
         message: text,
         dashboard_url: 'https://74hrs.store/dashboard',

@@ -34,7 +34,7 @@ Deno.serve(async (req) => {
     // Get user's profile to fetch discord_id
     const { data: profile, error: profileError } = await supabaseClient
       .from('profiles')
-      .select('discord_id, discord_username, discord_avatar_url')
+      .select('discord_id, username, avatar_url')
       .eq('id', user.id)
       .single();
 
