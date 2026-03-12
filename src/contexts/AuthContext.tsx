@@ -32,20 +32,40 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const profileFetchedForRef = useRef<string | null>(null);
 
-  const fetchProfile = useCallback(async (userId: string) => {
+  const fetchProfile = useCallback(async (currentUser: User) => {
+    const userId = currentUser.id;
     if (profileFetchedForRef.current === userId) return;
     profileFetchedForRef.current = userId;
     
     console.log('[Auth] Fetching profile for:', userId);
+    console.log('[Auth] User metadata:', JSON.stringify(currentUser.user_metadata));
+    
     try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .maybeSingle();
+      // Try by discord_id first
+      const discordId = currentUser.user_metadata?.provider_id;
+      let data = null;
+      
+      if (discordId) {
+        const result = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('discord_id', discordId)
+          .maybeSingle();
+        data = result.data;
+      }
+      
+      // Fallback to user id
+      if (!data) {
+        const result = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', userId)
+          .maybeSingle();
+        data = result.data;
+      }
 
-      if (error) {
-        console.error('[Auth] Profile fetch error:', JSON.stringify(error));
+      if (!data) {
+        console.log('[Auth] No profile found, will be created by edge function');
         setProfile(null);
         profileFetchedForRef.current = null;
       } else {
@@ -74,18 +94,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(currentSession?.user ?? null);
 
         if (currentSession?.user) {
+          if (event === 'SIGNED_IN') {
+            // Fire profile sync edge function first, then fetch profile
+            try {
+              await supabase.functions.invoke('update-profile-ip');
+              console.log('[Auth] Profile sync complete');
+            } catch (e) {
+              console.warn('[Auth] Profile sync edge function failed:', e);
+            }
+          }
+          
           setTimeout(async () => {
             if (!mounted) return;
-            await fetchProfile(currentSession.user.id);
+            await fetchProfile(currentSession.user);
             if (mounted) {
               setLoading(false);
               console.log('[Auth] Ready with profile');
             }
           }, 0);
-          
-          if (event === 'SIGNED_IN') {
-            supabase.functions.invoke('update-profile-ip').catch(() => {});
-          }
         } else {
           setProfile(null);
           profileFetchedForRef.current = null;

@@ -43,23 +43,26 @@ Deno.serve(async (req) => {
                      'unknown';
 
     const discordId = user.user_metadata?.provider_id;
-    const username = user.user_metadata?.full_name;
+    const username = user.user_metadata?.preferred_username || user.user_metadata?.full_name;
     const avatarUrl = user.user_metadata?.avatar_url;
     const email = user.email;
 
-    console.log(`[update-profile-ip] User ${user.id}, discord: ${discordId}, IP: ${clientIp}`);
+    console.log(`[update-profile-ip] User ${user.id}, discord: ${discordId}, username: ${username}, IP: ${clientIp}`);
+    console.log(`[update-profile-ip] Full metadata:`, JSON.stringify(user.user_metadata));
 
-    // Check current profile to determine if this is a new user (no signup_ip stored yet)
+    // Check if profile exists and if signup_ip is set
     const { data: existingProfile } = await supabaseAdmin
       .from('profiles')
       .select('signup_ip')
       .eq('id', user.id)
       .maybeSingle();
 
-    const isNewUser = !existingProfile?.signup_ip;
+    const isNewUser = !existingProfile;
+    const needsIp = !existingProfile?.signup_ip;
 
-    // Build update payload
-    const updatePayload: Record<string, any> = {
+    // Build upsert payload
+    const upsertPayload: Record<string, any> = {
+      id: user.id,
       discord_id: discordId,
       username: username,
       avatar_url: avatarUrl,
@@ -67,15 +70,21 @@ Deno.serve(async (req) => {
       last_login: new Date().toISOString(),
     };
 
-    // Only store IP on first signup
-    if (isNewUser) {
-      updatePayload.signup_ip = clientIp;
+    // Only store IP on first signup (when signup_ip is null)
+    if (needsIp) {
+      upsertPayload.signup_ip = clientIp;
     }
 
-    await supabaseAdmin
+    // Upsert profile — insert if missing, update if exists
+    const { error: upsertError } = await supabaseAdmin
       .from('profiles')
-      .update(updatePayload)
-      .eq('id', user.id);
+      .upsert(upsertPayload, { onConflict: 'id' });
+
+    if (upsertError) {
+      console.error('[update-profile-ip] Upsert error:', upsertError);
+    } else {
+      console.log('[update-profile-ip] Profile upserted successfully, isNew:', isNewUser);
+    }
 
     // Send signup webhook for new users
     if (isNewUser) {
