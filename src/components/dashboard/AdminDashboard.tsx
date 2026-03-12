@@ -62,7 +62,7 @@ const AdminDashboard = ({ profile, onSignOut }: AdminDashboardProps) => {
             <Badge className="bg-destructive/10 text-destructive border-destructive/20 text-xs">Owner</Badge>
           </div>
           <p className="text-muted-foreground text-sm ml-9">
-            Welcome back, {profile?.discord_username}
+            Welcome back, {profile?.username}
           </p>
         </div>
 
