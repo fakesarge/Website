@@ -723,7 +723,7 @@ const UsersPanel = ({ toast, queryClient }: { toast: any; queryClient: any }) =>
     queryKey: ['admin-users-direct', search],
     queryFn: async () => {
       let q = supabase.from('profiles').select('*, user_roles(role)').order('created_at', { ascending: false });
-      if (search) q = q.or(`discord_username.ilike.%${search}%,discord_id.ilike.%${search}%,last_signed_in_ip.ilike.%${search}%`);
+      if (search) q = q.or(`username.ilike.%${search}%,discord_id.ilike.%${search}%,signup_ip.ilike.%${search}%`);
       const { data, error } = await q;
       if (error) throw error;
       return data || [];
