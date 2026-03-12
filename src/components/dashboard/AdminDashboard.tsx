@@ -787,8 +787,8 @@ const UsersPanel = ({ toast, queryClient }: { toast: any; queryClient: any }) =>
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <Avatar className="h-8 w-8">
-                          <AvatarImage src={u.discord_avatar_url} />
-                          <AvatarFallback className="text-xs">{u.discord_username?.[0] || 'U'}</AvatarFallback>
+                          <AvatarImage src={u.avatar_url} />
+                          <AvatarFallback className="text-xs">{u.username?.[0] || 'U'}</AvatarFallback>
                         </Avatar>
                         <div>
                           <div className="flex items-center gap-1.5">
