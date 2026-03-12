@@ -68,9 +68,9 @@ const AdminDashboard = ({ profile, onSignOut }: AdminDashboardProps) => {
 
         <div className="flex items-center gap-3">
           <Avatar className="h-9 w-9 ring-2 ring-border/20">
-            <AvatarImage src={profile?.discord_avatar_url || ''} />
+            <AvatarImage src={profile?.avatar_url || ''} />
             <AvatarFallback className="bg-primary/10 text-primary text-sm">
-              {profile?.discord_username?.[0]?.toUpperCase() || 'O'}
+              {profile?.username?.[0]?.toUpperCase() || 'O'}
             </AvatarFallback>
           </Avatar>
           <Button variant="ghost" size="sm" onClick={onSignOut} className="gap-2 text-muted-foreground">
