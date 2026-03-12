@@ -123,8 +123,8 @@ export const AdminUsers = () => {
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <Avatar>
-                          <AvatarImage src={user.discord_avatar_url} />
-                          <AvatarFallback>{user.discord_username?.[0] || 'U'}</AvatarFallback>
+                          <AvatarImage src={user.avatar_url} />
+                          <AvatarFallback>{user.username?.[0] || 'U'}</AvatarFallback>
                         </Avatar>
                         <div>
                           <div className="flex items-center gap-2">
