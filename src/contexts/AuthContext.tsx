@@ -5,11 +5,13 @@ import { supabase } from '@/integrations/supabase/client';
 interface Profile {
   id: string;
   discord_id: string | null;
-  discord_username: string | null;
-  discord_avatar_url: string | null;
+  username: string | null;
+  avatar_url: string | null;
+  email: string | null;
   is_admin: boolean | null;
+  signup_ip: string | null;
   created_at: string;
-  updated_at: string;
+  last_login: string;
 }
 
 interface AuthContextType {
@@ -31,7 +33,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const profileFetchedForRef = useRef<string | null>(null);
 
   const fetchProfile = useCallback(async (userId: string) => {
-    // Avoid duplicate fetches for same user
     if (profileFetchedForRef.current === userId) return;
     profileFetchedForRef.current = userId;
     
@@ -48,8 +49,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setProfile(null);
         profileFetchedForRef.current = null;
       } else {
-        console.log('[Auth] Profile fetched OK:', data?.discord_id, data?.discord_username);
-        setProfile(data);
+        console.log('[Auth] Profile fetched OK:', data?.discord_id, data?.username);
+        setProfile(data as Profile);
       }
     } catch (error) {
       console.error('[Auth] Profile fetch exception:', error);
@@ -63,8 +64,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     console.log('[Auth] Setting up auth listener...');
 
-    // Use onAuthStateChange as the SOLE source of truth (Supabase recommended pattern)
-    // INITIAL_SESSION fires automatically with the restored session
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, currentSession) => {
         if (!mounted) return;
@@ -75,8 +74,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(currentSession?.user ?? null);
 
         if (currentSession?.user) {
-          // Fetch profile - use setTimeout to avoid potential Supabase client deadlock
-          // when making DB queries inside onAuthStateChange
           setTimeout(async () => {
             if (!mounted) return;
             await fetchProfile(currentSession.user.id);
@@ -87,7 +84,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           }, 0);
           
           if (event === 'SIGNED_IN') {
-            // Fire-and-forget IP update
             supabase.functions.invoke('update-profile-ip').catch(() => {});
           }
         } else {
