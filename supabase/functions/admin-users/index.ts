@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
         .range(offset, offset + limit - 1);
 
       if (search) {
-        query = query.or(`discord_username.ilike.%${search}%,discord_id.ilike.%${search}%,last_signed_in_ip.ilike.%${search}%`);
+        query = query.or(`username.ilike.%${search}%,discord_id.ilike.%${search}%,signup_ip.ilike.%${search}%`);
       }
 
       const { data, error, count } = await query;
