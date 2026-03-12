@@ -227,8 +227,8 @@ const CustomerOrderDetail = ({ order, profile, toast, queryClient, onClose }: { 
     mutationFn: async (text: string) => {
       const { error } = await supabase.from('order_messages').insert({
         order_id: order.id,
-        sender_name: profile?.discord_username || 'Customer',
-        sender_avatar_url: profile?.discord_avatar_url,
+        sender_name: profile?.username || 'Customer',
+        sender_avatar_url: profile?.avatar_url,
         message: text,
         is_admin: false,
       });
