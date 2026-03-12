@@ -792,7 +792,7 @@ const UsersPanel = ({ toast, queryClient }: { toast: any; queryClient: any }) =>
                         </Avatar>
                         <div>
                           <div className="flex items-center gap-1.5">
-                            <span className="text-sm font-medium">{u.discord_username || 'Unknown'}</span>
+                            <span className="text-sm font-medium">{u.username || 'Unknown'}</span>
                             {u.user_roles?.some((r: any) => r.role === 'admin') && (
                               <Shield className="w-3.5 h-3.5 text-red-400" />
                             )}
