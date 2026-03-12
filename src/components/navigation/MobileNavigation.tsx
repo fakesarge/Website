@@ -79,9 +79,9 @@ const MobileNavigation = ({
                   className="flex items-center gap-3 text-lg text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <Avatar className="h-7 w-7 ring-1 ring-border/20">
-                    <AvatarImage src={profile?.discord_avatar_url || ''} />
+                    <AvatarImage src={profile?.avatar_url || ''} />
                     <AvatarFallback className="bg-primary/10 text-primary text-xs">
-                      {profile?.discord_username?.[0]?.toUpperCase() || 'U'}
+                      {profile?.username?.[0]?.toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
                   Dashboard

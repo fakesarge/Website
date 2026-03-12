@@ -239,7 +239,7 @@ const CustomerOrderDetail = ({ order, profile, toast, queryClient, onClose }: { 
       setMessage('');
       // Send customer message webhook
       sendActivityWebhook('customer_message', {
-        sender_name: profile?.discord_username || 'Customer',
+        sender_name: profile?.username || 'Customer',
         order_name: order.order_name,
         message: text,
         dashboard_url: 'https://74hrs.store/dashboard',

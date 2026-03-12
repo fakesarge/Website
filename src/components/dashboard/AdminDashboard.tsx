@@ -803,7 +803,7 @@ const UsersPanel = ({ toast, queryClient }: { toast: any; queryClient: any }) =>
                     </TableCell>
                     <TableCell className="font-mono text-xs text-muted-foreground">{u.discord_id || '—'}</TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="font-mono text-xs bg-muted/30">{u.last_signed_in_ip || '—'}</Badge>
+                      <Badge variant="outline" className="font-mono text-xs bg-muted/30">{u.signup_ip || '—'}</Badge>
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1 flex-wrap">

@@ -79,7 +79,7 @@ const Settings = () => {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Discord Username</p>
-                <p>{profile?.discord_username || 'Not connected'}</p>
+                <p>{profile?.username || 'Not connected'}</p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Discord ID</p>

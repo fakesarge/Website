@@ -141,7 +141,7 @@ export const AdminUsers = () => {
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Badge variant="outline" className="font-mono text-xs bg-muted/50">
-                          {user.last_signed_in_ip || 'N/A'}
+                          {user.signup_ip || 'N/A'}
                         </Badge>
                       </div>
                     </TableCell>
