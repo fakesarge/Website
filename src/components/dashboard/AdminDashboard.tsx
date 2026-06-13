@@ -16,8 +16,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Plus, Pencil, Trash2, Search, Shield, ShieldOff, LogOut, Package, DollarSign, Clock, Users, MessageSquare, Image, Send, Upload, X, Eye } from 'lucide-react';
+import { Loader2, Plus, Pencil, Trash2, Search, Shield, ShieldOff, LogOut, Package, DollarSign, Clock, Users, MessageSquare, Image, Send, Upload, X, Eye, Crown } from 'lucide-react';
 import { sendActivityWebhook } from '@/utils/activityWebhook';
+import { AdminAssets } from '@/components/admin/AdminAssets';
 
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const;
