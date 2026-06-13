@@ -9,6 +9,7 @@ interface Profile {
   avatar_url: string | null;
   email: string | null;
   is_admin: boolean | null;
+  vip: boolean | null;
   signup_ip: string | null;
   created_at: string;
   last_login: string;
