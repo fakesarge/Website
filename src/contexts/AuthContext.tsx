@@ -95,7 +95,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(currentSession?.user ?? null);
 
         if (currentSession?.user) {
-          if (event === 'SIGNED_IN') {
+          if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
             // Fire profile sync edge function first, then fetch profile
             try {
               await supabase.functions.invoke('update-profile-ip');
