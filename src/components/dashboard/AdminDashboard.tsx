@@ -97,6 +97,9 @@ const AdminDashboard = ({ profile, onSignOut }: AdminDashboardProps) => {
             <TabsTrigger value="users" className="gap-2">
               <Users className="h-4 w-4" /> Users
             </TabsTrigger>
+            <TabsTrigger value="vip" className="gap-2">
+              <Crown className="h-4 w-4" /> VIP Library
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="orders">
@@ -104,6 +107,9 @@ const AdminDashboard = ({ profile, onSignOut }: AdminDashboardProps) => {
           </TabsContent>
           <TabsContent value="users">
             <UsersPanel toast={toast} queryClient={queryClient} />
+          </TabsContent>
+          <TabsContent value="vip">
+            <AdminAssets />
           </TabsContent>
         </Tabs>
       </motion.div>
