@@ -19,6 +19,8 @@ import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import ServerError from "./pages/ServerError";
+import VipLibrary from "./pages/VipLibrary";
+import VipAssetDetail from "./pages/VipAssetDetail";
 
 const queryClient = new QueryClient();
 
