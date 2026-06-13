@@ -66,6 +66,18 @@ export const AdminUsers = () => {
     });
   };
 
+  const vipMutation = useMutation({
+    mutationFn: async ({ user_id, vip }: { user_id: string; vip: boolean }) => {
+      const { error } = await supabase.from('profiles').update({ vip } as any).eq('id', user_id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      toast({ title: 'VIP status updated' });
+    },
+    onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
+  });
+
   const getRoleBadges = (userRoles: any[]) => {
     const roleColors: Record<string, string> = {
       admin: 'bg-red-500/10 text-red-500 border-red-500/20',
