@@ -166,6 +166,15 @@ export const AdminUsers = () => {
                         )}
                       </div>
                     </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Switch
+                          checked={!!user.vip}
+                          onCheckedChange={(v) => vipMutation.mutate({ user_id: user.id, vip: v })}
+                        />
+                        {user.vip && <Crown className="w-4 h-4 text-primary" />}
+                      </div>
+                    </TableCell>
                     <TableCell>{new Date(user.created_at).toLocaleDateString()}</TableCell>
                     <TableCell className="text-right">
                       <Select
