@@ -9,6 +9,7 @@ interface Profile {
   avatar_url: string | null;
   email: string | null;
   is_admin: boolean | null;
+  vip: boolean | null;
   signup_ip: string | null;
   created_at: string;
   last_login: string;
@@ -94,7 +95,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(currentSession?.user ?? null);
 
         if (currentSession?.user) {
-          if (event === 'SIGNED_IN') {
+          if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
             // Fire profile sync edge function first, then fetch profile
             try {
               await supabase.functions.invoke('update-profile-ip');

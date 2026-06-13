@@ -14,6 +14,106 @@ export type Database = {
   }
   public: {
     Tables: {
+      asset_favorites: {
+        Row: {
+          asset_id: string
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          asset_id: string
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          asset_id?: string
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_favorites_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      asset_views: {
+        Row: {
+          asset_id: string
+          id: string
+          user_id: string
+          viewed_at: string
+        }
+        Insert: {
+          asset_id: string
+          id?: string
+          user_id: string
+          viewed_at?: string
+        }
+        Update: {
+          asset_id?: string
+          id?: string
+          user_id?: string
+          viewed_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_views_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assets: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          download_count: number
+          file_url: string | null
+          id: string
+          is_premium: boolean
+          preview_url: string | null
+          tags: string[]
+          title: string
+          updated_at: string
+          video_url: string | null
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          download_count?: number
+          file_url?: string | null
+          id?: string
+          is_premium?: boolean
+          preview_url?: string | null
+          tags?: string[]
+          title: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          download_count?: number
+          file_url?: string | null
+          id?: string
+          is_premium?: boolean
+          preview_url?: string | null
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Relationships: []
+      }
       order_images: {
         Row: {
           created_at: string
@@ -155,6 +255,7 @@ export type Database = {
           last_login: string
           signup_ip: string | null
           username: string | null
+          vip: boolean
         }
         Insert: {
           avatar_url?: string | null
@@ -166,6 +267,7 @@ export type Database = {
           last_login?: string
           signup_ip?: string | null
           username?: string | null
+          vip?: boolean
         }
         Update: {
           avatar_url?: string | null
@@ -177,6 +279,7 @@ export type Database = {
           last_login?: string
           signup_ip?: string | null
           username?: string | null
+          vip?: boolean
         }
         Relationships: []
       }

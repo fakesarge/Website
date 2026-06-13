@@ -8,7 +8,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Search, Shield, ShieldOff } from 'lucide-react';
+import { Loader2, Search, Shield, ShieldOff, Crown } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export const AdminUsers = () => {
@@ -65,6 +66,18 @@ export const AdminUsers = () => {
     });
   };
 
+  const vipMutation = useMutation({
+    mutationFn: async ({ user_id, vip }: { user_id: string; vip: boolean }) => {
+      const { error } = await supabase.from('profiles').update({ vip } as any).eq('id', user_id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      toast({ title: 'VIP status updated' });
+    },
+    onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
+  });
+
   const getRoleBadges = (userRoles: any[]) => {
     const roleColors: Record<string, string> = {
       admin: 'bg-red-500/10 text-red-500 border-red-500/20',
@@ -113,6 +126,7 @@ export const AdminUsers = () => {
                   <TableHead>Discord ID</TableHead>
                   <TableHead className="font-semibold">Signup IP</TableHead>
                   <TableHead>Roles</TableHead>
+                  <TableHead>VIP</TableHead>
                   <TableHead>Joined</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
@@ -150,6 +164,15 @@ export const AdminUsers = () => {
                         {user.user_roles?.length > 0 ? getRoleBadges(user.user_roles) : (
                           <Badge variant="outline">No roles</Badge>
                         )}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Switch
+                          checked={!!user.vip}
+                          onCheckedChange={(v) => vipMutation.mutate({ user_id: user.id, vip: v })}
+                        />
+                        {user.vip && <Crown className="w-4 h-4 text-primary" />}
                       </div>
                     </TableCell>
                     <TableCell>{new Date(user.created_at).toLocaleDateString()}</TableCell>

@@ -15,7 +15,7 @@ const Navigation = () => {
     { name: "Portfolio", href: "/portfolio", isLink: true },
     { name: "Partners", href: "/partners", isLink: true },
     { name: "Queue", href: "/queue", isLink: true },
-    // { name: "Casino", href: "/casino", isLink: true },
+    { name: "VIP Library", href: "/vip", isLink: true },
     { name: "Orders", href: "/orders", isLink: true },
   ];
 
