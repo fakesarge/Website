@@ -44,6 +44,8 @@ const App = () => (
               <Route path="/terms" element={<Terms />} />
               <Route path="/login" element={<Login />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/vip" element={<VipLibrary />} />
+              <Route path="/vip/:id" element={<VipAssetDetail />} />
               {/* /admin removed — admin view is auto-detected in /dashboard */}
               <Route path="/settings" element={<Settings />} />
               <Route path="/error" element={<ServerError />} />
