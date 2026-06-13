@@ -126,6 +126,7 @@ export const AdminUsers = () => {
                   <TableHead>Discord ID</TableHead>
                   <TableHead className="font-semibold">Signup IP</TableHead>
                   <TableHead>Roles</TableHead>
+                  <TableHead>VIP</TableHead>
                   <TableHead>Joined</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
