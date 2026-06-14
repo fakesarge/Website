@@ -8,6 +8,8 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import Footer from "@/components/Footer";
 import PriceEstimator from "@/components/PriceEstimator";
 import SectionDivider from "@/components/SectionDivider";
+import FAQSection from "./FAQSection";
+import BigCTASection from "./BigCTASection";
 
 interface ContentSectionProps {
   contentRef: React.RefObject<HTMLDivElement>;

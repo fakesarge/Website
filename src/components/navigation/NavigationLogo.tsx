@@ -1,20 +1,27 @@
-
-import { Command } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const NavigationLogo = () => {
   return (
-    <Link to="/" className="flex items-center gap-2">
-      <img
-        src="/logo.png"
-        alt="74hrs Logo"
-        className="w-6 h-6"
-        onError={(e) => {
-          const target = e.target as HTMLImageElement;
-          target.style.display = 'none';
+    <Link to="/" className="flex items-center" aria-label="74hrs home">
+      <div
+        className="relative flex h-11 w-11 items-center justify-center rounded-full"
+        style={{
+          background: "radial-gradient(circle at 30% 30%, hsl(var(--accent-glow) / 0.9), hsl(var(--accent-glow) / 0.3) 60%, transparent 75%)",
+          boxShadow: "0 0 24px hsl(var(--accent-glow) / 0.55), inset 0 0 12px hsl(var(--accent-glow) / 0.3)",
         }}
-      />
-      <span className="font-bold text-base">74hrs</span>
+      >
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-background ring-1 ring-[hsl(var(--accent-glow)/0.4)]">
+          <img
+            src="/logo.png"
+            alt=""
+            className="h-5 w-5 object-contain"
+            onError={(e) => {
+              const t = e.target as HTMLImageElement;
+              t.style.display = "none";
+            }}
+          />
+        </div>
+      </div>
     </Link>
   );
 };
