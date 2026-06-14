@@ -72,11 +72,23 @@
 }
 
 .text-gradient {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-white;
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(135deg, hsl(var(--accent-glow)), hsl(var(--primary)));
+}
+
+.text-accent-glow {
+  color: hsl(var(--accent-glow));
 }
 
 .button-gradient {
-  @apply bg-gradient-to-r from-primary to-white/80 hover:opacity-90 transition-opacity rounded-full text-black;
+  background: linear-gradient(135deg, hsl(var(--accent-glow)), hsl(var(--primary)));
+  color: hsl(var(--accent-glow-foreground));
+  @apply hover:opacity-90 transition-opacity rounded-full font-medium;
+  box-shadow: 0 0 24px hsl(var(--accent-glow) / 0.35);
+}
+
+.glow-ring {
+  box-shadow: 0 0 0 1px hsl(var(--accent-glow) / 0.4), 0 0 28px hsl(var(--accent-glow) / 0.35);
 }
 
 /* Loading Animation */
