@@ -99,6 +99,16 @@ const ContentSection = ({ contentRef }: ContentSectionProps) => {
       {/* Testimonials */}
       <TestimonialsSection />
 
+      <SectionDivider />
+
+      {/* FAQ */}
+      <FAQSection />
+
+      <SectionDivider />
+
+      {/* Big CTA */}
+      <BigCTASection />
+
       {/* Footer */}
       <Footer />
 
