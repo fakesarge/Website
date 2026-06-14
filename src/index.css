@@ -14,8 +14,8 @@
     --card-foreground: 0 0% 95%;
     --popover: 0 0% 5%;
     --popover-foreground: 0 0% 95%;
-    --primary: 0 0% 75%;
-    --primary-foreground: 0 0% 10%;
+    --primary: 0 0% 88%;
+    --primary-foreground: 0 0% 8%;
     --secondary: 0 0% 8%;
     --secondary-foreground: 0 0% 95%;
     --muted: 0 0% 8%;
@@ -26,8 +26,13 @@
     --destructive-foreground: 0 0% 95%;
     --border: 0 0% 15%;
     --input: 0 0% 15%;
-    --ring: 0 0% 75%;
+    --ring: 0 0% 88%;
     --radius: 0.75rem;
+
+    /* Brand accent — change this single token to re-theme the whole site.
+       Default = soft silver-white (premium). Try e.g. 142 90% 55% for neon green. */
+    --accent-glow: 0 0% 92%;
+    --accent-glow-foreground: 0 0% 8%;
   }
 }
 
