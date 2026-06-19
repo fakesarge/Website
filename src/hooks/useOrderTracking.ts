@@ -2,39 +2,33 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
-interface Order {
+interface QueueOrder {
   id: string;
   order_code: string;
   order_name: string;
-  customer_name: string;
-  customer_email: string;
   service: string;
   category: string;
-  description: string;
-  price: number;
   status: string;
-  discord_id: string;
-  referral_code: string | null;
+  price: number;
   created_at: string;
   updated_at: string;
 }
 
-// Fetch all orders regardless of authentication
+// Public, safe-columns-only queue (no customer_email, discord_id, referral_code)
 export const useOrders = () => {
-  return useQuery<Order[]>({
-    queryKey: ['orders'],
+  return useQuery<QueueOrder[]>({
+    queryKey: ['orders-public-queue'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('orders')
+      const { data, error } = await (supabase as any)
+        .from('orders_public_queue')
         .select('*')
         .order('created_at', { ascending: false });
 
       if (error) {
-        console.error('Error fetching orders:', error);
+        console.error('Error fetching orders queue:', error);
         return [];
       }
-
-      return data || [];
+      return (data as QueueOrder[]) || [];
     },
     staleTime: 30000,
     gcTime: 5 * 60 * 1000,
@@ -52,7 +46,7 @@ export const useRealtimeOrders = () => {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'orders' },
         () => {
-          queryClient.invalidateQueries({ queryKey: ['orders'] });
+          queryClient.invalidateQueries({ queryKey: ['orders-public-queue'] });
         }
       )
       .subscribe();
@@ -85,7 +79,7 @@ export const useCreateOrder = () => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['orders'] });
+      queryClient.invalidateQueries({ queryKey: ['orders-public-queue'] });
     },
   });
 };
