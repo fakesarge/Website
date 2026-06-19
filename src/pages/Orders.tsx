@@ -55,7 +55,7 @@ const OrdersPage = () => {
   const filteredOrders = orders?.filter(order =>
     order.order_code?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     order.order_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.customer_email?.toLowerCase().includes(searchTerm.toLowerCase())
+    order.customer_name?.toLowerCase().includes(searchTerm.toLowerCase())
   ) || [];
 
   const handleSearch = (e: React.FormEvent) => {

@@ -338,6 +338,8 @@ export type Database = {
         Row: {
           category: string | null
           created_at: string | null
+          customer_name: string | null
+          description: string | null
           id: string | null
           order_code: string | null
           order_name: string | null
@@ -349,6 +351,8 @@ export type Database = {
         Insert: {
           category?: string | null
           created_at?: string | null
+          customer_name?: string | null
+          description?: string | null
           id?: string | null
           order_code?: string | null
           order_name?: string | null
@@ -360,6 +364,8 @@ export type Database = {
         Update: {
           category?: string | null
           created_at?: string | null
+          customer_name?: string | null
+          description?: string | null
           id?: string | null
           order_code?: string | null
           order_name?: string | null
