@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import Portfolio from "./pages/Portfolio";
+import GfxPortfolio from "./pages/GfxPortfolio";
 import Orders from "./pages/Orders";
 import OrderQueue from "./pages/OrderQueue";
 import Partners from "./pages/Partners";
@@ -35,6 +36,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/portfolio" element={<Portfolio />} />
+              <Route path="/gfx" element={<GfxPortfolio />} />
               <Route path="/orders" element={<Orders />} />
               <Route path="/queue" element={<OrderQueue />} />
               <Route path="/partners" element={<Partners />} />
