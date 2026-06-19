@@ -6,8 +6,10 @@ interface QueueOrder {
   id: string;
   order_code: string;
   order_name: string;
+  customer_name: string | null;
   service: string;
   category: string;
+  description: string | null;
   status: string;
   price: number;
   created_at: string;
