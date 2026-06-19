@@ -17,7 +17,7 @@ const GfxCard = ({ project, index, onClick }: Props) => {
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.6, delay: index * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
       whileHover={{ y: -6 }}
-      className="group relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-border/40 bg-card text-left"
+      className="group relative aspect-video w-full overflow-hidden rounded-2xl border border-border/40 bg-card text-left"
     >
       <img
         src={project.image}

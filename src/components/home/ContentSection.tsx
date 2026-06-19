@@ -10,6 +10,8 @@ import PriceEstimator from "@/components/PriceEstimator";
 import SectionDivider from "@/components/SectionDivider";
 import FAQSection from "./FAQSection";
 import BigCTASection from "./BigCTASection";
+import FeaturedProductsSection from "./FeaturedProductsSection";
+import VipMembershipSection from "./VipMembershipSection";
 
 interface ContentSectionProps {
   contentRef: React.RefObject<HTMLDivElement>;
@@ -52,6 +54,16 @@ const ContentSection = ({ contentRef }: ContentSectionProps) => {
 
       {/* Section 4 – Why 74hrs */}
       <WhyUsSection />
+
+      <SectionDivider />
+
+      {/* Featured Products from Shop */}
+      <FeaturedProductsSection />
+
+      <SectionDivider />
+
+      {/* VIP Membership */}
+      <VipMembershipSection />
 
       <SectionDivider />
 
