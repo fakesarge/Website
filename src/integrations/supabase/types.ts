@@ -154,6 +154,13 @@ export type Database = {
             foreignKeyName: "order_images_order_id_fkey"
             columns: ["order_id"]
             isOneToOne: false
+            referencedRelation: "orders_public_queue"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_images_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
             referencedRelation: "public_order_queue"
             referencedColumns: ["id"]
           },
@@ -196,6 +203,13 @@ export type Database = {
             columns: ["order_id"]
             isOneToOne: false
             referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_messages_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders_public_queue"
             referencedColumns: ["id"]
           },
           {
@@ -320,6 +334,42 @@ export type Database = {
       }
     }
     Views: {
+      orders_public_queue: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          id: string | null
+          order_code: string | null
+          order_name: string | null
+          price: number | null
+          service: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          id?: string | null
+          order_code?: string | null
+          order_name?: string | null
+          price?: number | null
+          service?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          id?: string | null
+          order_code?: string | null
+          order_name?: string | null
+          price?: number | null
+          service?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       public_order_queue: {
         Row: {
           category: string | null
