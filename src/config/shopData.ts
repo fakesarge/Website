@@ -122,27 +122,27 @@ export const shopCategories: ShopCategory[] = [
         userReviews: [
          ],
         purchaseUrl: "https://buy.stripe.com/00w3co3g9eTB80k45h6Ri05?prefilled_promo_code=SAVE30",
-
+        hoverPreview: "/images/products/blender.png",
       },
-      {
-        id: "social-pop-ups",
-        name: "Social Pop Ups",
-        description: "ZIP File with After Effect + Premier Pro + Photoshop Templates",
-        fullDescription: "Easy to use social media pop-up templates for After Effects, Premiere Pro, and Photoshop. Each template is fully customizable with intuitive controls, allowing you to quickly create eye-catching pop-ups for YouTube, Twitch, Instagram, and more. Perfect for streamers and content creators looking to enhance their videos with professional-quality graphics.",
-        price: "$25",
-        originalPrice: "$40",
-        features: ["Kick Template", " Youtube Template", "Twitch Template", "TikTok Template", "Instagram Template", "Facebook Template"],
-        icon: "box",
-        badge: "New",
-        image: "/images/products/dowiuefiowejf.png",
-        images: ["/images/products/dowiuefiowejf.png"],
-        rating: 5,
-        reviews: 23,
-        userReviews: [
-         ],
-        purchaseUrl: "https://buy.stripe.com/5kQdR26sleTBfsMbxJ6Ri02?prefilled_promo_code=SALE",
+      // {
+      //   id: "social-pop-ups",
+      //   name: "Social Pop Ups",
+      //   description: "ZIP File with After Effect + Premier Pro + Photoshop Templates",
+      //   fullDescription: "Easy to use social media pop-up templates for After Effects, Premiere Pro, and Photoshop. Each template is fully customizable with intuitive controls, allowing you to quickly create eye-catching pop-ups for YouTube, Twitch, Instagram, and more. Perfect for streamers and content creators looking to enhance their videos with professional-quality graphics.",
+      //   price: "$25",
+      //   originalPrice: "$40",
+      //   features: ["Kick Template", " Youtube Template", "Twitch Template", "TikTok Template", "Instagram Template", "Facebook Template"],
+      //   icon: "box",
+      //   badge: "New",
+      //   image: "/images/products/dowiuefiowejf.png",
+      //   images: ["/images/products/dowiuefiowejf.png"],
+      //   rating: 5,
+      //   reviews: 23,
+      //   userReviews: [
+      //    ],
+      //   purchaseUrl: "https://buy.stripe.com/5kQdR26sleTBfsMbxJ6Ri02?prefilled_promo_code=SALE",
 
-      },
+      // },
       {
         id: "ghetto-room-template",
         name: "Ghetto Room Template",
