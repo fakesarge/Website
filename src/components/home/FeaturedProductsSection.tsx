@@ -10,24 +10,29 @@ const FeaturedProductsSection = () => {
   return (
     <section className="container px-4 py-24">
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-end justify-between mb-12">
-          <div>
-            <div className="w-8 h-[1px] bg-primary/50 mb-6" />
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="text-4xl md:text-5xl font-bold tracking-tight"
-            >
-              Featured <span className="text-gradient">Products</span>
-            </motion.h2>
-            <p className="mt-3 text-muted-foreground">Hand-picked drops from the shop</p>
+        <div className="flex flex-col items-center text-center mb-14">
+          <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/40 px-3 py-1 mb-6">
+            <span className="size-1.5 rounded-full bg-[hsl(var(--accent-glow))]" />
+            <span className="text-[10px] uppercase tracking-[0.25em] font-medium text-muted-foreground">
+              Featured Drops
+            </span>
           </div>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="text-4xl md:text-5xl font-bold tracking-tight"
+          >
+            Hand-picked from the <span className="text-gradient">shop</span>
+          </motion.h2>
+          <p className="mt-4 text-muted-foreground max-w-xl">
+            Fresh products built and tested for serious creators.
+          </p>
           <motion.button
             whileHover={{ x: 4 }}
             onClick={() => navigate("/shop")}
-            className="hidden md:inline-flex items-center gap-2 text-sm text-foreground/80 hover:text-foreground transition-colors"
+            className="mt-6 inline-flex items-center gap-2 text-sm text-foreground/80 hover:text-foreground transition-colors"
           >
             View all <ArrowRight className="h-4 w-4" />
           </motion.button>
