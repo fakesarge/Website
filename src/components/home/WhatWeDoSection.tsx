@@ -81,14 +81,19 @@ const WhatWeDoSection = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.7, ease: premiumEase }}
-        className="max-w-2xl mb-16"
+        className="flex flex-col items-center text-center mb-16"
       >
-        <div className="w-8 h-[1px] bg-primary/50 mb-6" />
+        <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/40 px-3 py-1 mb-6">
+          <span className="size-1.5 rounded-full bg-[hsl(var(--accent-glow))]" />
+          <span className="text-[10px] uppercase tracking-[0.25em] font-medium text-muted-foreground">
+            What we do
+          </span>
+        </div>
         <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
-          What We <span className="text-gradient">Do</span>
+          Premium VFX for serious <span className="text-gradient">communities</span>
         </h2>
-        <p className="text-muted-foreground text-lg">
-          Premium VFX services built for serious FiveM communities.
+        <p className="text-muted-foreground text-lg max-w-xl">
+          Custom-built Blender graphics, animations and effects engineered for FiveM.
         </p>
       </motion.div>
 
