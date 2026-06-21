@@ -95,16 +95,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(currentSession?.user ?? null);
 
         if (currentSession?.user) {
-          // Fire-and-forget profile IP sync — never await inside onAuthStateChange (causes deadlock)
-          if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
-            supabase.functions.invoke('update-profile-ip')
-              .then(() => console.log('[Auth] Profile sync complete'))
-              .catch((e) => console.warn('[Auth] Profile sync failed:', e));
-          }
-
-          // Defer profile fetch so the auth callback returns immediately
+          // Defer Supabase calls so the auth callback returns immediately.
           setTimeout(async () => {
             if (!mounted) return;
+            if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+              const { error } = await supabase.functions.invoke('update-profile-ip', {
+                body: {},
+                headers: { Authorization: `Bearer ${currentSession.access_token}` },
+              });
+              if (error) {
+                console.warn('[Auth] Profile sync failed:', error);
+              } else {
+                console.log('[Auth] Profile sync complete');
+              }
+            }
             await fetchProfile(currentSession.user);
             if (mounted) {
               setLoading(false);
