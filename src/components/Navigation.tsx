@@ -14,11 +14,12 @@ const Navigation = () => {
   const { scrollToSection } = useNavigationUtils();
 
   const navItems = [
-    { name: "Home", href: "/", isLink: true },
     { name: "Shop", href: "/shop", isLink: true },
-    { name: "Portfolio", href: "/portfolio", isLink: true },
+    { name: "VFX", href: "/portfolio", isLink: true },
+    { name: "GFX", href: "/gfx", isLink: true },
     { name: "Queue", href: "/queue", isLink: true },
     { name: "VIP", href: "/vip", isLink: true },
+
   ];
 
   return (

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles } from "lucide-react";
 
 // ── Toggle this to enable/disable the popup ──
-const SALE_POPUP_ENABLED = true;
+const SALE_POPUP_ENABLED = false;
 
 const SalePopup = () => {
   const [open, setOpen] = useState(false);

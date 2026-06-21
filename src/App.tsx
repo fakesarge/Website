@@ -22,6 +22,7 @@ import NotFound from "./pages/NotFound";
 import ServerError from "./pages/ServerError";
 import VipLibrary from "./pages/VipLibrary";
 import VipAssetDetail from "./pages/VipAssetDetail";
+import CookieBanner from "@/components/CookieBanner";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +55,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AuthProvider>
+          <CookieBanner />
         </BrowserRouter>
       </div>
     </TooltipProvider>

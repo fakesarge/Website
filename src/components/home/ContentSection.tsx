@@ -40,17 +40,14 @@ const ContentSection = ({ contentRef }: ContentSectionProps) => {
       {/* Section 1 – What We Do */}
       <WhatWeDoSection />
 
-      <SectionDivider />
-
       {/* Logo Carousel */}
       <LogoCarousel />
+      {/* <FeaturedProductsSection /> */}
 
-      <SectionDivider />
 
       {/* Section 2 – Social Proof Stats */}
-      <StatsSection />
+      {/* <StatsSection /> */}
 
-      <SectionDivider />
 
       {/* Section 4 – Why 74hrs */}
       <WhyUsSection />
@@ -58,8 +55,6 @@ const ContentSection = ({ contentRef }: ContentSectionProps) => {
       <SectionDivider />
 
       {/* Featured Products from Shop */}
-      <FeaturedProductsSection />
-
       <SectionDivider />
 
       {/* VIP Membership */}

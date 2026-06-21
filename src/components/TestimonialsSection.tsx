@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { BadgeCheck } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const premiumEase = [0.25, 0.46, 0.45, 0.94] as const;
@@ -69,14 +70,15 @@ const TestimonialsSection = () => {
             </span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 text-foreground">
-            Trusted by gaming <span className="text-gradient">communities</span>
+            Loved and <span className="text-gradient">Trusted</span> by gaming{" "}
+            <span className="text-gradient">communities</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-xl">
             Real words from server owners, creators and devs running our work in production.
           </p>
         </motion.div>
 
-        <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+        <div className="columns-1 md:columns-2 gap-6 space-y-6">
           {testimonials.map((t, i) => (
             <motion.div
               key={t.name + i}
@@ -84,22 +86,44 @@ const TestimonialsSection = () => {
               whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.6, delay: (i % 3) * 0.08, ease: premiumEase }}
-              className="break-inside-avoid p-7 rounded-3xl border border-border/50 bg-card/40 backdrop-blur-xl hover:border-[hsl(var(--accent-glow)/0.4)] transition-colors duration-500"
+              className="break-inside-avoid rounded-3xl border border-border/50 bg-card/40 backdrop-blur-xl hover:border-[hsl(var(--accent-glow)/0.4)] transition-colors duration-500 overflow-hidden"
               style={{ transitionTimingFunction: "cubic-bezier(0.25,0.46,0.45,0.94)" }}
             >
-              <div className="flex items-center gap-3 mb-5">
-                <Avatar className="h-10 w-10 ring-1 ring-border/40">
-                  <AvatarImage src={t.image} />
-                  <AvatarFallback>{t.name[0]}</AvatarFallback>
-                </Avatar>
+              <div className="p-7">
+                {/* Identity header — who the testimonial belongs to */}
+                <div className="flex items-center gap-3 mb-5">
+                  <Avatar className="h-12 w-12 ring-1 ring-border/50">
+                    <AvatarImage src={t.image} />
+                    <AvatarFallback>{t.name[0]}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-sm font-semibold text-foreground">
+                        {t.name}
+                      </span>
+                      <BadgeCheck className="h-3.5 w-3.5 text-[#23a55a]" />
+                    </div>
+                    <div className="text-xs text-muted-foreground">{t.role}</div>
+                  </div>
+                </div>
+
+                {/* Quote */}
+                <p className="text-foreground/85 leading-relaxed">"{t.content}"</p>
+              </div>
+
+              {/* Footer — attribution strip, mirrors the reference layout */}
+              <div className="flex items-center justify-between px-7 py-4 border-t border-border/40 bg-background/20">
                 <div>
-                  <div className="text-sm font-semibold text-foreground">{t.name}</div>
-                  <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                  <div className="text-sm font-medium text-foreground">{t.name}</div>
+                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
                     {t.role}
                   </div>
                 </div>
+                <Avatar className="h-8 w-8 ring-1 ring-border/40">
+                  <AvatarImage src={t.image} />
+                  <AvatarFallback>{t.name[0]}</AvatarFallback>
+                </Avatar>
               </div>
-              <p className="text-foreground/85 leading-relaxed italic">"{t.content}"</p>
             </motion.div>
           ))}
         </div>
