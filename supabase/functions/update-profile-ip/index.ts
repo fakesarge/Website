@@ -86,35 +86,45 @@ Deno.serve(async (req) => {
       console.log('[update-profile-ip] Profile upserted successfully, isNew:', isNewUser);
     }
 
-    // Send signup webhook for new users
-    if (isNewUser) {
-      console.log('[update-profile-ip] New user detected, sending webhook');
-      const webhookUrl = Deno.env.get('DISCORD_ACTIVITY_WEBHOOK');
-      if (webhookUrl) {
-        try {
-          await fetch(webhookUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              embeds: [{
-                title: '👤 New User Signup',
-                color: 5814783,
-                fields: [
-                  { name: 'Username', value: username || 'Unknown', inline: true },
-                  { name: 'Email', value: email || 'N/A', inline: true },
-                  { name: 'Discord ID', value: discordId || 'N/A', inline: true },
-                  { name: 'Signup IP', value: clientIp, inline: true },
-                ],
-                footer: { text: '74HRS VFX Studio' },
-                timestamp: new Date().toISOString(),
-              }],
-            }),
-          });
-        } catch (e) {
-          console.error('[update-profile-ip] Webhook error:', e);
-        }
+    // Send Discord webhook on every login (different embed for new signups)
+    const webhookUrl = Deno.env.get('DISCORD_ACTIVITY_WEBHOOK');
+    if (webhookUrl) {
+      try {
+        const embed = isNewUser
+          ? {
+              title: '👤 New User Signup',
+              color: 5814783,
+              fields: [
+                { name: 'Username', value: username || 'Unknown', inline: true },
+                { name: 'Email', value: email || 'N/A', inline: true },
+                { name: 'Discord ID', value: discordId || 'N/A', inline: true },
+                { name: 'Signup IP', value: clientIp, inline: true },
+              ],
+              footer: { text: '74HRS VFX Studio' },
+              timestamp: new Date().toISOString(),
+            }
+          : {
+              title: '🔑 User Login',
+              color: 3447003,
+              fields: [
+                { name: 'Username', value: username || 'Unknown', inline: true },
+                { name: 'Discord ID', value: discordId || 'N/A', inline: true },
+                { name: 'IP', value: clientIp, inline: true },
+              ],
+              footer: { text: '74HRS VFX Studio' },
+              timestamp: new Date().toISOString(),
+            };
+
+        await fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ embeds: [embed] }),
+        });
+      } catch (e) {
+        console.error('[update-profile-ip] Webhook error:', e);
       }
     }
+
 
     return new Response(JSON.stringify({ success: true, isNewUser }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
