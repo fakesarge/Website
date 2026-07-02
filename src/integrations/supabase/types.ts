@@ -114,6 +114,128 @@ export type Database = {
         }
         Relationships: []
       }
+      booking_messages: {
+        Row: {
+          booking_id: string
+          created_at: string
+          id: string
+          message: string
+          sender: string
+          sender_name: string | null
+        }
+        Insert: {
+          booking_id: string
+          created_at?: string
+          id?: string
+          message: string
+          sender: string
+          sender_name?: string | null
+        }
+        Update: {
+          booking_id?: string
+          created_at?: string
+          id?: string
+          message?: string
+          sender?: string
+          sender_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_messages_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bookings: {
+        Row: {
+          addons: Json | null
+          admin_notes: string | null
+          booking_date: string
+          category: string | null
+          channel: string
+          created_at: string
+          customer_email: string | null
+          customer_name: string
+          description: string | null
+          discord_handle: string | null
+          estimated_price_max: number | null
+          estimated_price_min: number | null
+          id: string
+          service: string
+          status: string
+          ticket_code: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          addons?: Json | null
+          admin_notes?: string | null
+          booking_date: string
+          category?: string | null
+          channel: string
+          created_at?: string
+          customer_email?: string | null
+          customer_name: string
+          description?: string | null
+          discord_handle?: string | null
+          estimated_price_max?: number | null
+          estimated_price_min?: number | null
+          id?: string
+          service: string
+          status?: string
+          ticket_code: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          addons?: Json | null
+          admin_notes?: string | null
+          booking_date?: string
+          category?: string | null
+          channel?: string
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string
+          description?: string | null
+          discord_handle?: string | null
+          estimated_price_max?: number | null
+          estimated_price_min?: number | null
+          id?: string
+          service?: string
+          status?: string
+          ticket_code?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      calendar_days: {
+        Row: {
+          date: string
+          is_blocked: boolean
+          max_slots: number
+          note: string | null
+          updated_at: string
+        }
+        Insert: {
+          date: string
+          is_blocked?: boolean
+          max_slots?: number
+          note?: string | null
+          updated_at?: string
+        }
+        Update: {
+          date?: string
+          is_blocked?: boolean
+          max_slots?: number
+          note?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       order_images: {
         Row: {
           created_at: string
@@ -268,6 +390,51 @@ export type Database = {
           referral_code?: string | null
           service?: string
           status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      portfolio_items: {
+        Row: {
+          attributes: Json | null
+          cover_url: string
+          created_at: string
+          description: string | null
+          featured: boolean
+          id: string
+          kind: string
+          media_url: string | null
+          slug: string
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          attributes?: Json | null
+          cover_url: string
+          created_at?: string
+          description?: string | null
+          featured?: boolean
+          id?: string
+          kind: string
+          media_url?: string | null
+          slug: string
+          sort_order?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          attributes?: Json | null
+          cover_url?: string
+          created_at?: string
+          description?: string | null
+          featured?: boolean
+          id?: string
+          kind?: string
+          media_url?: string | null
+          slug?: string
+          sort_order?: number
+          title?: string
           updated_at?: string
         }
         Relationships: []
