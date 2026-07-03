@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -6,11 +6,45 @@ import GalleryCard from "@/components/gallery/GalleryCard";
 import GalleryShowcase from "@/components/gallery/GalleryShowcase";
 import AmbientBackground from "@/components/AmbientBackground";
 import { galleryProjects, type GalleryProject } from "@/config/galleryData";
+import { supabase } from "@/integrations/supabase/client";
 
 const premiumEase = [0.25, 0.46, 0.45, 0.94] as const;
 
+const extractYoutubeId = (url: string) => {
+  if (!url) return "";
+  if (!url.includes("/") && !url.includes("?")) return url; // already ID
+  const m = url.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/);
+  return m ? m[1] : url;
+};
+
 const Portfolio = () => {
   const [activeProject, setActiveProject] = useState<GalleryProject | null>(null);
+  const [dbProjects, setDbProjects] = useState<GalleryProject[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase
+        .from("portfolio_items")
+        .select("*")
+        .eq("kind", "vfx")
+        .order("sort_order");
+      if (!data) return;
+      setDbProjects(
+        (data as any[]).map((r) => ({
+          id: r.id,
+          title: r.title,
+          tagline: r.attributes?.tagline || "",
+          description: r.description || "",
+          youtubeId: extractYoutubeId(r.media_url || ""),
+          features: Array.isArray(r.attributes?.features) ? r.attributes.features : [],
+          productUrl: r.attributes?.productUrl,
+          size: (r.attributes?.size as GalleryProject["size"]) || "normal",
+        }))
+      );
+    })();
+  }, []);
+
+  const allProjects: GalleryProject[] = [...dbProjects, ...galleryProjects];
 
   return (
     <div className="min-h-screen bg-background relative">
@@ -50,7 +84,7 @@ const Portfolio = () => {
         {/* Masonry Gallery */}
         <section className="container px-4 pb-24">
           <div className="grid grid-cols-1 md:grid-cols-3 auto-rows-[280px] gap-4 md:gap-5 max-w-7xl mx-auto">
-            {galleryProjects.map((project, index) => (
+            {allProjects.map((project, index) => (
               <GalleryCard
                 key={project.id}
                 project={project}
