@@ -22,6 +22,7 @@ import NotFound from "./pages/NotFound";
 import ServerError from "./pages/ServerError";
 import VipLibrary from "./pages/VipLibrary";
 import VipAssetDetail from "./pages/VipAssetDetail";
+import Contact from "./pages/Contact";
 import CookieBanner from "@/components/CookieBanner";
 
 const queryClient = new QueryClient();
@@ -49,6 +50,8 @@ const App = () => (
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/vip" element={<VipLibrary />} />
               <Route path="/vip/:id" element={<VipAssetDetail />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/book" element={<Contact />} />
               {/* /admin removed — admin view is auto-detected in /dashboard */}
               <Route path="/settings" element={<Settings />} />
               <Route path="/error" element={<ServerError />} />

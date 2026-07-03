@@ -16,9 +16,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Plus, Pencil, Trash2, Search, Shield, ShieldOff, LogOut, Package, DollarSign, Clock, Users, MessageSquare, Image, Send, Upload, X, Eye, Crown } from 'lucide-react';
+import { Loader2, Plus, Pencil, Trash2, Search, Shield, ShieldOff, LogOut, Package, DollarSign, Clock, Users, MessageSquare, Image, Send, Upload, X, Eye, Crown, CalendarDays, Layers, Ticket } from 'lucide-react';
 import { sendActivityWebhook } from '@/utils/activityWebhook';
 import { AdminAssets } from '@/components/admin/AdminAssets';
+import { AdminCalendar } from '@/components/admin/AdminCalendar';
+import { AdminPortfolio } from '@/components/admin/AdminPortfolio';
+import { AdminBookings } from '@/components/admin/AdminBookings';
 
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const;
@@ -90,9 +93,18 @@ const AdminDashboard = ({ profile, onSignOut }: AdminDashboardProps) => {
         transition={{ duration: 0.6, delay: 0.25, ease }}
       >
         <Tabs defaultValue="orders" className="mt-8">
-          <TabsList className="bg-secondary/50 mb-6">
+          <TabsList className="bg-secondary/50 mb-6 flex-wrap h-auto">
             <TabsTrigger value="orders" className="gap-2">
               <Package className="h-4 w-4" /> Orders
+            </TabsTrigger>
+            <TabsTrigger value="bookings" className="gap-2">
+              <Ticket className="h-4 w-4" /> Bookings
+            </TabsTrigger>
+            <TabsTrigger value="calendar" className="gap-2">
+              <CalendarDays className="h-4 w-4" /> Calendar
+            </TabsTrigger>
+            <TabsTrigger value="portfolio" className="gap-2">
+              <Layers className="h-4 w-4" /> Portfolio
             </TabsTrigger>
             <TabsTrigger value="users" className="gap-2">
               <Users className="h-4 w-4" /> Users
@@ -104,6 +116,15 @@ const AdminDashboard = ({ profile, onSignOut }: AdminDashboardProps) => {
 
           <TabsContent value="orders">
             <OrdersPanel toast={toast} queryClient={queryClient} profile={profile} />
+          </TabsContent>
+          <TabsContent value="bookings">
+            <AdminBookings />
+          </TabsContent>
+          <TabsContent value="calendar">
+            <AdminCalendar />
+          </TabsContent>
+          <TabsContent value="portfolio">
+            <AdminPortfolio />
           </TabsContent>
           <TabsContent value="users">
             <UsersPanel toast={toast} queryClient={queryClient} />
