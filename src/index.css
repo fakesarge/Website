@@ -173,3 +173,306 @@
 .interactive-element {
   transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
+
+/* ============================================================
+   74hrs × shutter-kif home — black & white gritty minimal
+   ============================================================ */
+@font-face {
+  font-family: 'VCR';
+  src: url('/fonts/VCR.woff') format('woff');
+  font-weight: 400;
+  font-display: swap;
+}
+
+.kif {
+  --kif-paper: #000;
+  --kif-ink: #fff;
+  --kif-blend: screen;
+  --kif-ease: cubic-bezier(.16, 1, .3, 1);
+  background: var(--kif-paper);
+  color: var(--kif-ink);
+}
+.kif.is-invert {
+  --kif-paper: #fff;
+  --kif-ink: #000;
+  --kif-blend: multiply;
+}
+.kif ::selection { background: var(--kif-ink); color: var(--kif-paper); }
+
+/* cut-out artwork */
+.kif-el {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+  mix-blend-mode: var(--kif-blend);
+  /* artwork is dark-on-white: invert to light-on-black so it screens away */
+  filter: invert(1);
+}
+.kif.is-invert .kif-el { filter: invert(0); }
+
+/* sections */
+.kif-sec {
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--kif-paper);
+}
+
+/* layered type */
+.kif-lay {
+  position: absolute;
+  margin: 0;
+  z-index: 5;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-style: italic;
+}
+
+/* ---- boot loader ---- */
+.kif-boot {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: #fff;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.6rem;
+  transition: opacity .5s var(--kif-ease, cubic-bezier(.16,1,.3,1)), visibility .5s;
+}
+.kif-boot.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
+.kif-boot__word {
+  font-family: 'VCR', monospace;
+  font-size: clamp(2rem, 6vw, 3.4rem);
+  letter-spacing: .06em;
+}
+.kif-boot__bar {
+  width: min(230px, 44vw);
+  height: 2px;
+  background: currentColor;
+  opacity: .9;
+  position: relative;
+  overflow: hidden;
+}
+.kif-boot__bar::before { content: ''; position: absolute; inset: 0; background: currentColor; opacity: .18; }
+.kif-boot__bar span { position: absolute; inset: 0; background: #000; transition: right .16s linear; }
+.kif-boot__pct { font-family: 'VCR', monospace; font-size: .95rem; letter-spacing: .14em; opacity: .55; }
+
+/* ---- fixed controls ---- */
+.kif-ctl {
+  position: fixed;
+  right: clamp(1rem, 3.5vw, 3rem);
+  bottom: calc(clamp(1rem, 3.5vw, 3rem) - .3rem);
+  z-index: 95;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: .25rem;
+  mix-blend-mode: difference;
+}
+.kif-ctl__b {
+  background: none;
+  border: 0;
+  padding: .18rem 0;
+  cursor: pointer;
+  font-size: clamp(.72rem, 1vw, .86rem);
+  color: #fff;
+  line-height: 1.35;
+  position: relative;
+}
+.kif-ctl__b::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 100%; bottom: .1rem;
+  height: 1px;
+  background: currentColor;
+  transition: right .35s cubic-bezier(.16, 1, .3, 1);
+}
+.kif-ctl__b:hover::after,
+.kif-ctl__b[aria-pressed="true"]::after { right: 0; }
+
+/* ---- 01 hero ---- */
+.kif-el--star-a { right: 2%; top: -14%; width: min(32%, 480px); }
+.kif-el--star-b { left: -12%; top: 10%; width: min(60%, 900px); }
+.kif-el--dice   { left: 32%; top: 18%; width: min(34%, 520px); }
+.kif-lay--big {
+  left: 26%; top: 50%; transform: translateY(-50%);
+  font-size: clamp(4rem, 14vw, 12rem);
+}
+.kif-lay--small {
+  left: calc(26% + clamp(4.6rem, 15.5vw, 13.4rem)); top: 50%; transform: translateY(-50%);
+  font-size: clamp(4rem, 14vw, 12rem);
+}
+
+/* scroll cue */
+.kif-cue {
+  position: absolute;
+  bottom: 1.5rem; left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  padding: .6rem;
+}
+.kif-cue i {
+  display: block;
+  width: 1px; height: 34px;
+  background: currentColor;
+  opacity: .3;
+  position: relative;
+  overflow: hidden;
+}
+.kif-cue i::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--kif-ink);
+  animation: kif-sd 2s cubic-bezier(.65, 0, .35, 1) infinite;
+}
+@keyframes kif-sd {
+  0% { transform: translateY(-100%); }
+  60%, 100% { transform: translateY(100%); }
+}
+
+/* ---- 02 work ---- */
+.kif-el--flower { right: -6%; bottom: -10%; width: min(46%, 700px); opacity: .9; }
+.kif-work { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.kif-work__stage {
+  position: relative;
+  z-index: 4;
+  width: min(78vw, 1080px);
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+.kif-work__img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 1px solid color-mix(in srgb, var(--kif-ink) 14%, transparent);
+}
+.kif-work__meta { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+.kif-work__title { font-style: italic; font-size: clamp(1.4rem, 3vw, 2.4rem); letter-spacing: -0.02em; }
+.kif-work__tag {
+  font-family: 'VCR', monospace;
+  font-size: .8rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  opacity: .55;
+}
+.kif-rail {
+  position: absolute;
+  left: clamp(1rem, 3.5vw, 3rem);
+  bottom: clamp(1.2rem, 4vh, 2.6rem);
+  z-index: 6;
+  display: flex;
+  align-items: baseline;
+  gap: .6rem;
+  font-family: 'VCR', monospace;
+  font-size: .95rem;
+  letter-spacing: .1em;
+}
+.kif-rail b { font-weight: 400; }
+.kif-rail i { font-style: normal; opacity: .45; }
+.kif-rail__nav, .kif-rail__open {
+  background: none; border: 0; color: inherit;
+  font-family: 'VCR', monospace;
+  font-size: 1.05rem;
+  cursor: pointer;
+  padding: .2rem .35rem;
+  opacity: .75;
+  transition: opacity .2s;
+  text-decoration: none;
+}
+.kif-rail__nav:hover, .kif-rail__open:hover { opacity: 1; }
+.kif-keys {
+  position: absolute;
+  right: clamp(1rem, 3.5vw, 3rem);
+  bottom: clamp(1.2rem, 4vh, 2.6rem);
+  z-index: 6;
+  display: flex;
+  gap: .35rem;
+}
+.kif-keys kbd {
+  font-family: 'VCR', monospace;
+  font-size: .75rem;
+  border: 1px solid color-mix(in srgb, var(--kif-ink) 30%, transparent);
+  padding: .2rem .5rem;
+  opacity: .55;
+}
+
+/* ---- 03 about ---- */
+.kif-el--cd-a { left: -8%; top: 6%; width: min(40%, 620px); }
+.kif-el--cd-b { right: -6%; bottom: 4%; width: min(36%, 560px); }
+.kif-lay--abouth {
+  left: 10%; top: 22%;
+  font-size: clamp(3rem, 10vw, 8.5rem);
+}
+.kif-lay--aboutsub {
+  left: calc(10% + clamp(7rem, 23vw, 20rem)); top: 22%;
+  font-size: clamp(3rem, 10vw, 8.5rem);
+}
+.kif-bio {
+  left: 10%; right: 10%; top: 48%;
+  max-width: 46rem;
+  font-style: normal;
+  line-height: 1.6;
+  letter-spacing: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+.kif-bio p { margin: 0; font-size: clamp(.95rem, 1.4vw, 1.15rem); opacity: .85; }
+
+/* ---- 04 contact ---- */
+.kif-el--cards { left: 50%; top: 50%; width: min(56%, 860px); transform: translate(-50%, -50%); }
+.kif-lay--contact {
+  left: 14%; top: 38%;
+  font-size: clamp(3.4rem, 11vw, 9.5rem);
+}
+.kif-lay--contactsub {
+  left: calc(14% + clamp(8rem, 26vw, 23rem)); top: 38%;
+  font-size: clamp(3.4rem, 11vw, 9.5rem);
+}
+.kif-links {
+  left: 14%; bottom: 16%;
+  display: flex;
+  gap: 2rem;
+  font-style: normal;
+}
+.kif-links a {
+  font-family: 'VCR', monospace;
+  font-size: clamp(.85rem, 1.3vw, 1.05rem);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: inherit;
+  text-decoration: none;
+  position: relative;
+  opacity: .8;
+  transition: opacity .2s;
+}
+.kif-links a::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 100%; bottom: -3px;
+  height: 1px;
+  background: currentColor;
+  transition: right .35s cubic-bezier(.16, 1, .3, 1);
+}
+.kif-links a:hover { opacity: 1; }
+.kif-links a:hover::after { right: 0; }
+
+/* footer inside the kif theme keeps paper/ink contrast */
+.kif footer { background: var(--kif-paper); }
+
+@media (max-width: 640px) {
+  .kif-lay--big { left: 14%; }
+  .kif-lay--small { left: calc(14% + clamp(4.6rem, 15.5vw, 13.4rem)); }
+  .kif-lay--abouth, .kif-lay--aboutsub { left: 8%; }
+  .kif-lay--aboutsub { top: calc(22% + clamp(3.4rem, 11vw, 9rem)); }
+  .kif-bio { left: 8%; right: 8%; top: 44%; }
+  .kif-lay--contact { left: 8%; }
+  .kif-lay--contactsub { left: 8%; top: calc(38% + clamp(3.8rem, 12.5vw, 10.5rem)); }
+  .kif-links { left: 8%; flex-direction: column; gap: .8rem; }
+  .kif-keys { display: none; }
+}
