@@ -206,7 +206,10 @@
   user-select: none;
   z-index: 1;
   mix-blend-mode: var(--kif-blend);
+  /* artwork is dark-on-white: invert to light-on-black so it screens away */
+  filter: invert(1);
 }
+.kif.is-invert .kif-el { filter: invert(0); }
 
 /* sections */
 .kif-sec {
