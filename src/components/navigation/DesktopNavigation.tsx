@@ -20,13 +20,13 @@ const DesktopNavigation = ({ navItems, scrollToSection }: DesktopNavigationProps
   const { user, profile, loading } = useAuth();
 
   return (
-    <div className="hidden md:flex items-center gap-1 px-4">
+    <div className="ml-auto hidden items-center gap-1 px-4 md:flex">
       {navItems.map((item) => (
         item.isLink ? (
           <Link
             key={item.name}
             to={item.href}
-            className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors duration-300"
+            className="border-l border-transparent px-3 py-1.5 text-[11px] font-semibold uppercase text-muted-foreground transition-colors duration-200 hover:border-foreground/70 hover:text-foreground"
           >
             {item.name}
           </Link>
@@ -38,7 +38,7 @@ const DesktopNavigation = ({ navItems, scrollToSection }: DesktopNavigationProps
               e.preventDefault();
               if (item.onClick) item.onClick();
             }}
-            className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors duration-300"
+            className="border-l border-transparent px-3 py-1.5 text-[11px] font-semibold uppercase text-muted-foreground transition-colors duration-200 hover:border-foreground/70 hover:text-foreground"
           >
             {item.name}
           </a>

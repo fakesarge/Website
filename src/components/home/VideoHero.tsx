@@ -61,11 +61,11 @@ const VideoHero = ({ scrollToContent }: VideoHeroProps) => {
           initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 1.2, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="text-4xl sm:text-6xl md:text-8xl font-bold tracking-tight text-white leading-[1.1] mb-6"
+          className="display-type text-5xl sm:text-7xl md:text-9xl text-foreground mb-6"
         >
           Where Your Vision
           <br />
-          <span className="text-gradient">Becomes Reality.</span>
+            <span className="text-muted-foreground">Becomes Reality.</span>
         </motion.h1>
 
         <motion.p
@@ -87,7 +87,7 @@ const VideoHero = ({ scrollToContent }: VideoHeroProps) => {
             whileHover={{ scale: 1.04, boxShadow: "0 0 30px hsl(var(--primary) / 0.3)" }}
             whileTap={{ scale: 0.97 }}
             onClick={() => navigate("/portfolio")}
-            className="px-8 py-3.5 button-gradient rounded-full font-medium text-sm tracking-wide cursor-pointer"
+            className="studio-button cursor-pointer bg-foreground text-background"
           >
             Explore Our Work
           </motion.button>
@@ -95,7 +95,7 @@ const VideoHero = ({ scrollToContent }: VideoHeroProps) => {
             whileHover={{ scale: 1.04, backgroundColor: "rgba(255,255,255,0.12)" }}
             whileTap={{ scale: 0.97 }}
             onClick={() => navigate("/shop")}
-            className="px-8 py-3.5 bg-white/5 backdrop-blur-sm border border-white/15 rounded-full text-white font-medium text-sm tracking-wide cursor-pointer transition-colors"
+            className="studio-button cursor-pointer"
           >
             Shop Now
           </motion.button>

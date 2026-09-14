@@ -1,33 +1,30 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
-@import url('https://fonts.geist-ui.dev/font.css');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 3%;
-    --foreground: 0 0% 95%;
-    --card: 0 0% 5%;
+    --background: 0 0% 1%;
+    --foreground: 0 0% 96%;
+    --card: 0 0% 4%;
     --card-foreground: 0 0% 95%;
     --popover: 0 0% 5%;
     --popover-foreground: 0 0% 95%;
     --primary: 0 0% 88%;
     --primary-foreground: 0 0% 8%;
-    --secondary: 0 0% 8%;
+    --secondary: 0 0% 7%;
     --secondary-foreground: 0 0% 95%;
-    --muted: 0 0% 8%;
-    --muted-foreground: 0 0% 60%;
-    --accent: 0 0% 12%;
+    --muted: 0 0% 7%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 0 0% 11%;
     --accent-foreground: 0 0% 95%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 95%;
-    --border: 0 0% 15%;
+    --border: 0 0% 18%;
     --input: 0 0% 15%;
     --ring: 0 0% 88%;
-    --radius: 0.75rem;
+    --radius: 0.25rem;
 
     /* Brand accent — change this single token to re-theme the whole site.
        Default = soft silver-white (premium). Try e.g. 142 90% 55% for neon green. */
@@ -43,12 +40,75 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
+    letter-spacing: 0;
+  }
+}
+
+@layer components {
+  .public-shell {
+    @apply relative min-h-screen overflow-hidden bg-background text-foreground;
+    background-image:
+      linear-gradient(hsl(var(--border) / 0.16) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border) / 0.16) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+
+  .public-shell::before {
+    content: "";
+    @apply pointer-events-none fixed inset-0 z-50 opacity-[0.035];
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+  }
+
+  .display-type {
+    font-family: "Arial Narrow", "Roboto Condensed", "Helvetica Neue", sans-serif;
+    font-stretch: condensed;
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 0.88;
+    text-transform: uppercase;
+  }
+
+  .studio-label {
+    @apply inline-flex items-center gap-2 text-[11px] font-semibold uppercase text-muted-foreground;
+    letter-spacing: 0.16em;
+  }
+
+  .studio-label::before {
+    content: "";
+    @apply h-px w-5 bg-foreground/70;
+  }
+
+  .studio-panel {
+    @apply relative border border-border/80 bg-card/90;
+    box-shadow: inset 0 1px hsl(var(--foreground) / 0.04);
+  }
+
+  .studio-panel::before,
+  .studio-panel::after {
+    content: "";
+    @apply pointer-events-none absolute h-2.5 w-2.5 border-foreground/60 opacity-0 transition-opacity duration-300;
+  }
+
+  .studio-panel::before {
+    @apply left-[-1px] top-[-1px] border-l border-t;
+  }
+
+  .studio-panel::after {
+    @apply bottom-[-1px] right-[-1px] border-b border-r;
+  }
+
+  .studio-panel:hover::before,
+  .studio-panel:hover::after { opacity: 1; }
+
+  .studio-button {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 border border-foreground/50 bg-transparent px-6 text-xs font-bold uppercase text-foreground transition-colors duration-200 hover:bg-foreground hover:text-background;
+    letter-spacing: 0.12em;
   }
 }
 
 .glass {
-  @apply bg-white/5 backdrop-blur-lg;
-  border: 1px solid transparent;
+  @apply bg-card/90 backdrop-blur-lg;
+  border: 1px solid hsl(var(--border) / 0.8);
   background-clip: padding-box;
   position: relative;
 }
@@ -59,7 +119,7 @@
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(225deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
+  background: linear-gradient(225deg, hsl(var(--foreground) / 0.18), hsl(var(--foreground) / 0.03));
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
@@ -68,7 +128,7 @@
 }
 
 .glass-hover {
-  @apply transition-all duration-300 hover:bg-white/10;
+  @apply transition-all duration-300 hover:bg-accent;
 }
 
 .text-gradient {
@@ -81,10 +141,10 @@
 }
 
 .button-gradient {
-  background: linear-gradient(135deg, hsl(var(--accent-glow)), hsl(var(--primary)));
+  background: hsl(var(--foreground));
   color: hsl(var(--accent-glow-foreground));
-  @apply hover:opacity-90 transition-opacity rounded-full font-medium;
-  box-shadow: 0 0 24px hsl(var(--accent-glow) / 0.35);
+  @apply border border-foreground hover:bg-transparent hover:text-foreground transition-colors rounded-none font-semibold;
+  box-shadow: none;
 }
 
 .glow-ring {

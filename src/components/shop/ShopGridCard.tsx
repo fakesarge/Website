@@ -36,19 +36,14 @@ const ShopGridCard = ({ item, index, onClick }: ShopGridCardProps) => {
       initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
       animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       transition={{ duration: 0.5, delay: index * 0.06, ease: [0.25, 0.46, 0.45, 0.94] }}
-      whileHover={{ y: -4, transition: { duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] } }}
+      whileHover={{ y: -2, transition: { duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] } }}
       onMouseEnter={() => { setHovered(true); videoRef.current?.play(); }}
       onMouseLeave={() => {
         setHovered(false);
         if (videoRef.current) { videoRef.current.pause(); videoRef.current.currentTime = 0; }
       }}
       onClick={onClick}
-      className="group relative flex flex-col rounded-2xl border border-border/40 bg-card/70 backdrop-blur-md overflow-hidden cursor-pointer transition-all duration-500 hover:border-[hsl(var(--accent-glow)/0.5)]"
-      style={{
-        boxShadow: hovered
-          ? "0 24px 60px -12px hsl(var(--accent-glow) / 0.25), 0 0 0 1px hsl(var(--accent-glow) / 0.25)"
-          : "0 2px 12px -4px hsl(0 0% 0% / 0.5)",
-      }}
+      className="studio-panel group relative flex flex-col border-0 bg-card overflow-hidden cursor-pointer transition-colors duration-300 hover:bg-accent"
     >
       {/* Image */}
       <div className="relative aspect-[4/3] bg-secondary/40 overflow-hidden">
@@ -91,7 +86,7 @@ const ShopGridCard = ({ item, index, onClick }: ShopGridCardProps) => {
 
         {/* Category badge — top-left */}
         <span
-          className="absolute top-3 left-3 rounded-full px-3 py-1 text-[10px] font-bold tracking-wider"
+          className="absolute top-3 left-3 border border-foreground/40 bg-background/80 px-3 py-1 text-[10px] font-bold uppercase text-foreground backdrop-blur-md"
           style={{
             background: "hsl(var(--accent-glow) / 0.15)",
             color: "hsl(var(--accent-glow))",
@@ -103,7 +98,7 @@ const ShopGridCard = ({ item, index, onClick }: ShopGridCardProps) => {
 
         {/* Discount % badge — top-right */}
         {discount && (
-          <span className="absolute top-3 right-3 rounded-full bg-red-500/95 px-2.5 py-1 text-[11px] font-bold text-white shadow-lg shadow-red-500/30">
+            <span className="absolute top-3 right-3 border border-destructive bg-destructive px-2.5 py-1 text-[11px] font-bold text-destructive-foreground">
             -{discount}%
           </span>
         )}
@@ -146,7 +141,7 @@ const ShopGridCard = ({ item, index, onClick }: ShopGridCardProps) => {
             if (item.purchaseUrl) window.open(item.purchaseUrl, "_blank");
             else onClick?.();
           }}
-          className="mt-2 w-full rounded-full border border-[hsl(var(--accent-glow)/0.4)] bg-transparent py-2.5 text-xs font-bold uppercase tracking-[0.18em] text-foreground transition-all duration-300 hover:bg-[hsl(var(--accent-glow)/0.12)] hover:border-[hsl(var(--accent-glow)/0.7)] hover:shadow-[0_0_18px_hsl(var(--accent-glow)/0.35)]"
+          className="studio-button mt-2 w-full"
         >
           Add to Cart
         </button>

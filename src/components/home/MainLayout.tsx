@@ -21,7 +21,7 @@ const MainLayout = ({ showLoading }: MainLayoutProps) => {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="public-shell">
       <AmbientBackground />
       <Navigation />
       

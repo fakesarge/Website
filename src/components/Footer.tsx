@@ -14,16 +14,16 @@ const Footer = () => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.7, ease: premiumEase }}
-      className="w-full py-12 mt-20 relative"
+      className="relative mt-20 w-full border-t border-border py-12"
     >
       {/* Top gradient blend */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/15 to-transparent" />
       
       <div className="container px-4">
-        <div className="glass rounded-xl p-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="space-y-4">
-              <h3 className="font-medium text-lg">74HRS</h3>
+        <div className="studio-panel p-8 md:p-10">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
+            <div className="space-y-4 md:border-r md:border-border md:pr-8">
+              <h3 className="display-type text-5xl">74HRS</h3>
               <p className="text-sm text-muted-foreground">
                 Premium FiveM graphics studio creating stunning Blender animations and loading screens for gaming communities.
               </p>
@@ -51,7 +51,7 @@ const Footer = () => {
                 <li><a href="/portfolio" className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300">Portfolio</a></li>
                 <li><a href="/partners" className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300">Partners</a></li>
                 <li><a href="/orders" className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300">Orders</a></li>
-                <li><a href="/affiliates" className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300">Affiliates</a></li>
+                <li><a href="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">Book a Project</a></li>
               </ul>
             </div>
 
