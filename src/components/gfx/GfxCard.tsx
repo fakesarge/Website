@@ -16,8 +16,8 @@ const GfxCard = ({ project, index, onClick }: Props) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.6, delay: index * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
-      whileHover={{ y: -6 }}
-      className="group relative aspect-video w-full overflow-hidden rounded-2xl border border-border/40 bg-card text-left"
+      whileHover={{ y: -2 }}
+      className="studio-panel group relative aspect-video w-full overflow-hidden bg-card text-left"
     >
       <img
         src={project.image}
@@ -31,11 +31,11 @@ const GfxCard = ({ project, index, onClick }: Props) => {
         <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
           {project.year} · GFX
         </div>
-        <h3 className="text-xl font-semibold text-foreground">{project.title}</h3>
+        <h3 className="display-type text-2xl text-foreground">{project.title}</h3>
         <p className="text-sm text-muted-foreground line-clamp-1">{project.tagline}</p>
       </div>
 
-      <div className="pointer-events-none absolute right-4 top-4 rounded-full border border-border/40 bg-background/60 px-3 py-1 text-[10px] uppercase tracking-widest text-foreground/80 backdrop-blur-md opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+      <div className="pointer-events-none absolute right-4 top-4 border border-border bg-background/80 px-3 py-1 text-[10px] uppercase text-foreground/80 backdrop-blur-md opacity-0 transition-opacity duration-300 group-hover:opacity-100">
         View →
       </div>
     </motion.button>

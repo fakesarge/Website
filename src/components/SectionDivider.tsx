@@ -9,26 +9,23 @@ interface SectionDividerProps {
 
 const SectionDivider = ({ icon, lineHeight = 0 }: SectionDividerProps) => {
   return (
-    <div className="flex flex-col items-center pointer-events-none">
+    <div className="container flex items-center px-4 pointer-events-none">
       <div
-        className="w-px bg-gradient-to-b from-transparent to-border/80"
-        style={{ height: lineHeight }}
+        className="h-px flex-1 bg-border/80"
       />
       <motion.div
         initial={{ opacity: 0, scale: 0.6 }}
-        whileInView={{ opacity: 0, scale: 1 }}
+        whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="size-8 rounded-full border border-border/80 flex items-center justify-center bg-background"
-        style={{ boxShadow: "0 0 22px hsl(var(--accent-glow) / 0.18)" }}
+        className="size-8 border border-border/80 flex items-center justify-center bg-background"
       >
         {icon ?? (
-          <span className="size-1.5 rounded-full bg-[hsl(var(--accent-glow))] animate-pulse" />
+          <span className="size-1.5 bg-foreground" />
         )}
       </motion.div>
       <div
-        className="w-px bg-gradient-to-t from-transparent to-border/80"
-        style={{ height: lineHeight }}
+        className="h-px flex-1 bg-border/80"
       />
     </div>
   );

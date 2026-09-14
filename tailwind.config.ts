@@ -20,8 +20,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Geist', 'sans-serif'],
-        inter: ['Inter', 'sans-serif'],
+        sans: ['"Helvetica Neue"', 'Arial', 'sans-serif'],
+        inter: ['"Helvetica Neue"', 'Arial', 'sans-serif'],
+        display: ['"Arial Narrow"', '"Roboto Condensed"', '"Helvetica Neue"', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

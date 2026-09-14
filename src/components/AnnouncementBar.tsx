@@ -9,15 +9,12 @@ const AnnouncementBar = () => {
   const row = [...items, ...items, ...items];
   return (
     <div
-      className="fixed top-0 inset-x-0 z-[60] overflow-hidden border-b border-border/40"
-      style={{
-        background: "linear-gradient(90deg, hsl(var(--accent-glow) / 0.18), hsl(var(--accent-glow) / 0.06), hsl(var(--accent-glow) / 0.18))",
-      }}
+      className="fixed top-0 inset-x-0 z-[60] overflow-hidden border-b border-border/70 bg-foreground text-background"
     >
-      <div className="flex animate-marquee whitespace-nowrap py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-glow">
+      <div className="flex animate-marquee whitespace-nowrap py-1.5 text-[10px] font-bold uppercase">
         {row.map((t, i) => (
           <span key={i} className="mx-8 inline-flex items-center gap-3">
-            <span className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--accent-glow))]" />
+            <span className="h-1 w-1 bg-background" />
             {t}
           </span>
         ))}
