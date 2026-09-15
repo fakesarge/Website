@@ -1,90 +1,33 @@
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { shopCategories } from "@/config/shopData";
+import MediaPlaceholder from "./MediaPlaceholder";
 
 const FeaturedProductsSection = () => {
   const navigate = useNavigate();
-  const products = shopCategories.find((c) => c.id === "products")?.items.slice(0, 4) ?? [];
+  const products = shopCategories.find((category) => category.id === "products")?.items.slice(0, 3) ?? [];
 
   return (
-    <section className="container px-4 py-24">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col items-center text-center mb-14">
-          <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/40 px-3 py-1 mb-6">
-            <span className="size-1.5 rounded-full bg-[hsl(var(--accent-glow))]" />
-            <span className="text-[10px] uppercase tracking-[0.25em] font-medium text-muted-foreground">
-              Featured Drops
-            </span>
-          </div>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="text-4xl md:text-5xl font-bold tracking-tight"
-          >
-            Hand-picked from the <span className="text-gradient">shop</span>
-          </motion.h2>
-          <p className="mt-4 text-muted-foreground max-w-xl">
-            Fresh products built and tested for serious creators.
-          </p>
-          <motion.button
-            whileHover={{ x: 4 }}
-            onClick={() => navigate("/shop")}
-            className="mt-6 inline-flex items-center gap-2 text-sm text-foreground/80 hover:text-foreground transition-colors"
-          >
-            View all <ArrowRight className="h-4 w-4" />
-          </motion.button>
+    <section className="border-b border-border py-24">
+      <div className="mx-auto max-w-[1440px] px-5 md:px-10 lg:px-16">
+        <div className="mb-12 flex items-end justify-between gap-6">
+          <div><p className="section-kicker">Digital goods</p><h2 className="mt-4 font-display text-5xl font-extrabold uppercase md:text-7xl">Shop the drop.</h2></div>
+          <button onClick={() => navigate("/shop")} className="hidden items-center gap-2 text-xs font-bold uppercase md:flex">View shop <ArrowUpRight className="h-4 w-4" /></button>
         </div>
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
-          {products.map((item, i) => (
-            <motion.button
-              key={item.id}
-              type="button"
-              onClick={() => navigate(`/shop/${item.id}`)}
-              initial={{ opacity: 0, y: 30, filter: "blur(6px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.6, delay: i * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
-              whileHover={{ y: -8 }}
-              className="group relative aspect-[4/5] overflow-hidden rounded-2xl border border-border/40 bg-card text-left"
-            >
-              {item.image && (
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  loading="lazy"
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
-                />
-              )}
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
-              {item.badge && (
-                <span className="absolute left-4 top-4 rounded-full bg-primary/90 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">
-                  {item.badge}
-                </span>
-              )}
-              <div className="absolute inset-x-0 bottom-0 p-4">
-                <h3 className="text-base font-semibold text-foreground">{item.name}</h3>
-                <div className="mt-1 flex items-baseline gap-2">
-                  <span className="text-lg font-bold text-foreground">{item.price}</span>
-                  {item.originalPrice && (
-                    <span className="text-xs text-muted-foreground line-through">{item.originalPrice}</span>
-                  )}
-                </div>
+        <div className="grid gap-4 md:grid-cols-3">
+          {products.map((product, index) => (
+            <motion.button key={product.id} initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} onClick={() => navigate(`/shop/${product.id}`)} className="group border border-border bg-card text-left">
+              <div className="aspect-[4/3] overflow-hidden bg-secondary">
+                {product.image ? <img src={product.image} alt={product.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" /> : <MediaPlaceholder label={`${product.name} cover`} className="h-full border-0" format="4:3" />}
+              </div>
+              <div className="flex items-start justify-between border-t border-border p-5">
+                <div><h3 className="font-display text-lg font-bold uppercase">{product.name}</h3><p className="mt-2 text-sm text-muted-foreground">{product.price}</p></div>
+                <ArrowUpRight className="h-5 w-5 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
               </div>
             </motion.button>
           ))}
-        </div>
-
-        <div className="mt-10 text-center md:hidden">
-          <button
-            onClick={() => navigate("/shop")}
-            className="inline-flex items-center gap-2 text-sm text-foreground/80"
-          >
-            View all <ArrowRight className="h-4 w-4" />
-          </button>
+          {products.length < 3 && <MediaPlaceholder label="New product cover" className="aspect-[4/3]" format="4:3" />}
         </div>
       </div>
     </section>
