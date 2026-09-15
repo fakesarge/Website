@@ -31,11 +31,11 @@ const MobileNavigation = ({
     <div className="md:hidden">
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
         <SheetTrigger asChild>
-          <Button variant="outline" size="icon" className="rounded-none border-border bg-card">
+          <Button variant="outline" size="icon" className="glass">
             <Menu className="h-5 w-5" />
           </Button>
         </SheetTrigger>
-        <SheetContent className="border-l border-border bg-background">
+        <SheetContent className="bg-[#1B1B1B]">
           <div className="flex flex-col gap-4 mt-8">
             {navItems.map((item) => (
               item.isLink ? (

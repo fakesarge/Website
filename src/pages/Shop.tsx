@@ -15,7 +15,26 @@ const Shop = () => {
   const activeCat = shopCategories.find((c) => c.id === activeCategory)!;
 
   return (
-    <div className="public-shell">
+    <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
+      {/* Ambient cinematic background */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute inset-0 bg-background" />
+        <motion.div
+          animate={{ x: [0, 40, -20, 0], y: [0, -30, 20, 0], opacity: [0.04, 0.08, 0.03, 0.04] }}
+          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[15%] left-[20%] h-[600px] w-[600px] rounded-full bg-primary blur-[180px]"
+        />
+        <motion.div
+          animate={{ x: [0, -30, 50, 0], y: [0, 40, -20, 0], opacity: [0.03, 0.06, 0.02, 0.03] }}
+          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-[20%] right-[15%] h-[500px] w-[500px] rounded-full bg-primary blur-[160px]"
+        />
+        <motion.div
+          animate={{ opacity: [0.02, 0.05, 0.02] }}
+          transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 h-[800px] w-[800px] rounded-full bg-primary blur-[200px]"
+        />
+      </div>
 
       <Navigation />
       <ShopHero />
@@ -67,7 +86,7 @@ const Shop = () => {
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
               transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="mx-auto grid max-w-6xl grid-cols-1 gap-px border border-border bg-border md:grid-cols-2 lg:grid-cols-3"
+              className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
             >
               {activeCat.items.map((item, index) => (
                 <ShopProductCard key={item.id} item={item} index={index} onClick={() => navigate(`/shop/${item.id}`)} />
@@ -80,7 +99,7 @@ const Shop = () => {
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
               transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="mx-auto grid max-w-7xl grid-cols-2 gap-px border border-border bg-border sm:grid-cols-3 lg:grid-cols-4"
+              className="mx-auto grid max-w-7xl grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4 xl:gap-6"
             >
               {activeCat.items.map((item, index) => (
                 <ShopGridCard key={item.id} item={item} index={index} onClick={() => navigate(`/shop/${item.id}`)} />

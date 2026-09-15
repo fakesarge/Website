@@ -22,7 +22,7 @@ const GalleryCard = ({ project, index, onClick }: GalleryCardProps) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.6, delay: index * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className={`studio-panel group relative cursor-pointer overflow-hidden ${sizeClasses[project.size]}`}
+      className={`group relative cursor-pointer overflow-hidden rounded-2xl ${sizeClasses[project.size]}`}
       onClick={onClick}
     >
       {/* Thumbnail with YouTube preview */}
@@ -40,7 +40,7 @@ const GalleryCard = ({ project, index, onClick }: GalleryCardProps) => {
 
         {/* Hover glow border */}
         <motion.div
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+          className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
           style={{
             boxShadow: "inset 0 0 0 1.5px hsl(var(--primary) / 0.5), 0 0 30px hsl(var(--primary) / 0.15)",
           }}
@@ -49,7 +49,7 @@ const GalleryCard = ({ project, index, onClick }: GalleryCardProps) => {
         {/* Play icon */}
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-400">
           <motion.div
-            className="flex h-16 w-16 items-center justify-center border border-foreground/30 bg-background/70 backdrop-blur-md"
+            className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20"
             whileHover={{ scale: 1.1 }}
           >
             <Play className="w-7 h-7 text-white ml-1" fill="white" />
@@ -58,7 +58,7 @@ const GalleryCard = ({ project, index, onClick }: GalleryCardProps) => {
 
         {/* Content */}
         <div className="absolute bottom-0 left-0 right-0 p-6">
-          <h3 className="display-type mb-1 text-2xl text-foreground transition-colors duration-300">
+          <h3 className="text-lg md:text-xl font-bold text-white mb-1 group-hover:text-primary transition-colors duration-300">
             {project.title}
           </h3>
           <p className="text-sm text-white/60 italic">{project.tagline}</p>

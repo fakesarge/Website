@@ -26,12 +26,16 @@ const Navigation = () => {
     <>
       <AnnouncementBar />
       <header
-        className={`fixed top-7 inset-x-0 z-50 border-b border-border/70 bg-background/75 backdrop-blur-xl transition-all duration-300 ${
-          isScrolled ? "bg-background/95" : ""
+        className={`fixed top-10 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
+          isScrolled ? "scale-95" : ""
         }`}
       >
         <div
-          className="container flex h-16 items-center gap-2 px-4"
+          className="flex items-center gap-2 rounded-full border border-border/40 bg-[#0a0a0a]/85 backdrop-blur-xl px-2 py-2"
+          style={{
+            boxShadow:
+              "0 8px 40px -8px hsl(0 0% 0% / 0.8), 0 0 0 1px hsl(var(--accent-glow) / 0.08), 0 0 32px hsl(var(--accent-glow) / 0.12)",
+          }}
         >
           <NavigationLogo />
 
@@ -40,10 +44,14 @@ const Navigation = () => {
           {/* Cart pill */}
           <Link
             to="/orders"
-            className="hidden md:flex h-10 w-10 items-center justify-center border border-border bg-card transition-colors duration-200 hover:border-foreground/60"
+            className="hidden md:flex h-11 w-11 items-center justify-center rounded-full transition-all duration-300 hover:scale-105"
+            style={{
+              background: "radial-gradient(circle at 30% 30%, hsl(var(--accent-glow) / 0.9), hsl(var(--accent-glow) / 0.3) 60%, transparent 75%)",
+              boxShadow: "0 0 22px hsl(var(--accent-glow) / 0.5)",
+            }}
             aria-label="Orders"
           >
-            <div className="flex h-8 w-8 items-center justify-center">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-background ring-1 ring-[hsl(var(--accent-glow)/0.4)]">
               <ShoppingCart className="h-4 w-4 text-foreground" />
             </div>
           </Link>
