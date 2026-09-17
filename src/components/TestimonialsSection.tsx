@@ -54,14 +54,14 @@ const testimonials = [
 
 const TestimonialsSection = () => {
   return (
-    <section className="container px-4 py-24">
-      <div className="max-w-6xl mx-auto">
+    <section className="border-b border-border py-24 md:py-32">
+      <div className="mx-auto max-w-[1120px] px-5">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, ease: premiumEase }}
-          className="flex flex-col items-center text-center mb-16"
+          className="mb-16 flex flex-col items-center text-center"
         >
           <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/40 px-3 py-1 mb-6">
             <span className="size-1.5 rounded-full bg-[hsl(var(--accent-glow))]" />
@@ -69,16 +69,15 @@ const TestimonialsSection = () => {
               Testimonials
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 text-foreground">
-            Loved and <span className="text-gradient">Trusted</span> by gaming{" "}
-            <span className="text-gradient">communities</span>
+          <h2 className="mb-4 font-display text-4xl font-extrabold uppercase text-foreground md:text-6xl">
+            Made for creators.<br /><span className="text-muted-foreground">Backed by their words.</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-xl">
             Real words from server owners, creators and devs running our work in production.
           </p>
         </motion.div>
 
-        <div className="columns-1 md:columns-2 gap-6 space-y-6">
+        <div className="grid gap-px overflow-hidden rounded-lg border border-border bg-border md:grid-cols-3">
           {testimonials.map((t, i) => (
             <motion.div
               key={t.name + i}
@@ -86,8 +85,7 @@ const TestimonialsSection = () => {
               whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.6, delay: (i % 3) * 0.08, ease: premiumEase }}
-              className="break-inside-avoid rounded-3xl border border-border/50 bg-card/40 backdrop-blur-xl hover:border-[hsl(var(--accent-glow)/0.4)] transition-colors duration-500 overflow-hidden"
-              style={{ transitionTimingFunction: "cubic-bezier(0.25,0.46,0.45,0.94)" }}
+              className="overflow-hidden bg-card transition-colors duration-500 hover:bg-secondary"
             >
               <div className="p-7">
                 {/* Identity header — who the testimonial belongs to */}
@@ -101,7 +99,7 @@ const TestimonialsSection = () => {
                       <span className="text-sm font-semibold text-foreground">
                         {t.name}
                       </span>
-                      <BadgeCheck className="h-3.5 w-3.5 text-[#23a55a]" />
+                      <BadgeCheck className="h-3.5 w-3.5 text-success" />
                     </div>
                     <div className="text-xs text-muted-foreground">{t.role}</div>
                   </div>

@@ -9,12 +9,12 @@ const FeaturedWorkSection = () => {
   const projects = galleryProjects.slice(0, 3);
 
   return (
-    <section className="overflow-hidden border-b border-border py-24">
-      <div className="mx-auto max-w-[1440px] px-5 md:px-10 lg:px-16">
+    <section className="overflow-hidden border-b border-border py-24 md:py-32">
+      <div className="mx-auto max-w-[1120px] px-5">
         <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <div>
             <p className="section-kicker">Selected work / 01—03</p>
-            <h2 className="mt-4 font-display text-5xl font-extrabold uppercase leading-[0.9] md:text-8xl">Made to stop<br />the scroll.</h2>
+            <h2 className="mt-4 max-w-2xl font-display text-4xl font-extrabold uppercase leading-[0.9] md:text-7xl">Production visuals<br /><span className="text-muted-foreground">built to be remembered.</span></h2>
           </div>
           <button onClick={() => navigate("/portfolio")} className="group flex items-center gap-3 text-xs font-bold uppercase">
             Full portfolio <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
@@ -22,7 +22,7 @@ const FeaturedWorkSection = () => {
         </div>
       </div>
 
-      <div className="flex gap-4 overflow-x-auto px-5 pb-4 md:px-10 lg:px-16">
+      <div className="mx-auto grid max-w-[1120px] gap-4 px-5 md:grid-cols-2">
         {projects.map((project, index) => (
           <motion.button
             key={project.id}
@@ -31,7 +31,7 @@ const FeaturedWorkSection = () => {
             viewport={{ once: true }}
             transition={{ delay: index * 0.1 }}
             onClick={() => navigate("/portfolio")}
-            className="group relative min-w-[82vw] overflow-hidden border border-border bg-secondary text-left md:min-w-[620px]"
+            className={`group relative overflow-hidden rounded-lg border border-border bg-secondary text-left ${index === 0 ? "md:col-span-2" : ""}`}
           >
             <div className="aspect-video overflow-hidden">
               <img src={`https://img.youtube.com/vi/${project.youtubeId}/maxresdefault.jpg`} alt={project.title} className="h-full w-full object-cover grayscale transition duration-700 group-hover:scale-105 group-hover:grayscale-0" />
@@ -42,7 +42,7 @@ const FeaturedWorkSection = () => {
             </div>
           </motion.button>
         ))}
-        <div className="min-w-[82vw] md:min-w-[620px]"><MediaPlaceholder label="Your next featured project" className="aspect-video h-auto" /></div>
+        <div><MediaPlaceholder label="Your next featured project" className="aspect-video h-auto rounded-lg" /></div>
       </div>
     </section>
   );

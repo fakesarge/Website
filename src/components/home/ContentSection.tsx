@@ -25,10 +25,10 @@ const ContentSection = ({ contentRef }: ContentSectionProps) => {
 
   return (
     <motion.main ref={contentRef} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="relative w-full">
-      <FeaturedWorkSection />
       <StatsSection />
-      <WhatWeDoSection />
+      <FeaturedWorkSection />
       <ProcessSection />
+      <WhatWeDoSection />
       <FeaturedProductsSection />
       <VipMembershipSection />
       <TestimonialsSection />
