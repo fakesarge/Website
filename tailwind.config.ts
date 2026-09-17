@@ -20,8 +20,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Geist', 'sans-serif'],
-        inter: ['Inter', 'sans-serif'],
+        sans: ['Arial', 'Helvetica', 'sans-serif'],
+        display: ['Arial Black', 'Arial', 'sans-serif'],
+        mono: ['ui-monospace', 'SFMono-Regular', 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -57,6 +58,8 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        success: "hsl(var(--success))",
+        "surface-raised": "hsl(var(--surface-raised))",
       },
       keyframes: {
         marquee: {

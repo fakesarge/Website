@@ -8,12 +8,12 @@ const steps = [
 ];
 
 const ProcessSection = () => (
-  <section className="border-y border-border bg-secondary/35">
-    <div className="mx-auto max-w-[1440px] px-5 py-24 md:px-10 lg:px-16">
+  <section className="border-b border-border bg-secondary/35">
+    <div className="mx-auto max-w-[1120px] px-5 py-24 md:py-32">
       <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
         <div>
           <p className="section-kicker">How it works</p>
-          <h2 className="mt-4 max-w-3xl font-display text-4xl font-extrabold uppercase leading-[0.95] md:text-7xl">From idea to<br />final render.</h2>
+          <h2 className="mt-4 max-w-3xl font-display text-4xl font-extrabold uppercase leading-[0.95] md:text-6xl">Turn any idea<br />into a finished world.</h2>
         </div>
         <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">A focused process built for creators who want strong work without the usual confusion.</p>
       </div>
@@ -25,7 +25,7 @@ const ProcessSection = () => (
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: index * 0.1 }}
-            className="group min-h-72 border-b border-r border-border p-7 md:p-9"
+            className="group min-h-64 border-b border-r border-border bg-background p-7 md:p-9"
           >
             <div className="flex items-start justify-between">
               <span className="font-mono text-xs text-muted-foreground">[{step.number}]</span>

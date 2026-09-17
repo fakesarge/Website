@@ -25,9 +25,9 @@ const Navigation = () => {
   return (
     <>
       <AnnouncementBar />
-      <header className={`fixed left-0 right-0 top-8 z-50 border-b border-border bg-background/85 backdrop-blur-xl transition-all duration-300 ${isScrolled ? "shadow-sm" : ""}`}>
+      <header className={`fixed left-0 right-0 top-8 z-50 border-b border-border bg-background/90 backdrop-blur-xl transition-all duration-300 ${isScrolled ? "shadow-sm" : ""}`}>
         <div
-          className="mx-auto flex h-20 max-w-[1440px] items-center gap-3 border-x border-border px-5 md:px-8"
+          className="mx-auto flex h-16 max-w-[1180px] items-center gap-3 px-5 md:px-8"
         >
           <NavigationLogo />
 

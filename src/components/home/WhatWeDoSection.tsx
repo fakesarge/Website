@@ -10,25 +10,25 @@ const services = [
 ];
 
 const WhatWeDoSection = () => (
-  <section className="border-b border-border py-24">
-    <div className="mx-auto max-w-[1440px] px-5 md:px-10 lg:px-16">
-      <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+  <section className="border-b border-border py-24 md:py-32">
+    <div className="mx-auto max-w-[1120px] px-5">
+      <div className="grid gap-12 lg:grid-cols-[0.7fr_1.3fr] lg:items-center">
         <div>
           <p className="section-kicker">What we make</p>
-          <h2 className="mt-4 font-display text-5xl font-extrabold uppercase leading-[0.9] md:text-7xl">Big ideas.<br /><span className="text-muted-foreground">Sharper output.</span></h2>
+          <h2 className="mt-4 font-display text-4xl font-extrabold uppercase leading-[0.9] md:text-6xl">One studio.<br /><span className="text-muted-foreground">Every format.</span></h2>
           <p className="mt-8 max-w-md text-base leading-relaxed text-muted-foreground">From a single launch visual to a complete creative world, every piece is built around your community.</p>
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
-          <MediaPlaceholder label="Studio process image" className="aspect-[4/3]" format="4:3" />
-          <MediaPlaceholder label="Finished project image" className="aspect-[4/3] sm:translate-y-8" format="4:3" />
+          <MediaPlaceholder label="Studio process image" className="aspect-[4/3] rounded-lg" format="4:3" />
+          <MediaPlaceholder label="Finished project image" className="aspect-[4/3] rounded-lg sm:translate-y-8" format="4:3" />
         </div>
       </div>
 
-      <div className="mt-24 grid border-l border-t border-border md:grid-cols-2">
+      <div className="mt-24 grid border-l border-t border-border md:grid-cols-4">
         {services.map((service, index) => (
           <motion.article key={service.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }} className="group border-b border-r border-border p-7 md:p-9">
             <div className="flex items-start justify-between"><service.icon className="h-6 w-6" /><span className="font-mono text-[9px] text-muted-foreground">0{index + 1}</span></div>
-            <h3 className="mt-16 font-display text-2xl font-bold uppercase">{service.title}</h3>
+            <h3 className="mt-12 font-display text-xl font-bold uppercase">{service.title}</h3>
             <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted-foreground">{service.copy}</p>
           </motion.article>
         ))}
