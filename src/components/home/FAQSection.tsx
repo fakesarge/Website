@@ -12,7 +12,8 @@ const faqs = [
 
 const FAQSection = () => {
   return (
-    <section className="container px-4 py-28">
+    <section className="border-b border-border py-24 md:py-32">
+      <div className="mx-auto max-w-[1120px] px-5">
       <div className="mx-auto max-w-3xl text-center mb-12">
         <motion.p
           initial={{ opacity: 0, y: 10 }}
@@ -28,9 +29,9 @@ const FAQSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="text-4xl md:text-6xl font-bold tracking-tight"
+           className="font-display text-4xl font-extrabold uppercase md:text-6xl"
         >
-          Everything you <span className="text-gradient">need to know.</span>
+           Questions, answered.
         </motion.h2>
       </div>
 
@@ -40,7 +41,7 @@ const FAQSection = () => {
             <AccordionItem
               key={i}
               value={`item-${i}`}
-              className="rounded-full border border-border/40 bg-card/60 backdrop-blur-md px-6 data-[state=open]:rounded-2xl data-[state=open]:bg-card/80 transition-all"
+              className="border-b border-border bg-card px-6 first:border-t data-[state=open]:bg-secondary"
             >
               <AccordionTrigger className="text-left text-sm md:text-base font-medium hover:no-underline py-4">
                 {f.q}
@@ -51,6 +52,7 @@ const FAQSection = () => {
             </AccordionItem>
           ))}
         </Accordion>
+      </div>
       </div>
     </section>
   );

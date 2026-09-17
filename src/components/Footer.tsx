@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
 
 const premiumEase = [0.25, 0.46, 0.45, 0.94] as const;
 
@@ -14,16 +15,16 @@ const Footer = () => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.7, ease: premiumEase }}
-      className="w-full py-12 mt-20 relative"
+      className="relative w-full py-12"
     >
       {/* Top gradient blend */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/15 to-transparent" />
       
-      <div className="container px-4">
-        <div className="glass rounded-xl p-8">
+       <div className="mx-auto max-w-[1120px] px-5">
+         <div className="border-t border-border py-10">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="space-y-4">
-              <h3 className="font-medium text-lg">74HRS</h3>
+               <h3 className="font-display text-xl font-black">74HRS</h3>
               <p className="text-sm text-muted-foreground">
                 Premium FiveM graphics studio creating stunning Blender animations and loading screens for gaming communities.
               </p>
@@ -48,19 +49,19 @@ const Footer = () => {
             <div className="space-y-4">
               <h4 className="font-medium">Company</h4>
               <ul className="space-y-2">
-                <li><a href="/portfolio" className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300">Portfolio</a></li>
-                <li><a href="/partners" className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300">Partners</a></li>
-                <li><a href="/orders" className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300">Orders</a></li>
-                <li><a href="/affiliates" className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300">Affiliates</a></li>
+                 <li><Link to="/portfolio" className="text-sm text-muted-foreground transition-colors duration-300 hover:text-primary">Portfolio</Link></li>
+                 <li><Link to="/partners" className="text-sm text-muted-foreground transition-colors duration-300 hover:text-primary">Partners</Link></li>
+                 <li><Link to="/orders" className="text-sm text-muted-foreground transition-colors duration-300 hover:text-primary">Orders</Link></li>
+                 <li><Link to="/vip" className="text-sm text-muted-foreground transition-colors duration-300 hover:text-primary">VIP Library</Link></li>
               </ul>
             </div>
 
             <div className="space-y-4">
               <h4 className="font-medium">Legal</h4>
               <ul className="space-y-2">
-                <li><a href="/privacy" className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300">Privacy Policy</a></li>
-                <li><a href="/terms" className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300">Terms of Service</a></li>
-                <li><button onClick={handleDiscordClick} className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300 text-left">Support</button></li>
+                 <li><Link to="/privacy" className="text-sm text-muted-foreground transition-colors duration-300 hover:text-primary">Privacy Policy</Link></li>
+                 <li><Link to="/terms" className="text-sm text-muted-foreground transition-colors duration-300 hover:text-primary">Terms of Service</Link></li>
+                 <li><Button variant="link" onClick={handleDiscordClick} className="h-auto p-0 text-sm text-muted-foreground">Support</Button></li>
               </ul>
             </div>
           </div>

@@ -4,22 +4,19 @@ import { ArrowRight } from "lucide-react";
 
 const BigCTASection = () => {
   return (
-    <section className="container px-4 pb-24">
+    <section className="border-b border-border py-24 md:py-32">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="relative mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] border border-border/60 bg-card/40 p-12 md:p-20 backdrop-blur-xl"
+        className="relative mx-5 overflow-hidden rounded-lg border border-border bg-accent/15 p-10 md:mx-auto md:max-w-[1120px] md:p-20"
       >
         {/* Inner top sheen */}
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent-glow)/0.6)] to-transparent" />
 
         {/* Floor glow */}
-        <div
-          className="pointer-events-none absolute left-1/2 -bottom-48 h-[420px] w-[820px] -translate-x-1/2 rounded-[100%] blur-[120px]"
-          style={{ background: "hsl(var(--accent-glow) / 0.22)" }}
-        />
+        <div className="pointer-events-none absolute inset-0 creative-grid opacity-20" />
         {/* Subtle accent wash */}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[hsl(var(--accent-glow)/0.08)] to-transparent" />
 
@@ -36,11 +33,11 @@ const BigCTASection = () => {
             whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             viewport={{ once: true }}
             transition={{ duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="text-4xl md:text-6xl font-bold tracking-tight text-foreground mb-5 leading-[1.05]"
+            className="mb-5 font-display text-4xl font-extrabold uppercase leading-[1.05] text-foreground md:text-6xl"
           >
-            Elevate your <span className="text-gradient">community</span>
+            Your next launch deserves
             <br />
-            experience today.
+            more than ordinary.
           </motion.h2>
 
           <p className="text-muted-foreground text-lg mb-10 max-w-xl">
